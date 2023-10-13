@@ -1,3 +1,4 @@
-/test.py
-/api.py
-/apiv2.py
+./test.py
+./api.py
+./apiv2.py
+./__pycache__
