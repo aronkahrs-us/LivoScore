@@ -1,0 +1,16 @@
+{
+    "SCENE": "Live",
+    "H_SERVE": 60,
+    "A_SERVE": 59,
+    "H_SUBSTITUTION": 85,
+    "A_SUBSTITUTION": 87,
+    "TIME_OUT": 62,
+    "MATCH_POINT": 65,
+    "SET_POINT": 64,
+    "HOME_POINTS": "Home Score",
+    "AWAY_POINTS": "Away Score",
+    "HOME_NAME": "Home",
+    "AWAY_NAME": "Away",
+    "HOME_SET": "Home Set",
+    "AWAY_SET": "Away Set"
+}
