@@ -1,8 +1,6 @@
 from theme import *
 import PySimpleGUI as sg
-import threading
 import json
-import time
 
 DOMAINS = {
     "LIVOSUR": "https://livosur-web.dataproject.com",
@@ -60,7 +58,7 @@ class LeagueConfig():
             
         self.window.close()
     def get_config(self):
-        with open('api_config.json', 'r') as openfile:
+        with open('./Config/api_config.json', 'r') as openfile:
             # Reading from json file
             config = json.load(openfile)
             self.window['-LEAGUE-'].update(value=list(DOMAINS.keys())[list(DOMAINS.values()).index(config['LEAGUE_URL'])], visible=True)
@@ -76,7 +74,7 @@ class LeagueConfig():
         
         # Serializing json
         json_object = json.dumps(dictionary, indent=4)
-        with open("api_config.json", "w") as outfile:
+        with open("./Config/api_config.json", "w") as outfile:
             outfile.write(json_object)
             self.window['-SAVE_TXT-'].update(visible=True)
             pass

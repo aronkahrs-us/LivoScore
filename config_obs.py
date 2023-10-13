@@ -1,7 +1,6 @@
 import PySimpleGUI as sg
-import obs
+from Utils import obs
 from theme import *
-import threading
 import json
 
 class ObsConfig():
@@ -42,7 +41,7 @@ class ObsConfig():
         self.window.close()
 
     def get_config(self):
-        with open('obs_config.json', 'r') as openfile:
+        with open('./Config/obs_config.json', 'r') as openfile:
             # Reading from json file
             config = json.load(openfile)
             self.window['-IP-'].update(value=config['IP'], visible=True)
@@ -66,6 +65,6 @@ class ObsConfig():
         
         # Serializing json
         json_object = json.dumps(dictionary, indent=4)
-        with open("obs_config.json", "w") as outfile:
+        with open("./Config/obs_config.json", "w") as outfile:
             outfile.write(json_object)
             self.window['-SAVE_TXT-'].update('Saved', text_color='white', visible=True)

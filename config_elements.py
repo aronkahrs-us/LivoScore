@@ -1,7 +1,6 @@
 import PySimpleGUI as sg
-import obs
+from Utils import obs
 from theme import *
-import threading
 import json
 
 
@@ -107,7 +106,7 @@ class ElementsConfig():
         self.window.close()
 
     def get_config(self):
-        with open('elem_config.json', 'r') as openfile:
+        with open('./Config/elem_config.json', 'r') as openfile:
             # Reading from json file
             config = json.load(openfile)
             items = self.get_elements(config['SCENE'])
@@ -160,7 +159,7 @@ class ElementsConfig():
 
             # Serializing json
             json_object = json.dumps(dictionary, indent=4)
-            with open("elem_config.json", "w") as outfile:
+            with open("./Config/elem_config.json", "w") as outfile:
                 outfile.write(json_object)
                 self.window['-SAVE_TXT-'].update(visible=True)
                                   

@@ -1,14 +1,13 @@
 import PySimpleGUI as sg
 import threading
 import json
-import time
 from theme import *
 from config_elements import ElementsConfig
 from config_obs import ObsConfig
 from config_league import LeagueConfig
-from obs import Obs
-from apiv3 import Match
-from league import League
+from Utils.obs import Obs
+from Utils.apiv3 import Match
+from Utils.league import League
 
 class Main:
     def __init__(self) -> None:
@@ -76,7 +75,7 @@ class Main:
         self.window.close()
     def list_matches(self):
         try:
-            with open('api_config.json', 'r') as openfile:
+            with open('./Config/api_config.json', 'r') as openfile:
                 # Reading from json file
                 config = json.load(openfile)
         except Exception:
