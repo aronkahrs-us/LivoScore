@@ -1,22 +1,12 @@
-<h1 align="center"> GitPoint </h1> <br>
+<h1 align="center"> LivoScore </h1> <br>
 <p align="center">
-  <a href="https://gitpoint.co/">
-    <img alt="GitPoint" title="GitPoint" src="http://i.imgur.com/VShxJHs.png" width="450">
+  <a href="https://LivoScore.co/">
+    <img alt="LivoScore" title="LivoScore" src="http://i.imgur.com/VShxJHs.png" width="450">
   </a>
 </p>
 
 <p align="center">
-  GitHub in your pocket. Built with React Native.
-</p>
-
-<p align="center">
-  <a href="https://itunes.apple.com/us/app/gitpoint/id1251245162?mt=8">
-    <img alt="Download on the App Store" title="App Store" src="http://i.imgur.com/0n2zqHD.png" width="140">
-  </a>
-
-  <a href="https://play.google.com/store/apps/details?id=com.gitpoint">
-    <img alt="Get it on Google Play" title="Google Play" src="http://i.imgur.com/mtGRPuM.png" width="140">
-  </a>
+  Your right hand for volleyball streams. All graphics automated.
 </p>
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -36,16 +26,14 @@
 
 ## Introduction
 
-[![Build Status](https://img.shields.io/travis/gitpoint/git-point.svg?style=flat-square)](https://travis-ci.org/gitpoint/git-point)
-[![Coveralls](https://img.shields.io/coveralls/github/gitpoint/git-point.svg?style=flat-square)](https://coveralls.io/github/gitpoint/git-point)
+[![Build Status](https://img.shields.io/travis/LivoScore/git-point.svg?style=flat-square)](https://travis-ci.org/LivoScore/git-point)
+[![Coveralls](https://img.shields.io/coveralls/github/LivoScore/git-point.svg?style=flat-square)](https://coveralls.io/github/LivoScore/git-point)
 [![All Contributors](https://img.shields.io/badge/all_contributors-73-orange.svg?style=flat-square)](./CONTRIBUTORS.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)](http://commitizen.github.io/cz-cli/)
 [![Gitter chat](https://img.shields.io/badge/chat-on_gitter-008080.svg?style=flat-square)](https://gitter.im/git-point)
 
-View repository and user information, control your notifications and even manage your issues and pull requests. Built with React Native, GitPoint is one of the most feature-rich unofficial GitHub clients that is 100% free.
-
-**Available for both iOS and Android.**
+View repository and user information, control your notifications and even manage your issues and pull requests. Built with React Native, LivoScore is one of the most feature-rich unofficial GitHub clients that is 100% free.
 
 <p align="center">
   <img src = "http://i.imgur.com/HowF6aM.png" width=350>
@@ -53,7 +41,7 @@ View repository and user information, control your notifications and even manage
 
 ## Features
 
-A few of the things you can do with GitPoint:
+A few of the things you can do with LivoScore:
 
 * View user activity feed
 * Communicate on your issue and pull request conversations
@@ -75,7 +63,7 @@ A few of the things you can do with GitPoint:
 
 ## Feedback
 
-Feel free to send us feedback on [Twitter](https://twitter.com/gitpointapp) or [file an issue](https://github.com/gitpoint/git-point/issues/new). Feature requests are always welcome. If you wish to contribute, please take a quick look at the [guidelines](./CONTRIBUTING.md)!
+Feel free to send us feedback on [Twitter](https://twitter.com/LivoScoreapp) or [file an issue](https://github.com/LivoScore/git-point/issues/new). Feature requests are always welcome. If you wish to contribute, please take a quick look at the [guidelines](./CONTRIBUTING.md)!
 
 If there's anything you'd like to chat about, please feel free to join our [Gitter chat](https://gitter.im/git-point)!
 
@@ -94,7 +82,7 @@ This project follows the [all-contributors](https://github.com/kentcdodds/all-co
 
 Please take a look at the [contributing guidelines](./CONTRIBUTING.md) for a detailed process on how to build your application as well as troubleshooting information.
 
-**Development Keys**: The `CLIENT_ID` and `CLIENT_SECRET` in `api/index.js` are for development purposes and do not represent the actual application keys. Feel free to use them or use a new set of keys by creating an [OAuth application](https://github.com/settings/applications/new) of your own. Set the "Authorization callback URL" to `gitpoint://welcome`.
+**Development Keys**: The `CLIENT_ID` and `CLIENT_SECRET` in `api/index.js` are for development purposes and do not represent the actual application keys. Feel free to use them or use a new set of keys by creating an [OAuth application](https://github.com/settings/applications/new) of your own. Set the "Authorization callback URL" to `LivoScore://welcome`.
 
 ## Backers [![Backers on Open Collective](https://opencollective.com/git-point/backers/badge.svg)](#backers)
 
