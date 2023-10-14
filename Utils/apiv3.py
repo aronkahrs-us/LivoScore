@@ -5,7 +5,6 @@ import os
 import shutil
 import threading
 from obs import Obs
-import wget
 from bs4 import BeautifulSoup
 from sseclient import SSEClient
 
@@ -487,7 +486,4 @@ class Match:
         self._delete_files()
         self._update_ui()
 
-
-#EvSt(5953,'livosur')._update_stream()
-
-#Match(5953,'livosur')._get_logos()
+#Match(5953,'livosur')

@@ -252,5 +252,3 @@ def test():
                         auto_size_text=True, enable_events=True, disabled=True, expand_x=True, expand_y=True,readonly = True)]], element_justification='left', expand_x=True, expand_y=True)])
         n+=2
     print(main_layout)
-
-ElementsConfig()

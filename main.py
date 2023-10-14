@@ -8,6 +8,7 @@ from config_league import LeagueConfig
 from Utils.obs import Obs
 from Utils.apiv3 import Match
 from Utils.league import League
+from Utils.teams import Teams
 
 class Main:
     def __init__(self) -> None:
@@ -106,6 +107,7 @@ class Main:
         else:
             self.window['-ERROR-'].update("Iniciando", text_color='green', visible=True)
             self.match=Match(list(self.matches.keys())[list(self.matches.values()).index(self.values['-ID-'])],self.window)
+            threading.Thread(target=Teams,args=self.match).start()
             # match_id=list(self.matches.keys())[list(self.matches.values()).index(self.values['-ID-'])]
             # self.window['-ERROR-'].update(visible=False)
             # if api.get_status(match_id) == 2:
