@@ -31,6 +31,7 @@ class League:
                     Home = soup.find('span', {'id': 'Content_Main_RLV_MatchList_Label1_'+str(x)}).text
                     Guest = soup.find('span', {'id': 'Content_Main_RLV_MatchList_Label2_'+str(x)}).text
                     matches[int(x)]=str(str(Home)+' vs '+str(Guest))
+                    print(matches)
                 json_object = json.dumps(matches, indent=4)
                 with open("matches.json", "w") as outfile:
                     outfile.write(json_object)

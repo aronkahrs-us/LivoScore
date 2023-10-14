@@ -40,7 +40,7 @@ class LeagueConfig():
                     [sg.HorizontalSeparator(pad=(10,10))],
                     [sg.Column(B_Save, element_justification='c', expand_x=True, expand_y=True),sg.Column(T_Save, element_justification='c', expand_x=True, expand_y=True)]
                 ]
-        self.window = sg.Window("LivoStream - League Config", icon=logo,
+        self.window = sg.Window("Livoscore - League Config", icon=logo,
                         layout=layout, font=("Bebas", 15), auto_size_text = True, auto_size_buttons = True, modal= True,resizable=True, finalize=True)
         try:
             self.get_config()

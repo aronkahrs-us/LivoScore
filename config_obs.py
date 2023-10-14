@@ -20,7 +20,7 @@ class ObsConfig():
                     [sg.Column(T_pass, element_justification='c', expand_x=True, expand_y=True),sg.Column(S_pass, element_justification='c', expand_x=True, expand_y=True)],
                     [sg.Column(B_Save, element_justification='c', expand_x=True, expand_y=True),sg.Column(B_Test, element_justification='c', expand_x=True, expand_y=True),sg.Column(T_Save, element_justification='c', expand_x=True, expand_y=True)],
                 ]
-        self.window = sg.Window("LivoStream - OBS Config", icon=logo,
+        self.window = sg.Window("Livoscore - OBS Config", icon=logo,
                         layout=layout, font=("Bebas", 15), auto_size_text = True, auto_size_buttons = True, modal= True,resizable=True, finalize=True)
         try:
             self.get_config()

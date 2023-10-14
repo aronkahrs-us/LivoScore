@@ -28,7 +28,7 @@ class Main:
                             auto_size_text=True, enable_events=True, disabled=True, expand_x=True, expand_y=True, size=(30,10),readonly = True)]]
         layout = [
             [sg.Menu(menu_def, font=('Bebas', 15))],
-            [sg.Text("LivoStream", expand_x=True,
+            [sg.Text("Livoscore", expand_x=True,
                     text_color="#ffffff", click_submits=True, justification='center', font=('Bebas', 25))],
             [sg.Column(T_Id, element_justification='c', expand_x=True, expand_y=True),
             sg.Column(I_Id, element_justification='c', expand_x=True, expand_y=True),
@@ -39,11 +39,11 @@ class Main:
             sg.Column(T_Visita, element_justification='c', expand_x=True, expand_y=True)]
         ]
         # Create the Window
-        splash = sg.Window("LivoStream", icon=logo,
-                        layout=[[sg.Image(data=logo)]], transparent_color="#002b45", no_titlebar=True, keep_on_top=True).read(timeout=DISPLAY_TIME_MILLISECONDS, close=True)
-        threading.Thread(target=self.list_matches, daemon=True).start()
-        self.window = sg.Window("LivoStream", icon=logo,
+        # splash = sg.Window("Livoscore", icon=logo,
+        #                 layout=[[sg.Image(data=logo)]], transparent_color="#002b45", no_titlebar=True, keep_on_top=True).read(timeout=DISPLAY_TIME_MILLISECONDS, close=True)
+        self.window = sg.Window("Livoscore", icon=logo,
                         layout=layout, font=("Bebas", 15), auto_size_text=True, resizable=True, auto_size_buttons=True, finalize=True)
+        threading.Thread(target=self.list_matches, daemon=True).start()
         # Event Loop to process "events" and get the "values" of the inputs
         while True:
             event, self.values = self.window.read()
@@ -98,7 +98,7 @@ class Main:
                 self.window['-ID-'].update(values=[self.matches[x] for x in self.matches],value='Selecionar partido', visible=True, disabled=False)
             self.window['-RELOAD-'].update(disabled=False)
         except:
-            sg.Window("LivoStream - ERROR", icon=logo, font=("Bebas", 15), keep_on_top=True)
+            sg.Window("Livoscore - ERROR", icon=logo, font=("Bebas", 15), keep_on_top=True)
 
     def start_match(self):
         if Obs().test_connection() == "ERROR":

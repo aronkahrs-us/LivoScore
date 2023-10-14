@@ -4,7 +4,7 @@ import json
 import os
 import shutil
 import threading
-import obs
+from Utils.obs import obs
 import wget
 from bs4 import BeautifulSoup
 from sseclient import SSEClient
@@ -13,7 +13,7 @@ class Match:
     def __init__(self,m_id,window):
         self.m_id=int(m_id)
         self.is_running = True
-        self.obsApi = obs.Obs()
+        self.obsApi = obs()
         self.set_point = False
         self.match_point = False
         self.window=window

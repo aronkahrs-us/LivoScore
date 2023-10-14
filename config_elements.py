@@ -84,7 +84,7 @@ class ElementsConfig():
             [sg.Column(B_Save, element_justification='left', expand_x=True, expand_y=True),
             sg.Column(T_Save, element_justification='left', expand_x=True, expand_y=True)]
         ]
-        self.window = sg.Window("LivoStream - Config", icon=logo,
+        self.window = sg.Window("Livoscore - Config", icon=logo,
                         layout=layout, font=("Bebas", 15), auto_size_text=True, auto_size_buttons=True, modal=True, resizable=True, finalize=True, size=(800,400))
         width, height = sg.Window.get_screen_size()
         # try:
