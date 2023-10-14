@@ -36,18 +36,19 @@ class Obs:
 
     def get_scene_items(self,scene):
         try:
-            items = {}
+            items_d = {}
             resp = self.client.get_scene_item_list(scene).scene_items
             groups=self.client.get_group_list().groups
             for group in groups:
                 resp_g = self.client.get_group_scene_item_list(group).scene_items
                 for item in resp_g:
-                    items[item['sourceName']]={'id':item['sceneItemId'],
+                    items_d[item['sourceName']]={'id':item['sceneItemId'],
                                                'name':item['sourceName']}
             for item in resp:
-                items[item['sourceName']]={'id':item['sceneItemId'],
+                items_d[item['sourceName']]={'id':item['sceneItemId'],
                                             'name':item['sourceName']}
-            return items
+            items_d = dict(sorted(items_d.items()))
+            return items_d
         except Exception as e:
             return "ERROR" + str(e)
             
@@ -125,5 +126,11 @@ class Obs:
     def _set_input_settings(self,input,value):
         try:
             return self.client.set_input_settings(input,value,True)
+        except:
+            return "ERROR"
+    
+    def _get_input_settings(self,input):
+        try:
+            return self.client.get_input_settings(input)
         except:
             return "ERROR"

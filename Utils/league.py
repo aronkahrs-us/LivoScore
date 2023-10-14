@@ -31,7 +31,6 @@ class League:
                     Home = soup.find('span', {'id': 'Content_Main_RLV_MatchList_Label1_'+str(x)}).text
                     Guest = soup.find('span', {'id': 'Content_Main_RLV_MatchList_Label2_'+str(x)}).text
                     matches[int(x)]=str(str(Home)+' vs '+str(Guest))
-                    print(matches)
                 json_object = json.dumps(matches, indent=4)
                 with open("./Config/matches.json", "w") as outfile:
                     outfile.write(json_object)
@@ -43,7 +42,6 @@ class League:
                 with open('./Config/matches.json', 'r') as openfile:
                     # Reading from json file
                     matches = json.load(openfile)
-                    print(matches)
                     return matches
             except:
                 self.matches = {}
@@ -105,5 +103,3 @@ class League:
             headers=headers,
         ).json()
         self.credentials = response
-
-League().get_ready_matches()

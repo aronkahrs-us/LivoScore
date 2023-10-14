@@ -4,7 +4,7 @@ import json
 import os
 import shutil
 import threading
-from Utils.obs import obs
+from obs import Obs
 import wget
 from bs4 import BeautifulSoup
 from sseclient import SSEClient
@@ -13,7 +13,7 @@ class Match:
     def __init__(self,m_id,window):
         self.m_id=int(m_id)
         self.is_running = True
-        self.obsApi = obs()
+        self.obsApi = Obs()
         self.set_point = False
         self.match_point = False
         self.window=window
@@ -131,6 +131,7 @@ class Match:
                         if self.status == 2:
                             self._stop()
                         threading.Thread(target=self._set_point).start()
+                        threading.Thread(target=self._test_make_statistics).start()
                         threading.Thread(target=self._update_stream).start()
                         threading.Thread(target=self._update_ui).start()
                         x=x+1
@@ -372,8 +373,10 @@ class Match:
         homeurl = home.strip('background-image:url(').strip(');')
         away = soup.find('div', attrs={'id': 'DIV_LogoGuest_Image'})['style']
         awayurl = away.strip('background-image:url(').strip(');')
-        wget.download(homeurl, "home.jpg")
-        wget.download(awayurl, "away.jpg")
+        #wget.download(homeurl, "home.jpg")
+        #wget.download(awayurl, "away.jpg")
+        self.obsApi._set_input_settings(self.elements['HOME_LOGO'],{'file':homeurl})
+        self.obsApi._set_input_settings(self.elements['AWAY_LOGO'],{'file':awayurl})
     
     def _web_request(self, data):
         """makes the requests to the server with the specified data"""
@@ -434,6 +437,16 @@ class Match:
             self.obsApi._set_input_settings(self.elements['AWAY_POINTS'],{'text': str(self.away['Points'])})
             self.obsApi._set_input_settings(self.elements['HOME_SET'],{'text': str(self.home['Sets'])})
             self.obsApi._set_input_settings(self.elements['AWAY_SET'],{'text': str(self.away['Sets'])})
+            self.obsApi._set_input_settings(self.elements['HOME_STATS_PT'],{'text': str(self.stats['Total']['Home_percentage'])})
+            self.obsApi._set_input_settings(self.elements['AWAY_STATS_PT'],{'text': str(self.stats['Total']['Away_percentage'])})
+            self.obsApi._set_input_settings(self.elements['HOME_STATS_ST'],{'text': str(self.stats['Total']['Home_points'])})
+            self.obsApi._set_input_settings(self.elements['AWAY_STATS_ST'],{'text': str(self.stats['Total']['Away_points'])})
+            for x in self.stats.keys():
+                if x != 'Total':
+                    self.obsApi._set_input_settings(self.elements['HOME_STATS_P'+str(x.split('_')[1])],{'text': str(self.stats[x]['Home_percentage'])})
+                    self.obsApi._set_input_settings(self.elements['AWAY_STATS_P'+str(x.split('_')[1])],{'text': str(self.stats[x]['Away_percentage'])})
+                    self.obsApi._set_input_settings(self.elements['HOME_STATS_S'+str(x.split('_')[1])],{'text': str(self.stats[x]['Home_points'])})
+                    self.obsApi._set_input_settings(self.elements['AWAY_STATS_S'+str(x.split('_')[1])],{'text': str(self.stats[x]['Away_points'])})
         except Exception as e:
             print(e)
             return e
@@ -477,4 +490,4 @@ class Match:
 
 #EvSt(5953,'livosur')._update_stream()
 
-#Livosur().get_ready_matches()
+#Match(5953,'livosur')._get_logos()
