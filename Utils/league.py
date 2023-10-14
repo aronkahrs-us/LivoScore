@@ -8,7 +8,7 @@ class League:
     def __init__(self) -> None:
         ssl._create_default_https_context = ssl._create_unverified_context
         try:
-            with open('api_config.json', 'r') as openfile:
+            with open('./Config/api_config.json', 'r') as openfile:
                 # Reading from json file
                 config = json.load(openfile)
                 self.league = config['LEAGUE']
@@ -33,14 +33,14 @@ class League:
                     matches[int(x)]=str(str(Home)+' vs '+str(Guest))
                     print(matches)
                 json_object = json.dumps(matches, indent=4)
-                with open("matches.json", "w") as outfile:
+                with open("./Config/matches.json", "w") as outfile:
                     outfile.write(json_object)
             except Exception as e:
                 print("Got unhandled exception %s" % str(e))
             return matches
         else:
             try:
-                with open('matches.json', 'r') as openfile:
+                with open('./Config/matches.json', 'r') as openfile:
                     # Reading from json file
                     matches = json.load(openfile)
                     print(matches)
@@ -105,3 +105,5 @@ class League:
             headers=headers,
         ).json()
         self.credentials = response
+
+League().get_ready_matches()

@@ -19,7 +19,7 @@ class Match:
         self.window=window
         self.stats = {}
         try:
-            with open('api_config.json', 'r') as openfile:
+            with open('./Config/api_config.json', 'r') as openfile:
                 # Reading from json file
                 config = json.load(openfile)
                 self.league = config['LEAGUE']
@@ -27,7 +27,7 @@ class Match:
         except:
             self.league = ""
         try:
-            with open('elem_config.json', 'r') as openfile:
+            with open('./Config/elem_config.json', 'r') as openfile:
                 # Reading from json file
                 self.elements = json.load(openfile)
         except:

@@ -5,10 +5,10 @@ import time
 class Obs:
     def __init__(self) -> bool:
         try:
-            with open('obs_config.json', 'r') as openfile:
+            with open('./Config/obs_config.json', 'r') as openfile:
                 # Reading from json file
                 self.connect = json.load(openfile)
-            with open('elem_config.json', 'r') as openfile:
+            with open('./Config/elem_config.json', 'r') as openfile:
                 # Reading from json file
                 self.scene_data = json.load(openfile)
             self.client = obs.ReqClient(host=self.connect['IP'], port=self.connect['PORT'], password=self.connect['PASS'])
