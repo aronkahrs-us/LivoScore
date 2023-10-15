@@ -4,7 +4,8 @@ import json
 import os
 import shutil
 import threading
-from obs import Obs
+from .team import Team
+from .obs import Obs
 from bs4 import BeautifulSoup
 from sseclient import SSEClient
 
@@ -120,11 +121,11 @@ class Match:
                                 threading.Thread(target=self.obsApi.time_out).start()
                         elif data["M"][0]["M"] == "updateMatchSetData_ES" or data["M"][0]["M"] == "updateMatchSetData_DV":
                             self.current_set=data["M"][0]["A"][0]['SN']
-                            self.home['Points']=data["M"][0]["A"][0]['HP']
-                            self.away['Points']=data["M"][0]["A"][0]['GP']
+                            self.home.points=data["M"][0]["A"][0]['HP']
+                            self.away.points=data["M"][0]["A"][0]['GP']
                         elif data["M"][0]["M"] == "updateMatchScoreData_ES" or data["M"][0]["M"] == "updateMatchScoreData_DV":
-                            self.home['Sets']=data["M"][0]["A"][0]['H']
-                            self.away['Sets']=data["M"][0]["A"][0]['G']
+                            self.home.sets=data["M"][0]["A"][0]['H']
+                            self.away.sets=data["M"][0]["A"][0]['G']
                             self.status=data["M"][0]["A"][0]["S"]
                     finally:
                         if self.status == 2:
@@ -133,10 +134,10 @@ class Match:
                         threading.Thread(target=self._test_make_statistics).start()
                         threading.Thread(target=self._update_stream).start()
                         threading.Thread(target=self._update_ui).start()
-                        x=x+1
-                        if x == 15:
-                            threading.Thread(target=self._make_statistics).start()
-                            x=0
+                        # x=x+1
+                        # if x == 15:
+                        #     threading.Thread(target=self._make_statistics).start()
+                        #     x=0
                             
             except Exception as e:
                 print(e)
@@ -183,20 +184,23 @@ class Match:
         self.current_set = data['WonSetHome'] + data['WonSetGuest'] + 1
         if self.current_set > 5:
             self.current_set = 5
-        self.home = {
-            'Name': data['HomeEmpty'],
-            'Id': data['Home'],
-            'Points': data['Set'+str(self.current_set)+'Home'],
-            'Sets': data['WonSetHome'],
-            'Players': self._get_players(data['Home'])
-        }
-        self.away = {
-            'Name': data['GuestEmpty'],
-            'Id': data['Guest'],
-            'Points': data['Set'+str(self.current_set)+'Guest'],
-            'Sets': data['WonSetGuest'],
-            'Players': self._get_players(data['Guest'])
-        }
+        self.home = Team(data['HomeEmpty'],data['Home'],data['Set'+str(self.current_set)+'Home'],data['WonSetHome'],self._get_players(data['Home']))
+        # self.home = {
+        #     'Name': data['HomeEmpty'],
+        #     'Id': data['Home'],
+        #     'Points': data['Set'+str(self.current_set)+'Home'],
+        #     'Sets': data['WonSetHome'],
+        #     'Players': self._get_players(data['Home'])
+        # }
+
+        self.away = Team(data['GuestEmpty'],data['Guest'],data['Set'+str(self.current_set)+'Guest'],data['WonSetGuest'],self._get_players(data['Guest']))
+        # self.away = {
+        #     'Name': data['GuestEmpty'],
+        #     'Id': data['Guest'],
+        #     'Points': data['Set'+str(self.current_set)+'Guest'],
+        #     'Sets': data['WonSetGuest'],
+        #     'Players': self._get_players(data['Guest'])
+        # }
         self.status = data['Status']
         self._update_stream()
         self._update_ui()
@@ -217,23 +221,23 @@ class Match:
         self.set_point = False
         self.match_point = False
         if self.current_set == 5:
-            if self.home['Points'] >= 14 and self.home['Points'] - self.away['Points'] >= 2:
+            if self.home.points >= 14 and self.home.points - self.away.points >= 2:
                 self.match_point = True
-            elif self.away['Points'] >= 14 and self.away['Points'] - self.home['Points'] >= 2:
+            elif self.away.points >= 14 and self.away.points - self.home.points >= 2:
                 self.match_point = True
             else:
                 self.match_point = False
-        elif self.home['Sets'] >= 2 or self.away['Sets'] >= 2:
-            if self.home['Points'] >= 24 and self.home['Points'] - self.away['Points'] >= 2:
+        elif self.home.sets >= 2 or self.away.sets >= 2:
+            if self.home.points >= 24 and self.home.points - self.away.points >= 2:
                 self.match_point = True
-            elif self.away['Points'] >= 24 and self.away['Points'] - self.home['Points'] >= 2:
+            elif self.away.points >= 24 and self.away.points - self.home.points >= 2:
                 self.match_point = True
             else:
                 self.match_point = False
         else:
-            if self.home['Points'] >= 24 and self.home['Points'] - self.away['Points'] >= 2:
+            if self.home.points >= 24 and self.home.points - self.away.points >= 2:
                 self.set_point = True
-            elif self.away['Points'] >= 24 and self.away['Points'] - self.home['Points'] >= 2:
+            elif self.away.points >= 24 and self.away.points - self.home.points >= 2:
                 self.set_point = True
             else:
                 self.set_point = False
@@ -260,19 +264,26 @@ class Match:
             self.window['-HOME-'].update(visible=False)
             self.window['-AWAY-'].update(visible=False)
             self.window['-ST-'].update('Iniciar',disabled=False)
-        self.window['-HOME-'].update(value=self.home['Name'] +
-                                ' - ' + str(self.home['Points']), visible=True)
-        self.window['-AWAY-'].update(value=self.away['Name'] +
-                                ' - ' + str(self.away['Points']), visible=True)
+        self.window['-HOME-'].update(value=self.home.name +
+                                ' - ' + str(self.home.points), visible=True)
+        self.window['-AWAY-'].update(value=self.away.name +
+                                ' - ' + str(self.away.points), visible=True)
     
     def _test_make_statistics(self):
-        set_total_points = self.home['Points'] + self.away['Points']
+        set_total_points = self.home.points + self.away.points
         self.stats['Set_'+str(self.current_set)] = {
             "Total_points": set_total_points,
-            "Home_points": self.home['Points'],
-            "Away_points": self.away['Points'],
-            "Home_percentage": round((self.home['Points']*100)/set_total_points),
-            "Away_percentage": round((self.away['Points']*100)/set_total_points),
+            "Home_points": self.home.points,
+            "Away_points": self.away.points,
+            "Home_percentage": str(round((self.home.points*100)/set_total_points)) + " %",
+            "Away_percentage": str(round((self.away.points*100)/set_total_points)) + " %",
+        }
+        self.stats['Total'] = {
+            "Total_points": 0,
+            "Home_points": 0,
+            "Away_points": 0,
+            "Home_percentage": "0",
+            "Away_percentage": "0",
         }
         for x in self.stats.keys():
             if x != 'Total':
@@ -280,8 +291,8 @@ class Match:
                 self.stats['Total']['Total_points'] += data['Total_points']
                 self.stats['Total']['Home_points'] += data['Home_points']
                 self.stats['Total']['Away_points'] += data['Away_points']
-        self.stats['Total']['Home_percentage'] = round((self.stats['Total']['Home_points']*100)/self.stats['Total']['Total_points'])
-        self.stats['Total']['Away_percentage'] = round((self.stats['Total']['Away_points']*100)/self.stats['Total']['Total_points'])
+        self.stats['Total']['Home_percentage'] = str(round((self.stats['Total']['Home_points']*100)/self.stats['Total']['Total_points'])) + " %"
+        self.stats['Total']['Away_percentage'] = str(round((self.stats['Total']['Away_points']*100)/self.stats['Total']['Total_points'])) + " %"
 
     def _make_statistics(self):
         """makes all the stats of the match"""
@@ -430,16 +441,16 @@ class Match:
 
     def _update_stream(self):
         try:
-            self.obsApi._set_input_settings(self.elements['HOME_NAME'],{'text': self.home['Name']})
-            self.obsApi._set_input_settings(self.elements['AWAY_NAME'],{'text': self.away['Name']})
-            self.obsApi._set_input_settings(self.elements['HOME_POINTS'],{'text': str(self.home['Points'])})
-            self.obsApi._set_input_settings(self.elements['AWAY_POINTS'],{'text': str(self.away['Points'])})
-            self.obsApi._set_input_settings(self.elements['HOME_SET'],{'text': str(self.home['Sets'])})
-            self.obsApi._set_input_settings(self.elements['AWAY_SET'],{'text': str(self.away['Sets'])})
+            self.obsApi._set_input_settings(self.elements['HOME_NAME'],{'text': self.home.name})
+            self.obsApi._set_input_settings(self.elements['AWAY_NAME'],{'text': self.away.name})
+            self.obsApi._set_input_settings(self.elements['HOME_POINTS'],{'text': str(self.home.points)})
+            self.obsApi._set_input_settings(self.elements['AWAY_POINTS'],{'text': str(self.away.points)})
+            self.obsApi._set_input_settings(self.elements['HOME_SET'],{'text': str(self.home.sets)})
+            self.obsApi._set_input_settings(self.elements['AWAY_SET'],{'text': str(self.away.sets)})
             self.obsApi._set_input_settings(self.elements['HOME_STATS_PT'],{'text': str(self.stats['Total']['Home_percentage'])})
             self.obsApi._set_input_settings(self.elements['AWAY_STATS_PT'],{'text': str(self.stats['Total']['Away_percentage'])})
-            self.obsApi._set_input_settings(self.elements['HOME_STATS_ST'],{'text': str(self.stats['Total']['Home_points'])})
-            self.obsApi._set_input_settings(self.elements['AWAY_STATS_ST'],{'text': str(self.stats['Total']['Away_points'])})
+            self.obsApi._set_input_settings(self.elements['HOME_STATS_PuntosT'],{'text': str(self.stats['Total']['Home_points'])})
+            self.obsApi._set_input_settings(self.elements['AWAY_STATS_PuntosT'],{'text': str(self.stats['Total']['Away_points'])})
             for x in self.stats.keys():
                 if x != 'Total':
                     self.obsApi._set_input_settings(self.elements['HOME_STATS_P'+str(x.split('_')[1])],{'text': str(self.stats[x]['Home_percentage'])})
@@ -447,21 +458,21 @@ class Match:
                     self.obsApi._set_input_settings(self.elements['HOME_STATS_S'+str(x.split('_')[1])],{'text': str(self.stats[x]['Home_points'])})
                     self.obsApi._set_input_settings(self.elements['AWAY_STATS_S'+str(x.split('_')[1])],{'text': str(self.stats[x]['Away_points'])})
         except Exception as e:
-            print(e)
+            print("error",e)
             return e
 
 
 
     def _create_files(self):
         files = {
-                'Home': self.home['Name'],
+                'Home': self.home.name,
                 'Home_id': self.home['Id'],
-                'Home_points': self.home['Points'],
-                'Home_sets': self.home['Sets'],
-                'Away': self.away['Name'],
+                'Home_points': self.home.points,
+                'Home_sets': self.home.sets,
+                'Away': self.away.name,
                 'Away_id': self.away['Id'],
-                'Away_points': self.away['Points'],
-                'Away_sets': self.away['Sets'],
+                'Away_points': self.away.points,
+                'Away_sets': self.away.sets,
                 'Current_set': self.current_set,
                 }
         for file, value in files.items():
