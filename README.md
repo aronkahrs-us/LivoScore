@@ -1,7 +1,7 @@
 <h1 align="center"> LivoScore </h1> <br>
 <p align="center">
-  <a href="https://LivoScore.co/">
-    <img alt="LivoScore" title="LivoScore" src="" width="450">
+  <a href="">
+    <img alt="LivoScore" title="LivoScore" src="https://raw.githubusercontent.com/aronkahrs-us/LivoScore/main/assets/LivoScore.png?token=GHSAT0AAAAAAB5H2USR2OUSW5ZL6TZUFFJIZJMPETQ" width="450">
   </a>
 </p>
 
