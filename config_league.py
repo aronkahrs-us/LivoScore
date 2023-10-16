@@ -53,11 +53,11 @@ DOMAINS = {
 
 class LeagueConfig():
     def __init__(self):
-        T_league = [[sg.Text("Liga")]]
-        S_league = [[sg.Combo([x for x in DOMAINS], default_value='Elegir liga', key='-LEAGUE-',
+        T_league = [[sg.Text("League")]]
+        S_league = [[sg.Combo([x for x in DOMAINS], default_value='Select League', key='-LEAGUE-',
                             auto_size_text=True, enable_events=True, expand_x=True, expand_y=True, size=(30,10),readonly = True)]]
-        T_Save = [[sg.Text("Guardado", key="-SAVE_TXT-", visible=False)]]
-        B_Save= [[sg.Button("Guardar", key="-SAVE-")]]
+        T_Save = [[sg.Text("Saved", key="-SAVE_TXT-", visible=False)]]
+        B_Save= [[sg.Button("Save", key="-SAVE-")]]
         layout = [
                     [sg.Column(T_league, element_justification='c', expand_x=True, expand_y=True),sg.Column(S_league, element_justification='c', expand_x=True, expand_y=True)],
                     [sg.Column(B_Save, element_justification='c', expand_x=True, expand_y=True),sg.Column(T_Save, element_justification='c', expand_x=True, expand_y=True)]
@@ -67,7 +67,7 @@ class LeagueConfig():
         try:
             self.get_config()
         except Exception as e:
-            sg.Popup('Configurar', keep_on_top=True)
+            sg.Popup('Configure', keep_on_top=True)
 
         while True:
             event, values = self.window.read()
@@ -80,7 +80,7 @@ class LeagueConfig():
             
         self.window.close()
     def get_config(self):
-        with open('./Config/api_config.json', 'r') as openfile:
+        with open('./Config/league_config.json', 'r') as openfile:
             # Reading from json file
             config = json.load(openfile)
             self.window['-LEAGUE-'].update(value=list(DOMAINS.keys())[list(DOMAINS.values()).index(config['LEAGUE_URL'])], visible=True)
@@ -96,7 +96,7 @@ class LeagueConfig():
         
         # Serializing json
         json_object = json.dumps(dictionary, indent=4)
-        with open("./Config/api_config.json", "w") as outfile:
+        with open("./Config/league_config.json", "w") as outfile:
             outfile.write(json_object)
             self.window['-SAVE_TXT-'].update(visible=True)
             pass

@@ -20,7 +20,7 @@ class Match:
         self.window=window
         self.stats = Stats()
         try:
-            with open('./Config/api_config.json', 'r') as openfile:
+            with open('./Config/league_config.json', 'r') as openfile:
                 # Reading from json file
                 config = json.load(openfile)
                 self.league = config['LEAGUE']

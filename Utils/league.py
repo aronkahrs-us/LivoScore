@@ -8,7 +8,7 @@ class League:
     def __init__(self) -> None:
         ssl._create_default_https_context = ssl._create_unverified_context
         try:
-            with open('./Config/api_config.json', 'r') as openfile:
+            with open('./Config/league_config.json', 'r') as openfile:
                 # Reading from json file
                 config = json.load(openfile)
                 self.league = config['LEAGUE']

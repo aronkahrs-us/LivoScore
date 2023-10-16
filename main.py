@@ -15,17 +15,17 @@ class Main:
         DISPLAY_TIME_MILLISECONDS = 1000
 
         # All the stuff inside your self.window.
-        T_Local = [[sg.Text("Local", auto_size_text=True, key='-HOME-',
+        T_Local = [[sg.Text("Home", auto_size_text=True, key='-HOME-',
                         visible=False, expand_x=True, expand_y=True, justification='center')]]
-        T_Visita = [[sg.Text("Visita", auto_size_text=True,
+        T_Visita = [[sg.Text("Guest", auto_size_text=True,
                         key='-AWAY-', visible=False, expand_x=True, expand_y=True, justification='center')]]
-        B_Iniciar = [[sg.Button("Iniciar", key="-ST-", border_width=0, disabled=True)]]
+        B_Iniciar = [[sg.Button("Start", key="-ST-", border_width=0, disabled=True)]]
         B_Reload= [[sg.Button("🔄", key="-RELOAD-", button_color="#002B45")]]
         T_Error = [[sg.Text("", auto_size_text=True,
                             key='-ERROR-', visible=True, text_color="red", expand_x=True, expand_y=True, size=30, justification='center')]]
         T_Id = [
-            [sg.Text("Id de partido", text_color="white", justification="center")]]
-        I_Id = [[sg.Combo([], default_value='Cargando...', key='-ID-',
+            [sg.Text("Match ID", text_color="white", justification="center")]]
+        I_Id = [[sg.Combo([], default_value='Loading...', key='-ID-',
                             auto_size_text=True, enable_events=True, disabled=True, expand_x=True, expand_y=True, size=(30,10),readonly = True)]]
         layout = [
             [sg.Menu(menu_def, font=('Bebas', 15))],
@@ -58,7 +58,7 @@ class Main:
                     self.window['-ERROR-'].update("Falta configurar OBS o está cerrado", text_color='red', visible=True)
             elif event == 'Obs Config':  # if user closes self.window or clicks cancel
                 ObsConfig()
-            elif event == 'API Config':  # if user closes self.window or clicks cancel
+            elif event == 'League Config':  # if user closes self.window or clicks cancel
                 LeagueConfig()
             elif event == '-ID-' and self.values['-ID-'] != '':  # if user closes self.window or clicks cancel
                 self.window['-ST-'].update(disabled=False)
@@ -76,28 +76,28 @@ class Main:
         self.window.close()
     def list_matches(self):
         try:
-            with open('./Config/api_config.json', 'r') as openfile:
+            with open('./Config/league_config.json', 'r') as openfile:
                 # Reading from json file
                 config = json.load(openfile)
-            self.window['-ID-'].update(values=[],value='Cargando...', visible=True, disabled=True)
+            self.window['-ID-'].update(values=[],value='Loading...', visible=True, disabled=True)
             self.window['-RELOAD-'].update(disabled=True)
             self.matches = League().get_ready_matches()
             if self.matches == {}:
-                self.window['-ID-'].update(values=[],value='No hay partidos', visible=True, disabled=True)
+                self.window['-ID-'].update(values=[],value='No Matches Today', visible=True, disabled=True)
             else:
-                self.window['-ID-'].update(values=[self.matches[x] for x in self.matches],value='Selecionar partido', visible=True, disabled=False)
+                self.window['-ID-'].update(values=[self.matches[x] for x in self.matches],value='Select Match', visible=True, disabled=False)
             self.window['-RELOAD-'].update(disabled=False)
         except Exception as e:
             while 'window' not in locals()['self'].__dict__:
                 pass
             else:
                 print('OK')
-                self.window['-ERROR-'].update(value='Falta configurar', visible=True)
+                self.window['-ERROR-'].update(value='No configuration found', visible=True)
 
     def start_match(self):
         if Obs().test_connection() == "ERROR":
-            self.window['-ERROR-'].update("Falta configurar OBS o está cerrado", text_color='red', visible=True)
+            self.window['-ERROR-'].update("OBS is closed or not configured", text_color='red', visible=True)
         else:
-            self.window['-ERROR-'].update("Iniciando", text_color='green', visible=True)
+            self.window['-ERROR-'].update("Starting", text_color='green', visible=True)
             self.match=Match(list(self.matches.keys())[list(self.matches.values()).index(self.values['-ID-'])],self.window)
             threading.Thread(target=Court.start,args=self.match).start()

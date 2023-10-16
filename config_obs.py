@@ -26,7 +26,7 @@ class ObsConfig():
             self.get_config()
         except Exception as e:
             print(e)
-            sg.Popup('Configurar', keep_on_top=True)
+            sg.Popup('Configure', keep_on_top=True)
 
         while True:
             event, values = self.window.read()
