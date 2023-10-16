@@ -18,6 +18,13 @@ class Match:
         self.match_point = False
         self.window=window
         self.stats = {}
+        self.stats['Total'] = {
+            "Total_points": 0,
+            "Home_points": 0,
+            "Away_points": 0,
+            "Home_percentage": "0",
+            "Away_percentage": "0",
+        }
         try:
             with open('./Config/api_config.json', 'r') as openfile:
                 # Reading from json file
@@ -184,6 +191,7 @@ class Match:
         self.current_set = data['WonSetHome'] + data['WonSetGuest'] + 1
         if self.current_set > 5:
             self.current_set = 5
+        sets= ['Set{}Home','Set{}Guest']
         self.home = Team(data['HomeEmpty'],data['Home'],data['Set'+str(self.current_set)+'Home'],data['WonSetHome'],self._get_players(data['Home']))
         # self.home = {
         #     'Name': data['HomeEmpty'],
@@ -201,6 +209,18 @@ class Match:
         #     'Sets': data['WonSetGuest'],
         #     'Players': self._get_players(data['Guest'])
         # }
+        for i in range(1,6):
+            try:
+                set_total_points = data[sets[0].format(i)] + data[sets[1].format(i)]
+                self.stats['Set_'+str(i)] = {
+                    "Total_points": set_total_points,
+                    "Home_points": data[sets[0].format(i)],
+                    "Away_points": data[sets[1].format(i)],
+                    "Home_percentage": str(round((data[sets[0].format(i)]*100)/set_total_points)) + "%",
+                    "Away_percentage": str(round((data[sets[1].format(i)]*100)/set_total_points)) + "%",
+                }
+            except:
+                continue
         self.status = data['Status']
         self._update_stream()
         self._update_ui()
@@ -270,29 +290,32 @@ class Match:
                                 ' - ' + str(self.away.points), visible=True)
     
     def _test_make_statistics(self):
-        set_total_points = self.home.points + self.away.points
-        self.stats['Set_'+str(self.current_set)] = {
-            "Total_points": set_total_points,
-            "Home_points": self.home.points,
-            "Away_points": self.away.points,
-            "Home_percentage": str(round((self.home.points*100)/set_total_points)) + " %",
-            "Away_percentage": str(round((self.away.points*100)/set_total_points)) + " %",
-        }
-        self.stats['Total'] = {
-            "Total_points": 0,
-            "Home_points": 0,
-            "Away_points": 0,
-            "Home_percentage": "0",
-            "Away_percentage": "0",
-        }
-        for x in self.stats.keys():
-            if x != 'Total':
-                data=self.stats[x]
-                self.stats['Total']['Total_points'] += data['Total_points']
-                self.stats['Total']['Home_points'] += data['Home_points']
-                self.stats['Total']['Away_points'] += data['Away_points']
-        self.stats['Total']['Home_percentage'] = str(round((self.stats['Total']['Home_points']*100)/self.stats['Total']['Total_points'])) + " %"
-        self.stats['Total']['Away_percentage'] = str(round((self.stats['Total']['Away_points']*100)/self.stats['Total']['Total_points'])) + " %"
+        try:
+            set_total_points = self.home.points + self.away.points
+            self.stats['Set_'+str(self.current_set)] = {
+                "Total_points": set_total_points,
+                "Home_points": self.home.points,
+                "Away_points": self.away.points,
+                "Home_percentage": str(round((self.home.points*100)/set_total_points)) + "%",
+                "Away_percentage": str(round((self.away.points*100)/set_total_points)) + "%",
+            }
+            self.stats['Total'] = {
+                "Total_points": 0,
+                "Home_points": 0,
+                "Away_points": 0,
+                "Home_percentage": "0",
+                "Away_percentage": "0",
+            }
+            for x in self.stats.keys():
+                if x != 'Total':
+                    data=self.stats[x]
+                    self.stats['Total']['Total_points'] += data['Total_points']
+                    self.stats['Total']['Home_points'] += data['Home_points']
+                    self.stats['Total']['Away_points'] += data['Away_points']
+            self.stats['Total']['Home_percentage'] = str(round((self.stats['Total']['Home_points']*100)/self.stats['Total']['Total_points'])) + " %"
+            self.stats['Total']['Away_percentage'] = str(round((self.stats['Total']['Away_points']*100)/self.stats['Total']['Total_points'])) + " %"
+        except:
+            pass
 
     def _make_statistics(self):
         """makes all the stats of the match"""
