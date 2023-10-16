@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-from Utils import obs
+from Utils.obs import Obs
 from theme import *
 import json
 
@@ -49,7 +49,7 @@ class ObsConfig():
             self.window['-PASS-'].update(value=config['PASS'], visible=True)
 
     def test_config(self):
-        if obs.test_connection() != "ERROR":
+        if Obs().test_connection() != "ERROR":
             self.window['-SAVE_TXT-'].update(value="OK", text_color='green', visible=True)
         else:
             self.window['-SAVE_TXT-'].update(value="ERROR", text_color='red', visible=True)

@@ -79,27 +79,20 @@ class Main:
             with open('./Config/api_config.json', 'r') as openfile:
                 # Reading from json file
                 config = json.load(openfile)
-        except Exception:
-            while 'self.window' not in globals():
-                pass
-            else:
-                print('OK')
-                self.window['-ID-'].update(values=[],value='Falta configurar', visible=True, disabled=True)
-        try:
             self.window['-ID-'].update(values=[],value='Cargando...', visible=True, disabled=True)
             self.window['-RELOAD-'].update(disabled=True)
-        except:
-            print('Window not defined')
-        try:
             self.matches = League().get_ready_matches()
-            print(self.matches)
             if self.matches == {}:
                 self.window['-ID-'].update(values=[],value='No hay partidos', visible=True, disabled=True)
             else:
                 self.window['-ID-'].update(values=[self.matches[x] for x in self.matches],value='Selecionar partido', visible=True, disabled=False)
             self.window['-RELOAD-'].update(disabled=False)
-        except:
-            sg.Window("Livoscore - ERROR", icon=logo, font=("Bebas", 15), keep_on_top=True)
+        except Exception as e:
+            while 'window' not in locals()['self'].__dict__:
+                pass
+            else:
+                print('OK')
+                self.window['-ERROR-'].update(value='Falta configurar', visible=True)
 
     def start_match(self):
         if Obs().test_connection() == "ERROR":
@@ -108,60 +101,3 @@ class Main:
             self.window['-ERROR-'].update("Iniciando", text_color='green', visible=True)
             self.match=Match(list(self.matches.keys())[list(self.matches.values()).index(self.values['-ID-'])],self.window)
             threading.Thread(target=Court.start,args=self.match).start()
-            # match_id=list(self.matches.keys())[list(self.matches.values()).index(self.values['-ID-'])]
-            # self.window['-ERROR-'].update(visible=False)
-            # if api.get_status(match_id) == 2:
-            #     self.window['-ERROR-'].update("Ya terminó", text_color='yellow', visible=True)
-            # else:
-            #     api.get_logos(match_id)
-            #     api.statistics(match_id)
-            #     api.get_team(match_id, api.get_data(match_id)['Home_id'], "Home")
-            #     api.get_team(match_id, api.get_data(match_id)['Away_id'], "Away")
-            #     status = api.get_status(match_id)
-            #     i=0
-            #     show_error = False
-            #     if status == 0:
-            #         self.window['-ERROR-'].update("No ha comenzado", text_color='yellow', visible=True)
-            #         show_error = True
-            #     while status != 2:
-            #         self.window['-ID-'].update(disabled=True)
-            #         if status == 1 and show_error == True:
-            #             self.window['-ERROR-'].update(visible=False)
-            #             show_error = False
-            #         files = api.get_data(match_id)
-            #         self.window['-HOME-'].update(value=files['Home'] +
-            #                                 ' - ' + str(files['Home_points']), visible=True)
-            #         self.window['-AWAY-'].update(value=str(files['Away_points']) +
-            #                                 ' - ' + str(files['Away']), visible=True)
-            #         print('SERVE:',match_id, files['Current_set'])
-            #         if api.serve(match_id, files['Current_set']):
-            #             self.obsApi.serve('H')
-            #         else:
-            #             self.obsApi.serve('A')
-
-            #         if api.time_out(match_id, files['Current_set']) and points != int(files['Away_points']) + int(files['Home_points']):
-            #             points = int(files['Away_points']) + int(files['Home_points'])
-            #             threading.Thread(target=self.obsApi.time_out, daemon=True).start()
-
-            #         api.set_point(files['Home_points'], files['Away_points'], files['Home_sets'], files['Away_sets'], files['Current_set'])
-
-            #         substitution_match = api.substitution(match_id, files['Current_set'])
-            #         print('SUBSTITUTION:',substitution_match)
-            #         if points_substitution != int(files['Away_points']) + int(files['Home_points']):
-            #             if substitution_match == 'Home':
-            #                 points_substitution = int(files['Away_points']) + int(files['Home_points'])
-            #                 threading.Thread(target=self.obsApi.substitution, args=("H"), daemon=True).start()
-            #             elif substitution_match == 'Away':
-            #                 points_substitution = int(files['Away_points']) + int(files['Home_points'])
-            #                 threading.Thread(target=self.obsApi.time_out, args=("A"), daemon=True).start()
-            #         if i == 30:
-            #             api.statistics(match_id)
-            #             i=0
-            #         i=i+1
-            #         status = api.get_status(match_id)
-            #         time.sleep(0.5)
-            #     else:
-            #         self.window['-ID-'].update(disabled=False)
-            #         self.window['-ERROR-'].update("Ya terminó", text_color='yellow', visible=True)
-            #         self.window['-HOME-'].update(visible=False)
-            #         self.window['-AWAY-'].update(visible=False)

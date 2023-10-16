@@ -6,15 +6,14 @@ DOMAINS = {
     "LIVOSUR": "https://livosur-web.dataproject.com",
     "VOLLEYBALL DANMARK": "https://dvbf-web.dataproject.com",
     "Baltic League": "https://bvl-web.dataproject.com",
-    "Federacion del Voleibol Argentino": "https://aclav-web.dataproject.com",
+    "Asociacion de Clubes Liga Argentina de Voleibol": "https://aclav-web.dataproject.com",
+    "Federacion del Voleibol Argentino": "https://feva-web.dataproject.com",
     "Federacion Metropolitana de Voleibol": "https://fmv-web.dataproject.com",
     "National Volleyball League": "https://bvf-web.dataproject.com",
-    "Lotto": "https://www.euromillionsvolleyleague.be/",
     "NLB": "https://swi-web.dataproject.com",
-    "Federacion Metropolitana de Voleibol":"https://fmv-web.dataproject.com",
     "Slovenská Volejbalová Federácia":"https://svf-web.dataproject.com",
     "Malta Volleyball Association":"https://mva-web.dataproject.com",
-    "OZS":"https://mva-web.dataproject.com",
+    "OZS":"https://ozs-web.dataproject.com",
     "Real Federación Española de Voleibol":"https://rfevb-web.dataproject.com",
     "Svensk Volleyboll":"https://svbf-web.dataproject.com",
     "Türkiye Voleybol Federasyonu":"https://tvf-web.dataproject.com",
@@ -26,6 +25,30 @@ DOMAINS = {
     "Czech Volleyball Federation":"https://cvf-web.dataproject.com",
     "Lotto":"https://bevl-web.dataproject.com",
     "Confederação Brasileira de Voleibol":"https://cbv-web.dataproject.com",
+    "LNV":"https://lnv-web.dataproject.com",
+    "Qatar Volleyball Association": "https://qva-web.dataproject.com",
+    "Lithuanian Volleyball Federation":"https://lvf-web.dataproject.com",
+    "Israeli Volleyball Association":"https://iva-web.dataproject.com",
+    "Federata Shqiptare e Volejbollit":"https://fshv-web.dataproject.com",
+    "Federația Română de Volei":"https://frv-web.dataproject.com",
+    "Professional Volleyball League of Ukraine":"https://pvlu-web.dataproject.com",
+    "Federacion Peruana de Voley":"https://fpdv-web.dataproject.com",
+    "BIH Volley": "https://osbih-web.dataproject.com",
+    "Cyprus Volleyball Association": "https://kop-web.dataproject.com",
+    "HELLENIC VOLLEYBALL FEDERATION": "https://eope-web.dataproject.com",
+    "Philippine Superliga": "https://psl-web.dataproject.com",
+    "ODBOJKAŠKI SAVEZ SRBIJE": "https://ossrb-web.dataproject.com",
+    "Federação Portuguesa de Voleibol": "https://fpv-web.dataproject.com",
+    "Estonian Volleyball Federation": "https://evf-web.dataproject.com",
+    "Hellenic Volleyball League": "https://hvl-web.dataproject.com",
+    "Volleyball Federation of Republic of Kazakhstan": "https://vfrk-web.dataproject.com",
+    "Federata e Volejbollit e Kosovës": "https://fvkos-web.dataproject.com",
+    "Ukrainian Volleyball Federation": "https://uvf-web.dataproject.com",
+    "Croatian Volleyball Federation": "https://hos-web.dataproject.com",
+    "Federación Cordobesa de Voleibol": "https://fcv-web.dataproject.com",
+    "Latvijas volejbola federācija": "https://latvf-web.dataproject.com",
+    "Hungarian Volleyball Federation": "https://hvf-web.dataproject.com",
+    "Middle European League": "https://mevza-web.dataproject.com"
     }
 
 class LeagueConfig():
@@ -37,7 +60,6 @@ class LeagueConfig():
         B_Save= [[sg.Button("Guardar", key="-SAVE-")]]
         layout = [
                     [sg.Column(T_league, element_justification='c', expand_x=True, expand_y=True),sg.Column(S_league, element_justification='c', expand_x=True, expand_y=True)],
-                    [sg.HorizontalSeparator(pad=(10,10))],
                     [sg.Column(B_Save, element_justification='c', expand_x=True, expand_y=True),sg.Column(T_Save, element_justification='c', expand_x=True, expand_y=True)]
                 ]
         self.window = sg.Window("Livoscore - League Config", icon=logo,

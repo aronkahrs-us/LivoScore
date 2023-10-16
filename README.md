@@ -60,5 +60,3 @@ A few of the things you can do with LivoScore:
 
 
 ## Acknowledgments
-
-Thanks to [JetBrains](https://www.jetbrains.com) for supporting us with a [free Open Source License](https://www.jetbrains.com/buy/opensource).

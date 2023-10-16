@@ -21,80 +21,6 @@ class ElementsConfig():
                             auto_size_text=True, enable_events=True, disabled=True, expand_x=True, expand_y=True,readonly = True)]]
         T_Save = [[sg.Text("Saved", key="-SAVE_TXT-", visible=False)]]
         B_Save = [[sg.Button("Save", key="-SAVE-")]]
-        # main_layout = [
-        #     [sg.Column(T_scn, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_scn, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.HorizontalSeparator(pad=(10,10))],
-        #     [sg.Column(T_elm10, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm10, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm11, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm11, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm1, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm1, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm2, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm2, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm3, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm3, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm4, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm4, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm8, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm8, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm9, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm9, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm12, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm12, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm13, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm13, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm14, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm14, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm15, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm15, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm5, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm5, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm6, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm6, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm7, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm7, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(B_Save, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_Save, element_justification='left', expand_x=True, expand_y=True)]
-        # ]
-        # stats_layout = [
-        #     [sg.Column(T_scn, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_scn, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.HorizontalSeparator(pad=(10,10))],
-        #     [sg.Column(T_elm10, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm10, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm11, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm11, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm1, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm1, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm2, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm2, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm3, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm3, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm4, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm4, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm8, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm8, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm9, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm9, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm12, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm12, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm13, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm13, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm14, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm14, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm15, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm15, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm5, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm5, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_elm6, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm6, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(T_elm7, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(S_elm7, element_justification='left', expand_x=True, expand_y=True)],
-        #     [sg.Column(B_Save, element_justification='left', expand_x=True, expand_y=True),
-        #     sg.Column(T_Save, element_justification='left', expand_x=True, expand_y=True)]
-        # ]
         t_main_elem = ["Name","Logo","Points","Sets","Serve","Substitution"]
         t_stats_elem = ["Points %","Total Points","Set 1 %", "Set 1 Points","Set 2 %", "Set 2 Points",
                         "Set 3 %", "Set 3 Points","Set 4 %", "Set 4 Points","Set 5 %", "Set 5 Points"]
@@ -234,21 +160,3 @@ class ElementsConfig():
             with open("./Config/elem_config.json", "w") as outfile:
                 outfile.write(json_object)
                 self.window['-SAVE_TXT-'].update(visible=True)
-                                  
-def test():
-    main_elem=["Home Name","Away Name","Home Logo","Away Logo","Home Points","Away Points","Home Sets","Away Sets","Home Serve","Away Serve","Home Substitution","Away Substitution"]
-    stats_elem=["Home Points %","Away Points %"]
-    t_main_elem = ["Name","Logo","Points","Sets","Serve","Substitution"]
-    t_stats_elem = ["Points %","Total Points","Set {} %", "Set {} Points"]
-    main_layout = []
-    n=1
-    for i in t_main_elem:
-        print("Home "+i,n)
-        main_layout.append([sg.Column([[sg.Text("Home "+i, expand_x=True, expand_y=True)]], element_justification='left', expand_x=True, expand_y=True),
-        sg.Column([[sg.Combo([], default_value='Select Element', key="-Elem{}-".format(n),
-                        auto_size_text=True, enable_events=True, disabled=True, expand_x=True, expand_y=True,readonly = True)]], element_justification='left', expand_x=True, expand_y=True),
-        sg.Column([[sg.Text("Away "+i, expand_x=True, expand_y=True)]], element_justification='left', expand_x=True, expand_y=True),
-        sg.Column([[sg.Combo([], default_value='Select Element', key="-Elem{}-".format(n+1),
-                        auto_size_text=True, enable_events=True, disabled=True, expand_x=True, expand_y=True,readonly = True)]], element_justification='left', expand_x=True, expand_y=True)])
-        n+=2
-    print(main_layout)

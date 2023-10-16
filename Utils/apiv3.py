@@ -2,8 +2,8 @@ import requests
 import time
 import json
 import os
-import shutil
 import threading
+import PySimpleGUI as sg
 from .team import Team
 from .obs import Obs
 from .stats import Stats
@@ -25,8 +25,8 @@ class Match:
                 config = json.load(openfile)
                 self.league = config['LEAGUE']
                 self.league_url = config['LEAGUE_URL']
-        except:
-            self.league = ""
+        except Exception as e:
+            sg.popup_error(f'AN EXCEPTION OCCURRED!', e)
         try:
             with open('./Config/elem_config.json', 'r') as openfile:
                 # Reading from json file
@@ -451,40 +451,9 @@ class Match:
             print("error",e)
             return e
 
-
-
-    def _create_files(self):
-        files = {
-                'Home': self.home.name,
-                'Home_id': self.home['Id'],
-                'Home_points': self.home.points,
-                'Home_sets': self.home.sets,
-                'Away': self.away.name,
-                'Away_id': self.away['Id'],
-                'Away_points': self.away.points,
-                'Away_sets': self.away.sets,
-                'Current_set': self.current_set,
-                }
-        for file, value in files.items():
-            fw = open(file+'.txt', 'w')
-            fw.write(str(value))
-            fw.close()
-    
-    def _delete_files(self):
-        files = [
-            'Home',
-            'Away']
-        for file in files:
-            try:
-                os.remove(file+".jpg")
-            except:
-                continue
-        shutil.rmtree('stats')
-
     def _stop(self) -> bool:
         self.is_running=False
         self.status=2
-        self._delete_files()
         self._update_ui()
 
 #Match(5953,'livosur')
