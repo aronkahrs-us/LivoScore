@@ -1,6 +1,7 @@
 from theme import *
 import PySimpleGUI as sg
 import json
+import os
 
 DOMAINS = {
     "LIVOSUR": "https://livosur-web.dataproject.com",
@@ -96,7 +97,9 @@ class LeagueConfig():
         
         # Serializing json
         json_object = json.dumps(dictionary, indent=4)
-        with open("./Config/league_config.json", "w") as outfile:
+        filename = "./Config/league_config.json"
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with open(filename, "w") as outfile:
             outfile.write(json_object)
             self.window['-SAVE_TXT-'].update(visible=True)
             pass

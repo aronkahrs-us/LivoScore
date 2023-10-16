@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 from Utils import obs
 from theme import *
 import json
-
+import os
 
 class ElementsConfig():
 
@@ -58,16 +58,9 @@ class ElementsConfig():
                 sg.Column(T_Save, element_justification='left', expand_x=True, expand_y=True)]]
         self.window = sg.Window("Livoscore - Config", icon=logo,
                         layout=layout, font=("Bebas", 15), auto_size_text=True, auto_size_buttons=True, modal=True, resizable=True, finalize=True, size=(800,600))
-        width, height = sg.Window.get_screen_size()
-        # try:
-        #     self.get_config()
-        # except Exception as e:
-        #     print(e)
-        #     sg.Popup('Configurar', keep_on_top=True)
         self.get_config()
         while True:
             event, values = self.window.read()
-            print(event, values)
             if event == '-SCENE-':
                 self.get_elements(values['-SCENE-'])
             elif event == '-SAVE-':
@@ -78,23 +71,27 @@ class ElementsConfig():
         self.window.close()
 
     def get_config(self):
-        with open('./Config/elem_config.json', 'r') as openfile:
-            # Reading from json file
-            config = json.load(openfile)
-            items = self.get_elements(config['SCENE'])
-            x = 1
-            if items != "ERROR":
-                for key in config:
-                    if key == "SCENE":
-                        self.window['-'+key+'-'].update(value=config[key],
-                                                    visible=True)
-                    else:
-                        #self.window['-Elm'+str(x)+'-'].update(value=list(items.keys())[list(items.values()).index(config[key])], visible=True, disabled=False)
-                        if type(config[key]) == str:
-                            self.window['-Elm'+str(x)+'-'].update(value=config[key], visible=True, disabled=False)
+        try:
+            with open('./Config/elem_config.json', 'r') as openfile:
+                # Reading from json file
+                config = json.load(openfile)
+                items = self.get_elements(config['SCENE'])
+                x = 1
+                if items != "ERROR":
+                    for key in config:
+                        if key == "SCENE":
+                            self.window['-'+key+'-'].update(value=config[key],
+                                                        visible=True)
                         else:
-                            self.window['-Elm'+str(x)+'-'].update(value=[name for name, element in items.items() if element.get('id') == config[key]][0], visible=True, disabled=False)
+                            #self.window['-Elm'+str(x)+'-'].update(value=list(items.keys())[list(items.values()).index(config[key])], visible=True, disabled=False)
+                            if type(config[key]) == str:
+                                self.window['-Elm'+str(x)+'-'].update(value=config[key], visible=True, disabled=False)
+                            else:
+                                self.window['-Elm'+str(x)+'-'].update(value=[name for name, element in items.items() if element.get('id') == config[key]][0], visible=True, disabled=False)
                         x = x+1
+        except Exception as e:
+            print(e)
+            sg.Popup('Configurar', keep_on_top=True)
 
     def get_elements(self,scene):
         items = obs.Obs().get_scene_items(scene)
@@ -103,7 +100,7 @@ class ElementsConfig():
             for x in items:
                 elements.append(x)
             for x in range(1, self.n+3):
-                self.window['-Elm'+str(x)+'-'].update(values=elements,
+                self.window['-Elm'+str(x)+'-'].update(value="Select",values=elements,
                                                  visible=True, disabled=False)
         return items
 
@@ -157,6 +154,8 @@ class ElementsConfig():
 
             # Serializing json
             json_object = json.dumps(dictionary, indent=4)
-            with open("./Config/elem_config.json", "w") as outfile:
+            filename ="./Config/elem_config.json"
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+            with open(filename, "w") as outfile:
                 outfile.write(json_object)
                 self.window['-SAVE_TXT-'].update(visible=True)

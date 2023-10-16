@@ -8,10 +8,13 @@ class Obs:
             with open('./Config/obs_config.json', 'r') as openfile:
                 # Reading from json file
                 self.connect = json.load(openfile)
+            self.client = obs.ReqClient(host=self.connect['IP'], port=self.connect['PORT'], password=self.connect['PASS'])
+        except:
+            pass
+        try:
             with open('./Config/elem_config.json', 'r') as openfile:
                 # Reading from json file
                 self.scene_data = json.load(openfile)
-            self.client = obs.ReqClient(host=self.connect['IP'], port=self.connect['PORT'], password=self.connect['PASS'])
         except:
             pass
         
@@ -20,6 +23,14 @@ class Obs:
         try:
             self.client = obs.ReqClient(host=self.connect['IP'], port=self.connect['PORT'], password=self.connect['PASS'])
             return self.client.get_version().obs_version
+        except Exception as e:
+            print(e)
+            return "ERROR"
+    
+    def test_connection_params(self,ip,port,passw) -> str:
+        try:
+            client = obs.ReqClient(host=ip, port=port, password=passw)
+            return client.get_version().obs_version
         except Exception as e:
             print(e)
             return "ERROR"

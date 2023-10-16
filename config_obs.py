@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 from Utils.obs import Obs
 from theme import *
 import json
+import os
 
 class ObsConfig():
     def __init__(self) -> None:
@@ -30,7 +31,6 @@ class ObsConfig():
 
         while True:
             event, values = self.window.read()
-            print(event, values)
             if event == '-SAVE-':
                 self.save_config()
             elif event == '-TEST-':
@@ -49,7 +49,8 @@ class ObsConfig():
             self.window['-PASS-'].update(value=config['PASS'], visible=True)
 
     def test_config(self):
-        if Obs().test_connection() != "ERROR":
+        event, values = self.window.read()
+        if Obs().test_connection_params(values['-IP-'],values['-PORT-'],values['-PASS-']) != "ERROR":
             self.window['-SAVE_TXT-'].update(value="OK", text_color='green', visible=True)
         else:
             self.window['-SAVE_TXT-'].update(value="ERROR", text_color='red', visible=True)
@@ -65,6 +66,8 @@ class ObsConfig():
         
         # Serializing json
         json_object = json.dumps(dictionary, indent=4)
-        with open("./Config/obs_config.json", "w") as outfile:
+        filename ="./Config/obs_config.json"
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with open(filename, "w") as outfile:
             outfile.write(json_object)
             self.window['-SAVE_TXT-'].update('Saved', text_color='white', visible=True)
