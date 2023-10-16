@@ -1,3 +1,0 @@
-([('LivoScore',
-   '/Users/aronkahrs/Desktop/LivoScore/release/LivoScore',
-   'EXECUTABLE')],)
