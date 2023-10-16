@@ -6,6 +6,7 @@ import shutil
 import threading
 from .team import Team
 from .obs import Obs
+from .stats import Stats
 from bs4 import BeautifulSoup
 from sseclient import SSEClient
 
@@ -17,14 +18,7 @@ class Match:
         self.set_point = False
         self.match_point = False
         self.window=window
-        self.stats = {}
-        self.stats['Total'] = {
-            "Total_points": 0,
-            "Home_points": 0,
-            "Away_points": 0,
-            "Home_percentage": "0",
-            "Away_percentage": "0",
-        }
+        self.stats = Stats()
         try:
             with open('./Config/api_config.json', 'r') as openfile:
                 # Reading from json file
@@ -191,36 +185,10 @@ class Match:
         self.current_set = data['WonSetHome'] + data['WonSetGuest'] + 1
         if self.current_set > 5:
             self.current_set = 5
-        sets= ['Set{}Home','Set{}Guest']
         self.home = Team(data['HomeEmpty'],data['Home'],data['Set'+str(self.current_set)+'Home'],data['WonSetHome'],self._get_players(data['Home']))
-        # self.home = {
-        #     'Name': data['HomeEmpty'],
-        #     'Id': data['Home'],
-        #     'Points': data['Set'+str(self.current_set)+'Home'],
-        #     'Sets': data['WonSetHome'],
-        #     'Players': self._get_players(data['Home'])
-        # }
 
         self.away = Team(data['GuestEmpty'],data['Guest'],data['Set'+str(self.current_set)+'Guest'],data['WonSetGuest'],self._get_players(data['Guest']))
-        # self.away = {
-        #     'Name': data['GuestEmpty'],
-        #     'Id': data['Guest'],
-        #     'Points': data['Set'+str(self.current_set)+'Guest'],
-        #     'Sets': data['WonSetGuest'],
-        #     'Players': self._get_players(data['Guest'])
-        # }
-        for i in range(1,6):
-            try:
-                set_total_points = data[sets[0].format(i)] + data[sets[1].format(i)]
-                self.stats['Set_'+str(i)] = {
-                    "Total_points": set_total_points,
-                    "Home_points": data[sets[0].format(i)],
-                    "Away_points": data[sets[1].format(i)],
-                    "Home_percentage": str(round((data[sets[0].format(i)]*100)/set_total_points)) + "%",
-                    "Away_percentage": str(round((data[sets[1].format(i)]*100)/set_total_points)) + "%",
-                }
-            except:
-                continue
+        self.stats._initiate(data,self.current_set)
         self.status = data['Status']
         self._update_stream()
         self._update_ui()
@@ -291,29 +259,29 @@ class Match:
     
     def _test_make_statistics(self):
         try:
-            set_total_points = self.home.points + self.away.points
-            self.stats['Set_'+str(self.current_set)] = {
-                "Total_points": set_total_points,
-                "Home_points": self.home.points,
-                "Away_points": self.away.points,
-                "Home_percentage": str(round((self.home.points*100)/set_total_points)) + "%",
-                "Away_percentage": str(round((self.away.points*100)/set_total_points)) + "%",
-            }
-            self.stats['Total'] = {
-                "Total_points": 0,
-                "Home_points": 0,
-                "Away_points": 0,
-                "Home_percentage": "0",
-                "Away_percentage": "0",
-            }
-            for x in self.stats.keys():
-                if x != 'Total':
-                    data=self.stats[x]
-                    self.stats['Total']['Total_points'] += data['Total_points']
-                    self.stats['Total']['Home_points'] += data['Home_points']
-                    self.stats['Total']['Away_points'] += data['Away_points']
-            self.stats['Total']['Home_percentage'] = str(round((self.stats['Total']['Home_points']*100)/self.stats['Total']['Total_points'])) + " %"
-            self.stats['Total']['Away_percentage'] = str(round((self.stats['Total']['Away_points']*100)/self.stats['Total']['Total_points'])) + " %"
+            self.stats._update(self.home.points,self.away.points,self.current_set)
+            # self.stats['Set_'+str(self.current_set)] = {
+            #     "Total_points": set_total_points,
+            #     "Home_points": self.home.points,
+            #     "Away_points": self.away.points,
+            #     "Home_percentage": str(round((self.home.points*100)/set_total_points)) + "%",
+            #     "Away_percentage": str(round((self.away.points*100)/set_total_points)) + "%",
+            # }
+            # self.stats['Total'] = {
+            #     "Total_points": 0,
+            #     "Home_points": 0,
+            #     "Away_points": 0,
+            #     "Home_percentage": "0",
+            #     "Away_percentage": "0",
+            # }
+            # for x in self.stats.keys():
+            #     if x != 'Total':
+            #         data=self.stats[x]
+            #         self.stats['Total']['Total_points'] += data['Total_points']
+            #         self.stats['Total']['Home_points'] += data['Home_points']
+            #         self.stats['Total']['Away_points'] += data['Away_points']
+            # self.stats['Total']['Home_percentage'] = str(round((self.stats['Total']['Home_points']*100)/self.stats['Total']['Total_points'])) + " %"
+            # self.stats['Total']['Away_percentage'] = str(round((self.stats['Total']['Away_points']*100)/self.stats['Total']['Total_points'])) + " %"
         except:
             pass
 
@@ -470,16 +438,15 @@ class Match:
             self.obsApi._set_input_settings(self.elements['AWAY_POINTS'],{'text': str(self.away.points)})
             self.obsApi._set_input_settings(self.elements['HOME_SET'],{'text': str(self.home.sets)})
             self.obsApi._set_input_settings(self.elements['AWAY_SET'],{'text': str(self.away.sets)})
-            self.obsApi._set_input_settings(self.elements['HOME_STATS_PT'],{'text': str(self.stats['Total']['Home_percentage'])})
-            self.obsApi._set_input_settings(self.elements['AWAY_STATS_PT'],{'text': str(self.stats['Total']['Away_percentage'])})
-            self.obsApi._set_input_settings(self.elements['HOME_STATS_PuntosT'],{'text': str(self.stats['Total']['Home_points'])})
-            self.obsApi._set_input_settings(self.elements['AWAY_STATS_PuntosT'],{'text': str(self.stats['Total']['Away_points'])})
-            for x in self.stats.keys():
-                if x != 'Total':
-                    self.obsApi._set_input_settings(self.elements['HOME_STATS_P'+str(x.split('_')[1])],{'text': str(self.stats[x]['Home_percentage'])})
-                    self.obsApi._set_input_settings(self.elements['AWAY_STATS_P'+str(x.split('_')[1])],{'text': str(self.stats[x]['Away_percentage'])})
-                    self.obsApi._set_input_settings(self.elements['HOME_STATS_S'+str(x.split('_')[1])],{'text': str(self.stats[x]['Home_points'])})
-                    self.obsApi._set_input_settings(self.elements['AWAY_STATS_S'+str(x.split('_')[1])],{'text': str(self.stats[x]['Away_points'])})
+            self.obsApi._set_input_settings(self.elements['HOME_STATS_PT'],{'text': str(self.stats.total['Home_percentage'])})
+            self.obsApi._set_input_settings(self.elements['AWAY_STATS_PT'],{'text': str(self.stats.total['Away_percentage'])})
+            self.obsApi._set_input_settings(self.elements['HOME_STATS_PuntosT'],{'text': str(self.stats.total['Home_points'])})
+            self.obsApi._set_input_settings(self.elements['AWAY_STATS_PuntosT'],{'text': str(self.stats.total['Away_points'])})
+            for x in self.stats.sets.keys():
+                self.obsApi._set_input_settings(self.elements['HOME_STATS_P'+str(x.split('_')[1])],{'text': str(self.stats.sets[x]['Home_percentage'])})
+                self.obsApi._set_input_settings(self.elements['AWAY_STATS_P'+str(x.split('_')[1])],{'text': str(self.stats.sets[x]['Away_percentage'])})
+                self.obsApi._set_input_settings(self.elements['HOME_STATS_S'+str(x.split('_')[1])],{'text': str(self.stats.sets[x]['Home_points'])})
+                self.obsApi._set_input_settings(self.elements['AWAY_STATS_S'+str(x.split('_')[1])],{'text': str(self.stats.sets[x]['Away_points'])})
         except Exception as e:
             print("error",e)
             return e
