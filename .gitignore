@@ -2,9 +2,11 @@
 /livoscore.ico
 /Livoscore.psd
 /Livoscore.spec
+/.DS_Store
 /stats
 /__pycache__
 /Utils/__pycache__
+/Utils/.DS_Store
 /psc_LivoScore_tmp/LivoScore
 /release
 /build
