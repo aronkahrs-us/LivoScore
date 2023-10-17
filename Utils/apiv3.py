@@ -10,136 +10,140 @@ from .stats import Stats
 from bs4 import BeautifulSoup
 from sseclient import SSEClient
 
+
 class Match:
-    def __init__(self,m_id,window):
-        self.m_id=int(m_id)
+    def __init__(self, m_id, window):
+        self.m_id = int(m_id)
         self.is_running = True
         self.obsApi = Obs()
         self.set_point = False
         self.match_point = False
-        self.window=window
+        self.window = window
         self.stats = Stats()
         try:
-            with open('./Config/league_config.json', 'r') as openfile:
+            with open("./Config/league_config.json", "r") as openfile:
                 # Reading from json file
                 config = json.load(openfile)
-                self.league = config['LEAGUE']
-                self.league_url = config['LEAGUE_URL']
+                self.league = config["LEAGUE"]
+                self.league_url = config["LEAGUE_URL"]
         except Exception as e:
-            sg.popup_error(f'AN EXCEPTION OCCURRED!', e)
+            sg.popup_error(f"AN EXCEPTION OCCURRED!", e)
         try:
-            with open('./Config/elem_config.json', 'r') as openfile:
+            with open("./Config/elem_config.json", "r") as openfile:
                 # Reading from json file
                 self.elements = json.load(openfile)
         except:
             self.elements = {}
         self._get_credentials()
         self.cookies = {
-        'ARRAffinitySameSite': 'd4cf45d89d11a6d9b07a5dbd364ea4432ecfd8782dd6765a42a25cf772133186',
+            "ARRAffinitySameSite": "d4cf45d89d11a6d9b07a5dbd364ea4432ecfd8782dd6765a42a25cf772133186",
         }
         self.headers = {
-            'Accept': 'text/plain, */*; q=0.01',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Connection': 'keep-alive',
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'Origin': self.league_url,
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'cross-site',
+            "Accept": "text/plain, */*; q=0.01",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": self.league_url,
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "cross-site",
         }
         self.negotiate()
         threading.Thread(target=self.connect).start()
-        #self.connect()
+        # self.connect()
 
     def negotiate(self):
-
         params = {
-            'clientProtocol': '1.5',
-            'connectionData': '[{"name":"signalrlivehubfederations"}]',
-            '_': str(round(time.time() * 1000)),
+            "clientProtocol": "1.5",
+            "connectionData": '[{"name":"signalrlivehubfederations"}]',
+            "_": str(round(time.time() * 1000)),
         }
 
         response = requests.get(
-            'https://dataprojectservicesignalr.azurewebsites.net/signalr/negotiate',
+            "https://dataprojectservicesignalr.azurewebsites.net/signalr/negotiate",
             params=params,
             cookies=self.cookies,
             headers=self.headers,
         ).json()
-        self.token= response['ConnectionToken']
+        self.token = response["ConnectionToken"]
 
     def connect(self):
         headers = {
-            'Accept': 'text/event-stream',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Cache-Control': 'no-cache',
-            'Connection': 'keep-alive',
-            'Origin': self.league_url,
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'cross-site',
+            "Accept": "text/event-stream",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "Origin": self.league_url,
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "cross-site",
         }
 
         params = {
-            'transport': 'serverSentEvents',
-            'clientProtocol': '1.5',
-            'connectionToken': self.token,
-            'connectionData': '[{"name":"signalrlivehubfederations"}]',
-            'tid': '1',
+            "transport": "serverSentEvents",
+            "clientProtocol": "1.5",
+            "connectionToken": self.token,
+            "connectionData": '[{"name":"signalrlivehubfederations"}]',
+            "tid": "1",
         }
 
         # Create an SSE clients
         messages = SSEClient(
-        'https://dataprojectservicesignalr.azurewebsites.net/signalr/connect',
-        params=params,
-        cookies=self.cookies,
-        headers=headers,
+            "https://dataprojectservicesignalr.azurewebsites.net/signalr/connect",
+            params=params,
+            cookies=self.cookies,
+            headers=headers,
         )
         self.start()
         self.send()
         # Iterate through SSE events
-        x=0
+        x = 0
         for msg in messages:
             if self.is_running == False:
-                print('STOP')
+                print("STOP")
                 break
             try:
-                data=msg.data.replace("'","\"")
-                if data != 'initialized' and data != '{}':
+                data = msg.data.replace("'", '"')
+                if data != "initialized" and data != "{}":
                     data = json.loads(data)
                     try:
-                        print('___________')
-                        print(data["M"][0]["M"])
                         if data["M"][0]["M"] == "refreshPlayByPlayData":
-                            self.rally=data["M"][0]["A"][0][-1]
-                            self.serve=data["M"][0]["A"][0][-1]['Team']
-                            self.action=data["M"][0]["A"][0][-1]['RallyT']
-                            self.skill=data["M"][0]["A"][0][-1]['Skill']
+                            self.rally = data["M"][0]["A"][0][-1]
+                            self.serve = data["M"][0]["A"][0][-1]["Team"]
+                            self.action = data["M"][0]["A"][0][-1]["RallyT"]
+                            self.skill = data["M"][0]["A"][0][-1]["Skill"]
                             if self.action == 0 or self.action == 1:
-                                threading.Thread(target=self.obsApi.serve,args=self.serve).start()
+                                threading.Thread(
+                                    target=self.obsApi.serve, args=self.serve
+                                ).start()
                             elif self.action == 2:
-                                threading.Thread(target=self.obsApi.substitution, args=self.serve).start()
+                                threading.Thread(
+                                    target=self.obsApi.substitution, args=self.serve
+                                ).start()
                             elif self.action == 3:
                                 threading.Thread(target=self.obsApi.time_out).start()
-                        elif data["M"][0]["M"] == "updateMatchSetData_ES" or data["M"][0]["M"] == "updateMatchSetData_DV":
-                            self.current_set=data["M"][0]["A"][0]['SN']
-                            self.home.points=data["M"][0]["A"][0]['HP']
-                            self.away.points=data["M"][0]["A"][0]['GP']
-                        elif data["M"][0]["M"] == "updateMatchScoreData_ES" or data["M"][0]["M"] == "updateMatchScoreData_DV":
-                            self.home.sets=data["M"][0]["A"][0]['H']
-                            self.away.sets=data["M"][0]["A"][0]['G']
-                            self.status=data["M"][0]["A"][0]["S"]
+                        elif (
+                            data["M"][0]["M"] == "updateMatchSetData_ES"
+                            or data["M"][0]["M"] == "updateMatchSetData_DV"
+                        ):
+                            self.current_set = data["M"][0]["A"][0]["SN"]
+                            self.home.points = data["M"][0]["A"][0]["HP"]
+                            self.away.points = data["M"][0]["A"][0]["GP"]
+                        elif (
+                            data["M"][0]["M"] == "updateMatchScoreData_ES"
+                            or data["M"][0]["M"] == "updateMatchScoreData_DV"
+                        ):
+                            self.home.sets = data["M"][0]["A"][0]["H"]
+                            self.away.sets = data["M"][0]["A"][0]["G"]
+                            self.status = data["M"][0]["A"][0]["S"]
                     finally:
                         if self.status == 2:
                             self._stop()
                         threading.Thread(target=self._set_point).start()
-                        threading.Thread(target=self._test_make_statistics).start()
+                        threading.Thread(target=self._make_statistics).start()
                         threading.Thread(target=self._update_stream).start()
                         threading.Thread(target=self._update_ui).start()
-                        # x=x+1
-                        # if x == 15:
-                        #     threading.Thread(target=self._make_statistics).start()
-                        #     x=0
-                            
+
             except Exception as e:
                 print(e)
                 pass
@@ -147,15 +151,15 @@ class Match:
 
     def start(self):
         params = {
-            'transport': 'serverSentEvents',
-            'clientProtocol': '1.5',
-            'connectionToken': self.token,
-            'connectionData': '[{"name":"signalrlivehubfederations"}]',
-            '_': str(round(time.time() * 1000)),
+            "transport": "serverSentEvents",
+            "clientProtocol": "1.5",
+            "connectionToken": self.token,
+            "connectionData": '[{"name":"signalrlivehubfederations"}]',
+            "_": str(round(time.time() * 1000)),
         }
 
         response = requests.get(
-            'https://dataprojectservicesignalr.azurewebsites.net/signalr/start',
+            "https://dataprojectservicesignalr.azurewebsites.net/signalr/start",
             params=params,
             cookies=self.cookies,
             headers=self.headers,
@@ -164,32 +168,48 @@ class Match:
 
     def send(self):
         params = {
-            'transport': 'serverSentEvents',
-            'clientProtocol': '1.5',
-            'connectionToken': self.token,
-            'connectionData': '[{"name":"signalrlivehubfederations"}]',
+            "transport": "serverSentEvents",
+            "clientProtocol": "1.5",
+            "connectionToken": self.token,
+            "connectionData": '[{"name":"signalrlivehubfederations"}]',
         }
 
         data = {
-            'data': '{"H":"signalrlivehubfederations","M":"getLiveScoreListData_From_ES","A":["'+str(self.m_id)+'","'+self.league+'"],"I":0}',
+            "data": '{"H":"signalrlivehubfederations","M":"getLiveScoreListData_From_ES","A":["'
+            + str(self.m_id)
+            + '","'
+            + self.league
+            + '"],"I":0}',
         }
 
         data = requests.post(
-            'https://dataprojectservicesignalr.azurewebsites.net/signalr/send',
+            "https://dataprojectservicesignalr.azurewebsites.net/signalr/send",
             params=params,
             cookies=self.cookies,
             headers=self.headers,
             data=data,
-        ).json()['R'][0]
+        ).json()["R"][0]
         print(data)
-        self.current_set = data['WonSetHome'] + data['WonSetGuest'] + 1
+        self.current_set = data["WonSetHome"] + data["WonSetGuest"] + 1
         if self.current_set > 5:
             self.current_set = 5
-        self.home = Team(data['HomeEmpty'],data['Home'],data['Set'+str(self.current_set)+'Home'],data['WonSetHome'],self._get_players(data['Home']))
+        self.home = Team(
+            data["HomeEmpty"],
+            data["Home"],
+            data["Set" + str(self.current_set) + "Home"],
+            data["WonSetHome"],
+            self._get_players(data["Home"]),
+        )
 
-        self.away = Team(data['GuestEmpty'],data['Guest'],data['Set'+str(self.current_set)+'Guest'],data['WonSetGuest'],self._get_players(data['Guest']))
-        self.stats._initiate(data,self.current_set)
-        self.status = data['Status']
+        self.away = Team(
+            data["GuestEmpty"],
+            data["Guest"],
+            data["Set" + str(self.current_set) + "Guest"],
+            data["WonSetGuest"],
+            self._get_players(data["Guest"]),
+        )
+        self.stats.initiate(data, self.current_set)
+        self.status = data["Status"]
         self._update_stream()
         self._update_ui()
         self._get_logos()
@@ -197,12 +217,18 @@ class Match:
     def _get_players(self, team_id):
         """Get the list of players of the team"""
         data_rq = {
-            'data': '{"H":"signalrlivehubfederations","M":"getRosterData","A":["'+str(self.m_id)+'",'+str(team_id)+',"'+self.league+'"]}',
+            "data": '{"H":"signalrlivehubfederations","M":"getRosterData","A":["'
+            + str(self.m_id)
+            + '",'
+            + str(team_id)
+            + ',"'
+            + self.league
+            + '"]}',
         }
         data = self._web_request(data_rq)
         players = {}
         for player in data:
-            players[str(player['N'])] = player['NM']+' '+player['SR']
+            players[str(player["N"])] = player["NM"] + " " + player["SR"]
         return players
 
     def _set_point(self):
@@ -229,202 +255,113 @@ class Match:
                 self.set_point = True
             else:
                 self.set_point = False
-        
+
         self.obsApi.set_point(self.set_point)
         self.obsApi.match_point(self.match_point)
 
     def _update_ui(self):
-        if self.status==0:
-            self.window['-ID-'].update(disabled=False)
-            self.window['-ERROR-'].update("No ha comenzado", text_color='yellow', visible=True)
-            self.window['-HOME-'].update(visible=False)
-            self.window['-AWAY-'].update(visible=False)
-            self.window['-ST-'].update('Parar',disabled=False)
-        elif self.status==1:
-            self.window['-ID-'].update(disabled=True)
-            self.window['-ERROR-'].update(visible=False)
-            self.window['-HOME-'].update(visible=True)
-            self.window['-AWAY-'].update(visible=True)
-            self.window['-ST-'].update('Parar',disabled=False)
-        elif self.status==2:
-            self.window['-ID-'].update(disabled=False)
-            self.window['-ERROR-'].update("Ya terminó", text_color='yellow', visible=True)
-            self.window['-HOME-'].update(visible=False)
-            self.window['-AWAY-'].update(visible=False)
-            self.window['-ST-'].update('Iniciar',disabled=False)
-        self.window['-HOME-'].update(value=self.home.name +
-                                ' - ' + str(self.home.points), visible=True)
-        self.window['-AWAY-'].update(value=self.away.name +
-                                ' - ' + str(self.away.points), visible=True)
-    
-    def _test_make_statistics(self):
-        try:
-            self.stats._update(self.home.points,self.away.points,self.current_set)
-            # self.stats['Set_'+str(self.current_set)] = {
-            #     "Total_points": set_total_points,
-            #     "Home_points": self.home.points,
-            #     "Away_points": self.away.points,
-            #     "Home_percentage": str(round((self.home.points*100)/set_total_points)) + "%",
-            #     "Away_percentage": str(round((self.away.points*100)/set_total_points)) + "%",
-            # }
-            # self.stats['Total'] = {
-            #     "Total_points": 0,
-            #     "Home_points": 0,
-            #     "Away_points": 0,
-            #     "Home_percentage": "0",
-            #     "Away_percentage": "0",
-            # }
-            # for x in self.stats.keys():
-            #     if x != 'Total':
-            #         data=self.stats[x]
-            #         self.stats['Total']['Total_points'] += data['Total_points']
-            #         self.stats['Total']['Home_points'] += data['Home_points']
-            #         self.stats['Total']['Away_points'] += data['Away_points']
-            # self.stats['Total']['Home_percentage'] = str(round((self.stats['Total']['Home_points']*100)/self.stats['Total']['Total_points'])) + " %"
-            # self.stats['Total']['Away_percentage'] = str(round((self.stats['Total']['Away_points']*100)/self.stats['Total']['Total_points'])) + " %"
-        except:
-            pass
+        if self.status == 0:
+            self.window["-ID-"].update(disabled=False)
+            self.window["-ERROR-"].update(
+                "No ha comenzado", text_color="yellow", visible=True
+            )
+            self.window["-HOME-"].update(visible=False)
+            self.window["-AWAY-"].update(visible=False)
+            self.window["-ST-"].update("Parar", disabled=False)
+        elif self.status == 1:
+            self.window["-ID-"].update(disabled=True)
+            self.window["-ERROR-"].update(visible=False)
+            self.window["-HOME-"].update(visible=True)
+            self.window["-AWAY-"].update(visible=True)
+            self.window["-ST-"].update("Parar", disabled=False)
+        elif self.status == 2:
+            self.window["-ID-"].update(disabled=False)
+            self.window["-ERROR-"].update(
+                "Ya terminó", text_color="yellow", visible=True
+            )
+            self.window["-HOME-"].update(visible=False)
+            self.window["-AWAY-"].update(visible=False)
+            self.window["-ST-"].update("Iniciar", disabled=False)
+        self.window["-HOME-"].update(
+            value=self.home.name + " - " + str(self.home.points), visible=True
+        )
+        self.window["-AWAY-"].update(
+            value=self.away.name + " - " + str(self.away.points), visible=True
+        )
 
     def _make_statistics(self):
-        """makes all the stats of the match"""
-        data_rq = {
-            'data': '{"H":"signalrlivehubfederations","M":"getLiveScoreData_From_DV","A":["'+str(self.m_id)+'","'+self.league+'"],"I":0}',
-        }
-
-        data = self._web_request(data_rq)
-        percents = []
-        Home_tot_points = 0
-        Away_tot_points = 0
-        for i in range(1, 6):
-            try:
-                Home_points_percent = str(round(
-                    (data['Set'+str(i)+'Home']*100)/(data['Set'+str(i)+'Home']+data['Set'+str(i)+'Guest'])))+' %'
-                Away_points_percent = str(round((data['Set'+str(i)+'Guest']*100)/(
-                    data['Set'+str(i)+'Home']+data['Set'+str(i)+'Guest'])))+' %'
-            except ZeroDivisionError:
-                Home_points_percent = 0
-                Away_points_percent = 0
-            percents.append(Home_points_percent)
-            percents.append(Away_points_percent)
         try:
-            Home_tot_points = data['Set1Home']+data['Set2Home'] + \
-                data['Set3Home']+data['Set4Home']+data['Set5Home']
-            Away_tot_points = data['Set1Guest']+data['Set2Guest'] + \
-                data['Set3Guest']+data['Set4Guest']+data['Set5Guest']
-            Home_points_percent = round((Home_tot_points*100) / \
-                (Home_tot_points+Away_tot_points))
-            Away_points_percent = round((Away_tot_points*100) / \
-                (Home_tot_points+Away_tot_points))
-        except ZeroDivisionError:
-            Home_tot_points = 0
-            Away_tot_points = 0
-            Home_points_percent = 0
-            Away_points_percent = 0
-        ###############################################
-        # Esto manda la data a los archivos que usa OBS
-        # pero todavia no se como voy a manejar eso y no
-        # se si quiero que la clase haga todo de una
-        # o hacerlo separado
-        ###############################################
-        try:
-            files = {
-                'Home_points_percent_s1': percents[0],
-                'Away_points_percent_s1': percents[1],
-                'Home_points_percent_s2': percents[2],
-                'Away_points_percent_s2': percents[3],
-                'Home_points_percent_s3': percents[4],
-                'Away_points_percent_s3': percents[5],
-                'Home_points_percent_s4': percents[6],
-                'Away_points_percent_s4': percents[7],
-                'Home_points_percent_s5': percents[8],
-                'Away_points_percent_s5': percents[9],
-                'Home_points_percent': Home_points_percent,
-                'Away_points_percent': Away_points_percent,
-                'Home_points_s1': data['Set1Home'],
-                'Away_points_s1': data['Set1Guest'],
-                'Home_points_s2': data['Set2Home'],
-                'Away_points_s2': data['Set2Guest'],
-                'Home_points_s3': data['Set3Home'],
-                'Away_points_s3': data['Set3Guest'],
-                'Home_points_s4': data['Set4Home'],
-                'Away_points_s4': data['Set4Guest'],
-                'Home_points_s5': data['Set5Home'],
-                'Away_points_s5': data['Set5Guest'],
-                'Home_points': Home_tot_points,
-                'Away_points': Away_tot_points,
-            }
-            for file, value in files.items():
-                path = os.path.join(os.getcwd(), r'stats')
-                if not os.path.exists(path):
-                    os.makedirs(path)
-                fw = open('./stats/'+file+'.txt', 'w')
-                fw.write(str(value))
-                fw.close()
+            self.stats.update(self.home.points, self.away.points, self.current_set)
         except:
             pass
 
     def _get_logos(self):
         """Gets the logos of the teams in the match"""
-        URL = str(self.league_url)+"/LiveScore_adv.aspx?ID="+str(self.m_id)
+        URL = str(self.league_url) + "/LiveScore_adv.aspx?ID=" + str(self.m_id)
         r = requests.get(URL, verify=True)
 
-        soup = BeautifulSoup(r.content, 'html5lib')
+        soup = BeautifulSoup(r.content, "html5lib")
 
-        home = soup.find('div', attrs={'id': 'DIV_LogoHome_Image'})['style']
-        homeurl = home.strip('background-image:url(').strip(');')
-        away = soup.find('div', attrs={'id': 'DIV_LogoGuest_Image'})['style']
-        awayurl = away.strip('background-image:url(').strip(');')
-        #wget.download(homeurl, "home.jpg")
-        #wget.download(awayurl, "away.jpg")
-        self.obsApi._set_input_settings(self.elements['HOME_LOGO'],{'file':homeurl})
-        self.obsApi._set_input_settings(self.elements['AWAY_LOGO'],{'file':awayurl})
-    
+        home = soup.find("div", attrs={"id": "DIV_LogoHome_Image"})["style"]
+        homeurl = home.strip("background-image:url(").strip(");")
+        away = soup.find("div", attrs={"id": "DIV_LogoGuest_Image"})["style"]
+        awayurl = away.strip("background-image:url(").strip(");")
+        # wget.download(homeurl, "home.jpg")
+        # wget.download(awayurl, "away.jpg")
+        self.obsApi._set_input_settings(self.elements["HOME_LOGO"], {"file": homeurl})
+        self.obsApi._set_input_settings(self.elements["AWAY_LOGO"], {"file": awayurl})
+
     def _web_request(self, data):
         """makes the requests to the server with the specified data"""
         cookies = {
-            'ARRAffinitySameSite': '02acb1319a69edaf85b38e14f86a1d4a24942007f49c27a9216d162dc8017f28',
+            "ARRAffinitySameSite": "02acb1319a69edaf85b38e14f86a1d4a24942007f49c27a9216d162dc8017f28",
         }
         headers = {
-            'Accept': 'text/plain, */*; q=0.01',
-            'Accept-Language': 'en-US,en;q=0.7',
-            'Connection': 'keep-alive',
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'Origin': self.league_url,
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'cross-site',
-            'Sec-GPC': '1',
+            "Accept": "text/plain, */*; q=0.01",
+            "Accept-Language": "en-US,en;q=0.7",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": self.league_url,
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "cross-site",
+            "Sec-GPC": "1",
         }
         params = {
-                'transport': 'serverSentEvents',
-                'clientProtocol': self.credentials['ProtocolVersion'],
-                'connectionToken': self.credentials['ConnectionToken'],
-                'connectionData': '[{"name":"signalrlivehubfederations"}]',
-            }
-        return requests.post('https://dataprojectservicesignalradv.azurewebsites.net/signalr/send',
-                             params=params, cookies=cookies, headers=headers, data=data).json()['R']
-    
+            "transport": "serverSentEvents",
+            "clientProtocol": self.credentials["ProtocolVersion"],
+            "connectionToken": self.credentials["ConnectionToken"],
+            "connectionData": '[{"name":"signalrlivehubfederations"}]',
+        }
+        return requests.post(
+            "https://dataprojectservicesignalradv.azurewebsites.net/signalr/send",
+            params=params,
+            cookies=cookies,
+            headers=headers,
+            data=data,
+        ).json()["R"]
+
     def _get_credentials(self):
         """Gets the credentials needed for the requests"""
         headers = {
-            'Accept': 'text/plain, */*; q=0.01',
-            'Accept-Language': 'en-US,en;q=0.6',
-            'Connection': 'keep-alive',
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            'Origin': self.league_url,
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'cross-site',
-            'Sec-GPC': '1',
+            "Accept": "text/plain, */*; q=0.01",
+            "Accept-Language": "en-US,en;q=0.6",
+            "Connection": "keep-alive",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": self.league_url,
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "cross-site",
+            "Sec-GPC": "1",
         }
 
         params = {
-            'clientProtocol': '1.5',
-            'connectionData': '[{"name":"signalrlivehubfederations"}]',
+            "clientProtocol": "1.5",
+            "connectionData": '[{"name":"signalrlivehubfederations"}]',
         }
 
         response = requests.get(
-            'https://dataprojectservicesignalradv.azurewebsites.net/signalr/negotiate',
+            "https://dataprojectservicesignalradv.azurewebsites.net/signalr/negotiate",
             params=params,
             headers=headers,
         ).json()
@@ -432,28 +369,65 @@ class Match:
 
     def _update_stream(self):
         try:
-            self.obsApi._set_input_settings(self.elements['HOME_NAME'],{'text': self.home.name})
-            self.obsApi._set_input_settings(self.elements['AWAY_NAME'],{'text': self.away.name})
-            self.obsApi._set_input_settings(self.elements['HOME_POINTS'],{'text': str(self.home.points)})
-            self.obsApi._set_input_settings(self.elements['AWAY_POINTS'],{'text': str(self.away.points)})
-            self.obsApi._set_input_settings(self.elements['HOME_SET'],{'text': str(self.home.sets)})
-            self.obsApi._set_input_settings(self.elements['AWAY_SET'],{'text': str(self.away.sets)})
-            self.obsApi._set_input_settings(self.elements['HOME_STATS_PT'],{'text': str(self.stats.total['Home_percentage'])})
-            self.obsApi._set_input_settings(self.elements['AWAY_STATS_PT'],{'text': str(self.stats.total['Away_percentage'])})
-            self.obsApi._set_input_settings(self.elements['HOME_STATS_PuntosT'],{'text': str(self.stats.total['Home_points'])})
-            self.obsApi._set_input_settings(self.elements['AWAY_STATS_PuntosT'],{'text': str(self.stats.total['Away_points'])})
+            self.obsApi._set_input_settings(
+                self.elements["HOME_NAME"], {"text": self.home.name}
+            )
+            self.obsApi._set_input_settings(
+                self.elements["AWAY_NAME"], {"text": self.away.name}
+            )
+            self.obsApi._set_input_settings(
+                self.elements["HOME_POINTS"], {"text": str(self.home.points)}
+            )
+            self.obsApi._set_input_settings(
+                self.elements["AWAY_POINTS"], {"text": str(self.away.points)}
+            )
+            self.obsApi._set_input_settings(
+                self.elements["HOME_SET"], {"text": str(self.home.sets)}
+            )
+            self.obsApi._set_input_settings(
+                self.elements["AWAY_SET"], {"text": str(self.away.sets)}
+            )
+            self.obsApi._set_input_settings(
+                self.elements["HOME_STATS_PT"],
+                {"text": str(self.stats.total["Home_percentage"])},
+            )
+            self.obsApi._set_input_settings(
+                self.elements["AWAY_STATS_PT"],
+                {"text": str(self.stats.total["Away_percentage"])},
+            )
+            self.obsApi._set_input_settings(
+                self.elements["HOME_STATS_PuntosT"],
+                {"text": str(self.stats.total["Home_points"])},
+            )
+            self.obsApi._set_input_settings(
+                self.elements["AWAY_STATS_PuntosT"],
+                {"text": str(self.stats.total["Away_points"])},
+            )
             for x in self.stats.sets.keys():
-                self.obsApi._set_input_settings(self.elements['HOME_STATS_P'+str(x.split('_')[1])],{'text': str(self.stats.sets[x]['Home_percentage'])})
-                self.obsApi._set_input_settings(self.elements['AWAY_STATS_P'+str(x.split('_')[1])],{'text': str(self.stats.sets[x]['Away_percentage'])})
-                self.obsApi._set_input_settings(self.elements['HOME_STATS_S'+str(x.split('_')[1])],{'text': str(self.stats.sets[x]['Home_points'])})
-                self.obsApi._set_input_settings(self.elements['AWAY_STATS_S'+str(x.split('_')[1])],{'text': str(self.stats.sets[x]['Away_points'])})
+                self.obsApi._set_input_settings(
+                    self.elements["HOME_STATS_P" + str(x.split("_")[1])],
+                    {"text": str(self.stats.sets[x]["Home_percentage"])},
+                )
+                self.obsApi._set_input_settings(
+                    self.elements["AWAY_STATS_P" + str(x.split("_")[1])],
+                    {"text": str(self.stats.sets[x]["Away_percentage"])},
+                )
+                self.obsApi._set_input_settings(
+                    self.elements["HOME_STATS_S" + str(x.split("_")[1])],
+                    {"text": str(self.stats.sets[x]["Home_points"])},
+                )
+                self.obsApi._set_input_settings(
+                    self.elements["AWAY_STATS_S" + str(x.split("_")[1])],
+                    {"text": str(self.stats.sets[x]["Away_points"])},
+                )
         except Exception as e:
-            print("error",e)
+            print("error", e)
             return e
 
-    def _stop(self) -> bool:
-        self.is_running=False
-        self.status=2
+    def _stop(self):
+        self.is_running = False
+        self.status = 2
         self._update_ui()
 
-#Match(5953,'livosur')
+
+# Match(5953,'livosur')
