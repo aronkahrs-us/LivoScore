@@ -1,7 +1,11 @@
 /test.py
 /livoscore.ico
 /Livoscore.psd
+/Livoscore.spec
 /stats
 /__pycache__
 /Utils/__pycache__
 /psc_LivoScore_tmp/LivoScore
+/release
+/build
+/dist

@@ -56,18 +56,21 @@ class ObsConfig():
             self.window['-SAVE_TXT-'].update(value="ERROR", text_color='red', visible=True)
 
     def save_config(self):
-        event, values = self.window.read()
-        # Data to be written
-        dictionary = {
-            "IP": values['-IP-'],
-            "PORT": values['-PORT-'],
-            "PASS": values['-PASS-']
-        }
-        
-        # Serializing json
-        json_object = json.dumps(dictionary, indent=4)
-        filename ="./Config/obs_config.json"
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
-        with open(filename, "w") as outfile:
-            outfile.write(json_object)
-            self.window['-SAVE_TXT-'].update('Saved', text_color='white', visible=True)
+        try:
+            event, values = self.window.read()
+            # Data to be written
+            dictionary = {
+                "IP": values['-IP-'],
+                "PORT": values['-PORT-'],
+                "PASS": values['-PASS-']
+            }
+            
+            # Serializing json
+            json_object = json.dumps(dictionary, indent=4)
+            filename ="./Config/obs_config.json"
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+            with open(filename, "w") as outfile:
+                outfile.write(json_object)
+                self.window['-SAVE_TXT-'].update('Saved', text_color='white', visible=True)
+        except:
+                self.window['-SAVE_TXT-'].update('ERROR', text_color='red', visible=True)

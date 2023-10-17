@@ -41,12 +41,12 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    version='2.0',
+    version='2',
     icon=['/Users/aronkahrs/Desktop/LivoScore/livoscore.ico'],
 )
 app = BUNDLE(
     exe,
     name='LivoScore.app',
     icon='/Users/aronkahrs/Desktop/LivoScore/livoscore.ico',
-    bundle_identifier='com.ak.volley.livoscore',
+    bundle_identifier=None,
 )

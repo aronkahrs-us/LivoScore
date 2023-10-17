@@ -28,6 +28,7 @@ class ElementsConfig():
         stats_layout = []
         self.n=1
         for i in t_main_elem:
+            print("-Elm{}-".format(self.n),"-Elm{}-".format(self.n+1))
             main_layout.append([sg.Column([[sg.Text("Home "+i, expand_x=True, expand_y=True)]], element_justification='left', expand_x=True, expand_y=True),
             sg.Column([[sg.Combo([], default_value='Select Element', key="-Elm{}-".format(self.n),
                             auto_size_text=True, enable_events=True, disabled=True, expand_x=True, expand_y=True,readonly = True)]], element_justification='left', expand_x=True, expand_y=True),
@@ -42,6 +43,7 @@ class ElementsConfig():
         main_layout.append([sg.Column(T_elmTO, element_justification='left', expand_x=True, expand_y=True),
                             sg.Column(S_elmTO, element_justification='left', expand_x=True, expand_y=True)])
         for i in t_stats_elem:
+            print("-Elm{}-".format(self.n),"-Elm{}-".format(self.n+1))
             stats_layout.append([sg.Column([[sg.Text("Home "+i, expand_x=True, expand_y=True)]], element_justification='left', expand_x=True, expand_y=True),
             sg.Column([[sg.Combo([], default_value='Select Element', key="-Elm{}-".format(self.n),
                             auto_size_text=True, enable_events=True, disabled=True, expand_x=True, expand_y=True,readonly = True)]], element_justification='left', expand_x=True, expand_y=True),
@@ -53,7 +55,7 @@ class ElementsConfig():
                 sg.Column(S_scn, element_justification='left', expand_x=True, expand_y=True)],
                 [sg.HorizontalSeparator(pad=(10,10))],
                 [sg.TabGroup([[sg.Tab("Main", main_layout),
-                               sg.Tab("Stats", stats_layout)]],s=(750,450))],
+                               sg.Tab("Stats", stats_layout)]],s=(750,450), expand_x=True, expand_y=True)],
                 [sg.Column(B_Save, element_justification='left', expand_x=True, expand_y=True),
                 sg.Column(T_Save, element_justification='left', expand_x=True, expand_y=True)]]
         self.window = sg.Window("Livoscore - Config", icon=logo,
@@ -76,6 +78,7 @@ class ElementsConfig():
                 # Reading from json file
                 config = json.load(openfile)
                 items = self.get_elements(config['SCENE'])
+                print('items_ln: ',len(config))
                 x = 1
                 if items != "ERROR":
                     for key in config:
@@ -88,7 +91,7 @@ class ElementsConfig():
                                 self.window['-Elm'+str(x)+'-'].update(value=config[key], visible=True, disabled=False)
                             else:
                                 self.window['-Elm'+str(x)+'-'].update(value=[name for name, element in items.items() if element.get('id') == config[key]][0], visible=True, disabled=False)
-                        x = x+1
+                            x = x+1
         except Exception as e:
             print(e)
             sg.Popup('Configurar', keep_on_top=True)
@@ -99,7 +102,7 @@ class ElementsConfig():
             elements = []
             for x in items:
                 elements.append(x)
-            for x in range(1, self.n+3):
+            for x in range(1, self.n+2):
                 self.window['-Elm'+str(x)+'-'].update(value="Select",values=elements,
                                                  visible=True, disabled=False)
         return items

@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 import threading
 import json
+import os
 from theme import *
 from config_elements import ElementsConfig
 from config_obs import ObsConfig
@@ -42,6 +43,7 @@ class Main:
         # Create the Window
         # splash = sg.Window("Livoscore", icon=logo,
         #                 layout=[[sg.Image(data=logo)]], transparent_color="#002b45", no_titlebar=True, keep_on_top=True).read(timeout=DISPLAY_TIME_MILLISECONDS, close=True)
+        os.makedirs(os.path.dirname("./Config"), exist_ok=True)
         self.window = sg.Window("Livoscore", icon=logo,
                         layout=layout, font=("Bebas", 15), auto_size_text=True, resizable=True, auto_size_buttons=True, finalize=True)
         threading.Thread(target=self.list_matches, daemon=True).start()
