@@ -80,16 +80,6 @@ class Main:
         layout = [
             [sg.Menu(menu_def, font=("Bebas", 15))],
             [
-                sg.Text(
-                    "Livoscore",
-                    expand_x=True,
-                    text_color="#ffffff",
-                    click_submits=True,
-                    justification="center",
-                    font=("Bebas", 25),
-                )
-            ],
-            [
                 sg.Column(
                     T_Id, element_justification="c", expand_x=True, expand_y=True
                 ),
@@ -140,10 +130,9 @@ class Main:
         # Event Loop to process "events" and get the "values" of the inputs
         while True:
             event, self.values = self.window.read()
-            if (
-                event == sg.WIN_CLOSED or event == "Cancel"
-            ):  # if user closes self.window or clicks cancel
-                self.match._stop()
+            if (event == sg.WIN_CLOSED or event == "Cancel"):  # if user closes self.window or clicks cancel
+                if "match" in locals()["self"].__dict__:
+                    self.match._stop()
                 break
             elif event == "Obs Elements":  # if user closes self.window or clicks cancel
                 if Obs().test_connection() != "ERROR":
@@ -186,7 +175,10 @@ class Main:
                 values=[], value="Loading...", visible=True, disabled=True
             )
             self.window["-RELOAD-"].update(disabled=True)
-            self.matches = League().get_ready_matches()
+            if 'TEAM' in config.keys():
+                self.matches = League().get_ready_matches(config['TEAM'])
+            else:
+                self.matches = League().get_ready_matches()
             if self.matches == {}:
                 self.window["-ID-"].update(
                     values=[], value="No Matches Today", visible=True, disabled=True

@@ -19,7 +19,7 @@ class League:
         self._get_credentials()
         pass
 
-    def get_ready_matches(self) -> dict:
+    def get_ready_matches(self, query:str="") -> dict:
         if int(datetime.now(tz=timezone.utc).strftime("%d")) == int(datetime.now().strftime("%d")):
             matches = {}
             URL = str(self.league_url) + "/MainLiveScore.aspx"
@@ -38,8 +38,11 @@ class League:
                     status = soup.find(
                         "div", {"id": "Content_Main_RLV_MatchList_DIV_FinalResult_" + str(x)}
                     ).get("style")
-                    if status == None:
-                        matches[int(x)] = str(str(Home) + " vs " + str(Guest))
+                    if status == None and query != "":
+                        if query.lower() in Home.lower() or query.lower() in Guest.lower():
+                            matches[int(x)] = Home + " vs " + Guest
+                    elif status == None:
+                        matches[int(x)] = Home + " vs " + Guest
                 json_object = json.dumps(matches, indent=4)
                 with open("./Config/matches.json", "w") as outfile:
                     outfile.write(json_object)
@@ -121,6 +124,3 @@ class League:
             headers=headers,
         ).json()
         self.credentials = response
-
-
-League().get_ready_matches()

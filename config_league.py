@@ -71,6 +71,32 @@ class LeagueConfig:
                 )
             ]
         ]
+        T_team = [[sg.Text("Team")]]
+        S_team = [
+            [
+                sg.Input(
+                    default_text="Name of the Team (optional)",
+                    key="-TEAM-",
+                    enable_events=True,
+                    expand_x=True,
+                    expand_y=True,
+                    disabled=True,
+                    size=(30, 10),
+                )
+            ]
+        ]
+        C_team = [
+            [
+                sg.Checkbox(
+                    text='',
+                    default=False,
+                    enable_events=True,
+                    key="-CHECK-TEAM-",
+                    expand_x=True,
+                    expand_y=True,
+                )
+            ]
+        ]
         T_Save = [[sg.Text("Saved", key="-SAVE_TXT-", visible=False)]]
         B_Save = [[sg.Button("Save", key="-SAVE-")]]
         layout = [
@@ -80,6 +106,17 @@ class LeagueConfig:
                 ),
                 sg.Column(
                     S_league, element_justification="c", expand_x=True, expand_y=True
+                ),
+            ],
+            [
+                sg.Column(
+                    T_team, element_justification="c", expand_x=True, expand_y=True
+                ),
+                sg.Column(
+                    S_team, element_justification="c", expand_x=True, expand_y=True
+                ),
+                sg.Column(
+                    C_team, element_justification="c", expand_x=True, expand_y=True
                 ),
             ],
             [
@@ -105,6 +142,7 @@ class LeagueConfig:
         try:
             self.get_config()
         except Exception as e:
+            print(e)
             sg.Popup("Configure", keep_on_top=True)
 
         while True:
@@ -112,6 +150,9 @@ class LeagueConfig:
             if event == "-SAVE-":
                 self.save_config()
                 self.window.write_event_value("-RELOAD-", "")
+            if event == "-CHECK-TEAM-":
+                print(event,values)
+                self.window["-TEAM-"].update(disabled=not values['-CHECK-TEAM-'])
 
             elif event == "Exit" or event == sg.WIN_CLOSED:
                 break
@@ -128,17 +169,30 @@ class LeagueConfig:
                 ],
                 visible=True,
             )
+            if 'TEAM' in config.keys():
+                self.window["-TEAM-"].update(value=config['TEAM'])
+                self.window["-TEAM-"].update(disabled=False)
+                self.window["-CHECK-TEAM-"].update(value=True)
 
     def save_config(self):
         self.window["-SAVE_TXT-"].update(visible=False)
         event, values = self.window.read()
         # Data to be written
-        dictionary = {
-            "LEAGUE_URL": DOMAINS[values["-LEAGUE-"]],
-            "LEAGUE": DOMAINS[values["-LEAGUE-"]]
-            .replace("https://", "")
-            .replace("-web.dataproject.com", ""),
-        }
+        if values['-CHECK-TEAM-']:
+            dictionary = {
+                "LEAGUE_URL": DOMAINS[values["-LEAGUE-"]],
+                "LEAGUE": DOMAINS[values["-LEAGUE-"]]
+                .replace("https://", "")
+                .replace("-web.dataproject.com", ""),
+                "TEAM": str(values["-TEAM-"]).lower()
+            }
+        else:
+            dictionary = {
+                "LEAGUE_URL": DOMAINS[values["-LEAGUE-"]],
+                "LEAGUE": DOMAINS[values["-LEAGUE-"]]
+                .replace("https://", "")
+                .replace("-web.dataproject.com", ""),
+            }
 
         # Serializing json
         json_object = json.dumps(dictionary, indent=4)
