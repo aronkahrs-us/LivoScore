@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 import threading
 import json
-import os
+import sys, os
 from theme import *
 from config_elements import ElementsConfig
 from config_obs import ObsConfig
@@ -15,7 +15,7 @@ from Utils.court import Court
 class Main:
     def __init__(self) -> None:
         DISPLAY_TIME_MILLISECONDS = 1000
-
+        sg.theme('LIVO')
         # All the stuff inside your self.window.
         T_Local = [
             [
@@ -44,7 +44,7 @@ class Main:
             ]
         ]
         B_Iniciar = [[sg.Button("Start", key="-ST-", border_width=0, disabled=True)]]
-        B_Reload = [[sg.Button("🔄", key="-RELOAD-", button_color="#002B45")]]
+        B_Reload = [[sg.Button("🔄", key="-RELOAD-", button_color="#002B45", border_width=0)]]
         T_Error = [
             [
                 sg.Text(
@@ -56,7 +56,7 @@ class Main:
                     expand_x=True,
                     expand_y=True,
                     size=30,
-                    justification="center",
+                    justification="c",
                 )
             ]
         ]
@@ -128,11 +128,13 @@ class Main:
             "Livoscore",
             icon=logo,
             layout=layout,
-            font=("Bebas", 15),
+            font=("Bebas Neue", 15),
             auto_size_text=True,
             resizable=True,
             auto_size_buttons=True,
             finalize=True,
+            border_depth=0,
+            titlebar_background_color="#002B45",
         )
         threading.Thread(target=self.list_matches, daemon=True).start()
         # Event Loop to process "events" and get the "values" of the inputs
@@ -148,7 +150,7 @@ class Main:
                     ElementsConfig()
                 else:
                     self.window["-ERROR-"].update(
-                        "Falta configurar OBS o está cerrado",
+                        "OBS not configured or closed",
                         text_color="red",
                         visible=True,
                     )
@@ -201,7 +203,7 @@ class Main:
             while "window" not in locals()["self"].__dict__:
                 pass
             else:
-                print("OK")
+                print("OK",e)
                 self.window["-ERROR-"].update(
                     value="No configuration found", visible=True
                 )

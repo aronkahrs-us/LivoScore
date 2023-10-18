@@ -1,7 +1,7 @@
 import requests
 import json
 import ssl
-from datetime import datetime
+from datetime import datetime, timezone
 from bs4 import BeautifulSoup
 
 
@@ -20,7 +20,7 @@ class League:
         pass
 
     def get_ready_matches(self) -> dict:
-        if int(datetime.utcnow().strftime("%d")) == int(datetime.now().strftime("%d")):
+        if int(datetime.now(tz=timezone.utc).strftime("%d")) == int(datetime.now().strftime("%d")):
             matches = {}
             URL = str(self.league_url) + "/MainLiveScore.aspx"
             r = requests.get(URL, verify=True)
@@ -35,7 +35,11 @@ class League:
                     Guest = soup.find(
                         "span", {"id": "Content_Main_RLV_MatchList_Label2_" + str(x)}
                     ).text
-                    matches[int(x)] = str(str(Home) + " vs " + str(Guest))
+                    status = soup.find(
+                        "div", {"id": "Content_Main_RLV_MatchList_DIV_FinalResult_" + str(x)}
+                    ).get("style")
+                    if status == None:
+                        matches[int(x)] = str(str(Home) + " vs " + str(Guest))
                 json_object = json.dumps(matches, indent=4)
                 with open("./Config/matches.json", "w") as outfile:
                     outfile.write(json_object)
@@ -117,3 +121,6 @@ class League:
             headers=headers,
         ).json()
         self.credentials = response
+
+
+League().get_ready_matches()
