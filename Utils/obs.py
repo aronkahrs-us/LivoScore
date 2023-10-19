@@ -93,7 +93,6 @@ class Obs:
                 self.client.set_scene_item_enabled(
                     elements["SCENE"], elements["A_SERVE"], True
                 )
-            print("serve " + team)
             return "OK"
         except:
             return "ERROR"
@@ -109,7 +108,6 @@ class Obs:
             self.client.set_scene_item_enabled(
                 elements["SCENE"], elements["TIME_OUT"], False
             )
-            print("time_out")
             return "OK"
         except:
             return "ERROR"
@@ -134,7 +132,6 @@ class Obs:
                 self.client.set_scene_item_enabled(
                     elements["SCENE"], elements["A_SUBSTITUTION"], False
                 )
-            print("substitution")
             return "OK"
         except:
             return "ERROR"
@@ -151,7 +148,6 @@ class Obs:
                 self.client.set_scene_item_enabled(
                     elements["SCENE"], elements["MATCH_POINT"], False
                 )
-            print("match_point " + show)
             return "OK"
         except:
             return "ERROR"
@@ -168,7 +164,6 @@ class Obs:
                 self.client.set_scene_item_enabled(
                     elements["SCENE"], elements["SET_POINT"], False
                 )
-            print("set_point " + show)
             return "OK"
         except:
             return "ERROR"

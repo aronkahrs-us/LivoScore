@@ -151,7 +151,6 @@ class LeagueConfig:
                 self.save_config()
                 self.window.write_event_value("-RELOAD-", "")
             if event == "-CHECK-TEAM-":
-                print(event,values)
                 self.window["-TEAM-"].update(disabled=not values['-CHECK-TEAM-'])
 
             elif event == "Exit" or event == sg.WIN_CLOSED:

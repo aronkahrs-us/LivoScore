@@ -91,7 +91,6 @@ class ElementsConfig:
         stats_layout = []
         self.n = 1
         for i in t_main_elem:
-            print("-Elm{}-".format(self.n), "-Elm{}-".format(self.n + 1))
             main_layout.append(
                 [
                     sg.Column(
@@ -176,7 +175,6 @@ class ElementsConfig:
             ]
         )
         for i in t_stats_elem:
-            print("-Elm{}-".format(self.n), "-Elm{}-".format(self.n + 1))
             stats_layout.append(
                 [
                     sg.Column(
@@ -291,7 +289,6 @@ class ElementsConfig:
                 # Reading from json file
                 config = json.load(openfile)
                 items = self.get_elements(config["SCENE"])
-                print("items_ln: ", len(config))
                 x = 1
                 if items != "ERROR":
                     for key in config:

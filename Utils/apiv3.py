@@ -163,7 +163,6 @@ class Match:
             cookies=self.cookies,
             headers=self.headers,
         ).json()
-        print(response)
 
     def send(self):
         params = {
@@ -188,7 +187,6 @@ class Match:
             headers=self.headers,
             data=data,
         ).json()["R"][0]
-        print(data)
         self.current_set = data["WonSetHome"] + data["WonSetGuest"] + 1
         if self.current_set > 5:
             self.current_set = 5
@@ -241,12 +239,17 @@ class Match:
             else:
                 self.match_point = False
         elif self.home.sets >= 2 or self.away.sets >= 2:
-            if self.home.points >= 24 and self.home.points - self.away.points >= 2:
+            if self.home.sets >= 2 and self.home.points >= 24 and self.home.points - self.away.points >= 1:
                 self.match_point = True
-            elif self.away.points >= 24 and self.away.points - self.home.points >= 2:
+            elif self.away.sets >= 2 and self.away.points >= 24 and self.away.points - self.home.points >= 1:
                 self.match_point = True
+            elif self.home.sets >= 2 and self.away.points >= 24 and self.away.points - self.home.points >= 1:
+                self.set_point = True
+            if self.away.sets >= 2 and self.home.points >= 24 and self.home.points - self.away.points >= 1:
+                self.set_point = True
             else:
                 self.match_point = False
+                self.set_point = False
         else:
             if self.home.points >= 24 and self.home.points - self.away.points >= 2:
                 self.set_point = True

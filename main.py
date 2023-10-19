@@ -213,4 +213,4 @@ class Main:
                 ],
                 self.window,
             )
-            threading.Thread(target=Court.start, args=self.match).start()
+            threading.Thread(target=Court(self.match).start).start()
