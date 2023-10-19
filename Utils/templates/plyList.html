@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LivoScore - Players List</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font: 20px Bebas Neue, sans-serif;
+        }
+
+        .court {
+            border: solid 80px #68b6cf;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            overflow: auto;
+            display: block;
+            margin: 0;
+            z-index: 1;
+        }
+
+        .court__grid {
+            display: grid;
+            height: 100%;
+            grid-template-columns: repeat(26, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            background-color: #68b6cf;
+        }
+
+        .court__cell {
+            background: #dc8170;
+            box-shadow: inset 0 0 0 2px white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-family: Georgia;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .court_left_back {
+            grid-row: 2 / 8;
+            grid-column: 1 / 9;
+        }
+
+        .court_left_zone {
+            background: #c65b4d;
+            grid-row: 2 / 8;
+            grid-column: 9 / 14;
+        }
+
+        .court_right_zone {
+            background: #c65b4d;
+            grid-row: 2 / 8;
+            grid-column: 14 / 19;
+        }
+
+        .court_right_back {
+            grid-row: 2 / 8;
+            grid-column: 19 / 27;
+        }
+
+        .home {
+            position: absolute;
+            z-index: 10;
+            top: 20%;
+            left: 4.5%;
+            width: 40vw;
+            min-height: 60vh;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            grid-auto-rows: repeat(3, 1fr);;
+        }
+
+        .away {
+            position: absolute;
+            z-index: 10;
+            top: 20%;
+            right: 4.5%;
+            width: 40vw;
+            min-height: 60vh;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            grid-auto-rows: repeat(3, 1fr);;
+        }
+
+        .circle {
+            position: relative;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            padding: 10px;
+            background: #fff;
+            border: 3px solid #000;
+            color: #000;
+            text-align: center;
+            font: 32px Bebas Neue, sans-serif;
+            margin-bottom: 10px;
+        }
+        .number{
+            position: relative;
+            top: -2%;
+        }
+        .name{
+            position: relative;
+            top: 20%;
+            left: -10%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="court">
+        <div class="court__grid">
+            <div class="court__cell court_left_back"></div>
+            <div class="court__cell court_left_zone"></div>
+            <div class="court__cell court_right_zone"></div>
+            <div class="court__cell court_right_back"></div>
+        </div>
+    </div>
+    <div class="home">
+    {% for number, name in home.items() %}
+        <div class="circle">
+            <div class="number">{{number}}</div>
+            <div class="name">{{name}}</div>
+        </div>
+    {% endfor %}
+    </div>
+
+    <div class="away">
+        {% for number, name in away.items() %}
+            <div class="circle">
+                <div class="number">{{number}}</div>
+                <div class="name">{{name}}</div>
+            </div>
+        {% endfor %}
+        </div>
+    <!--<div class="home">
+        {% for number, name in home.items() %}
+        <div style="text-align: center;">
+            <div class="circle">{{number}}</div>
+            <div class="text">{{name}}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="away">
+        {% for number, name in away.items() %}
+        <div style="text-align: center;">
+            <div class="circle">{{number}}</div>
+            <div class="text">{{name}}</div>
+        </div>
+        {% endfor %}
+    </div>-->
+</body>
+
+</html>

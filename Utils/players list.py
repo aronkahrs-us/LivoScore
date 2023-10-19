@@ -2,14 +2,14 @@ from .apiv3 import Match
 from flask import Flask, render_template
 
 
-class Court:
+class plyrList:
     def __init__(self, match: Match) -> None:
         self.app = Flask(__name__)
 
         @self.app.route("/")
         def index():
             return render_template(
-                "court.html", home=match.home.players, away=match.away.players
+                "index.html", home=match.home, away=match.away
             )
 
     def start(self):

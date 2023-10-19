@@ -147,7 +147,6 @@ class Match:
             except Exception as e:
                 print(e)
                 pass
-        self._delete_files()
 
     def start(self):
         params = {
@@ -210,7 +209,7 @@ class Match:
         )
         self.stats.initiate(data, self.current_set)
         self.status = data["Status"]
-        self._update_stream()
+        self._reset_stream()
         self._update_ui()
         self._get_logos()
 
@@ -423,10 +422,66 @@ class Match:
         except Exception as e:
             print("error", e)
             return e
+        
+    def _reset_stream(self):
+        try:
+            self.obsApi._set_input_settings(
+                self.elements["HOME_NAME"], {"text": ""}
+            )
+            self.obsApi._set_input_settings(
+                self.elements["AWAY_NAME"], {"text": ""}
+            )
+            self.obsApi._set_input_settings(
+                self.elements["HOME_POINTS"], {"text": ""}
+            )
+            self.obsApi._set_input_settings(
+                self.elements["AWAY_POINTS"], {"text": ""}
+            )
+            self.obsApi._set_input_settings(
+                self.elements["HOME_SET"], {"text": ""}
+            )
+            self.obsApi._set_input_settings(
+                self.elements["AWAY_SET"], {"text": ""}
+            )
+            self.obsApi._set_input_settings(
+                self.elements["HOME_STATS_PT"], {"text": ""},
+            )
+            self.obsApi._set_input_settings(
+                self.elements["AWAY_STATS_PT"], {"text": ""},
+            )
+            self.obsApi._set_input_settings(
+                self.elements["HOME_STATS_PuntosT"], {"text": ""},
+            )
+            self.obsApi._set_input_settings(
+                self.elements["AWAY_STATS_PuntosT"], {"text": ""},
+            )
+            for x in range(1,6):
+                self.obsApi._set_input_settings(
+                    self.elements["HOME_STATS_P" + str(x)],
+                    {"text": ""},
+                )
+                self.obsApi._set_input_settings(
+                    self.elements["AWAY_STATS_P" + str(x)],
+                    {"text": ""},
+                )
+                self.obsApi._set_input_settings(
+                    self.elements["HOME_STATS_S" + str(x)],
+                    {"text": ""},
+                )
+                self.obsApi._set_input_settings(
+                    self.elements["AWAY_STATS_S" + str(x)],
+                    {"text": ""},
+                )
+            self.obsApi._set_input_settings(self.elements["HOME_LOGO"], {"file": ""})
+            self.obsApi._set_input_settings(self.elements["AWAY_LOGO"], {"file": ""})
+        except Exception as e:
+            print("error", e)
+            return e
 
     def _stop(self):
         self.is_running = False
         self.status = 2
+        self._reset_stream()
         self._update_ui()
 
 

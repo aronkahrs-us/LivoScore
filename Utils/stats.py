@@ -48,12 +48,19 @@ class Stats:
 
     def _total(self):
         try:
+            self.total = {
+                "Total_points": 0,
+                "Home_points": 0,
+                "Away_points": 0,
+                "Home_percentage": "0",
+                "Away_percentage": "0",
+            }
             for x in self.sets.keys():
                 data = self.sets[x]
                 self.total["Total_points"] += data["Total_points"]
-                self.total["Total"]["Home_points"] += data["Home_points"]
-                self.total["Total"]["Away_points"] += data["Away_points"]
-            self.stats["Total"]["Home_percentage"] = (
+                self.total["Home_points"] += data["Home_points"]
+                self.total["Away_points"] += data["Away_points"]
+            self.total["Home_percentage"] = (
                 str(
                     round(
                         (self.total["Home_points"] * 100) / self.total["Total_points"]
@@ -61,7 +68,7 @@ class Stats:
                 )
                 + "%"
             )
-            self.stats["Total"]["Away_percentage"] = (
+            self.total["Away_percentage"] = (
                 str(
                     round(
                         (self.total["Away_points"] * 100) / self.total["Total_points"]
