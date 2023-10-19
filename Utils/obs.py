@@ -179,3 +179,9 @@ class Obs:
             return self.client.get_input_settings(input)
         except:
             return "ERROR"
+    
+    def _create_input(self,scene,name,kind,settings,enabled) -> int:
+        try:
+            return self.client.create_input(scene,name,kind,settings,enabled)
+        except:
+            return "ERROR"

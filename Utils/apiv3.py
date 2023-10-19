@@ -7,7 +7,6 @@ import PySimpleGUI as sg
 from .team import Team
 from .obs import Obs
 from .stats import Stats
-from bs4 import BeautifulSoup
 from sseclient import SSEClient
 
 
@@ -299,17 +298,8 @@ class Match:
 
     def _get_logos(self):
         """Gets the logos of the teams in the match"""
-        URL = str(self.league_url) + "/LiveScore_adv.aspx?ID=" + str(self.m_id)
-        r = requests.get(URL, verify=True)
-
-        soup = BeautifulSoup(r.content, "html5lib")
-
-        home = soup.find("div", attrs={"id": "DIV_LogoHome_Image"})["style"]
-        homeurl = home.strip("background-image:url(").strip(");")
-        away = soup.find("div", attrs={"id": "DIV_LogoGuest_Image"})["style"]
-        awayurl = away.strip("background-image:url(").strip(");")
-        # wget.download(homeurl, "home.jpg")
-        # wget.download(awayurl, "away.jpg")
+        homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.home.id)
+        awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.away.id)
         self.obsApi._set_input_settings(self.elements["HOME_LOGO"], {"file": homeurl})
         self.obsApi._set_input_settings(self.elements["AWAY_LOGO"], {"file": awayurl})
 
