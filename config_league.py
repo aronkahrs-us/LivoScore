@@ -1,7 +1,8 @@
 from theme import *
 import PySimpleGUI as sg
 import json
-import os
+import platform, os
+from pathlib import Path
 
 DOMAINS = {
     "LIVOSUR": "https://livosur-web.dataproject.com",
@@ -50,6 +51,7 @@ DOMAINS = {
     "Latvijas volejbola federācija": "https://latvf-web.dataproject.com",
     "Hungarian Volleyball Federation": "https://hvf-web.dataproject.com",
     "Middle European League": "https://mevza-web.dataproject.com",
+    "Bundesliga": "https://vbl-web.dataproject.com",
 }
 
 
@@ -195,10 +197,14 @@ class LeagueConfig:
 
         # Serializing json
         json_object = json.dumps(dictionary, indent=4)
-        filename = "./Config/league_config.json"
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
-        with open(filename, "w") as outfile:
-            outfile.write(json_object)
-            self.window["-SAVE_TXT-"].update(visible=True)
-            pass
+        filename = Path("./Config/league_config.json")
+        if platform.system() == "Darwin":
+            try:
+                filename.parent.mkdir(mode=777,exist_ok=True, parents=True)
+            except Exception as e:
+                print(e)
+        else:
+            os.makedirs(filename, exist_ok=True)
+        filename.write_text(json_object)
+        self.window["-SAVE_TXT-"].update(visible=True)
         return True

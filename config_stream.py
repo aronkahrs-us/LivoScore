@@ -2,7 +2,8 @@ import PySimpleGUI as sg
 from Utils.obs import Obs
 from theme import *
 import json
-import os
+import platform, os
+from pathlib import Path
 
 
 class ObsConfig:
@@ -13,9 +14,12 @@ class ObsConfig:
         S_port = [[sg.Input("", enable_events=True, key="-PORT-")]]
         T_pass = [[sg.Text("Password")]]
         S_pass = [[sg.Input("", enable_events=True, key="-PASS-")]]
+        S_obs = [[sg.Radio("OBS","stream", enable_events=True, key="-OBS-")]]
+        S_vmix = [[sg.Radio("vMix","stream", enable_events=True, key="-VMIX-")]]
         T_Save = [[sg.Text("Saved", key="-SAVE_TXT-", visible=False)]]
         B_Save = [[sg.Button("Save", key="-SAVE-")]]
         B_Test = [[sg.Button("Test Connection", key="-TEST-")]]
+
         layout = [
             [
                 sg.Column(
@@ -43,6 +47,14 @@ class ObsConfig:
             ],
             [
                 sg.Column(
+                    S_obs, element_justification="c", expand_x=True, expand_y=True
+                ),
+                sg.Column(
+                    S_vmix, element_justification="c", expand_x=True, expand_y=True
+                ),
+            ],
+            [
+                sg.Column(
                     B_Save, element_justification="c", expand_x=True, expand_y=True
                 ),
                 sg.Column(
@@ -54,7 +66,7 @@ class ObsConfig:
             ],
         ]
         self.window = sg.Window(
-            "Livoscore - OBS Config",
+            "Livoscore - Stream Config",
             icon=logo,
             layout=layout,
             font=("Bebas", 15),
@@ -72,6 +84,7 @@ class ObsConfig:
 
         while True:
             event, values = self.window.read()
+            print(values)
             if event == "-SAVE-":
                 self.save_config()
             elif event == "-TEST-":
@@ -82,12 +95,14 @@ class ObsConfig:
         self.window.close()
 
     def get_config(self):
-        with open("./Config/obs_config.json", "r") as openfile:
+        with open("./Config/stream_config.json", "r") as openfile:
             # Reading from json file
             config = json.load(openfile)
             self.window["-IP-"].update(value=config["IP"], visible=True)
             self.window["-PORT-"].update(value=config["PORT"], visible=True)
             self.window["-PASS-"].update(value=config["PASS"], visible=True)
+            self.window["-OBS-"].update(value=config["OBS"], visible=True)
+            self.window["-VMIX-"].update(value=config["VMIX"], visible=True)
 
     def test_config(self):
         event, values = self.window.read()
@@ -106,23 +121,29 @@ class ObsConfig:
             )
 
     def save_config(self):
-        try:
-            event, values = self.window.read()
-            # Data to be written
-            dictionary = {
-                "IP": values["-IP-"],
-                "PORT": values["-PORT-"],
-                "PASS": values["-PASS-"],
-            }
+        event, values = self.window.read()
+        # Data to be written
+        dictionary = {
+            "IP": values["-IP-"],
+            "PORT": values["-PORT-"],
+            "PASS": values["-PASS-"],
+            "OBS": values["-OBS-"],
+            "VMIX": values["-VMIX-"],
+        }
 
-            # Serializing json
-            json_object = json.dumps(dictionary, indent=4)
-            filename = "./Config/obs_config.json"
-            os.makedirs(os.path.dirname(filename), exist_ok=True)
-            with open(filename, "w") as outfile:
-                outfile.write(json_object)
-                self.window["-SAVE_TXT-"].update(
-                    "Saved", text_color="white", visible=True
-                )
-        except:
-            self.window["-SAVE_TXT-"].update("ERROR", text_color="red", visible=True)
+        # Serializing json
+        json_object = json.dumps(dictionary, indent=4)
+        filename = Path("./Config/stream_config.json")
+        if platform.system() == "Darwin":
+            try:
+                filename.parent.mkdir(mode=777, exist_ok=True, parents=True)
+            except Exception as e:
+                print(e)
+                self.window["-SAVE_TXT-"].update("ERROR", text_color="red", visible=True)
+        else:
+            os.makedirs(filename, exist_ok=True)
+        filename.write_text(json_object)
+        os.makedirs(filename, exist_ok=True)
+        self.window["-SAVE_TXT-"].update(
+            "Saved", text_color="white", visible=True
+        )

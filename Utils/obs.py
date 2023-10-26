@@ -6,7 +6,7 @@ import time
 class Obs:
     def __init__(self) -> bool:
         try:
-            with open("./Config/obs_config.json", "r") as openfile:
+            with open("./Config/stream_config.json", "r") as openfile:
                 # Reading from json file
                 self.connect = json.load(openfile)
             self.client = obs.ReqClient(

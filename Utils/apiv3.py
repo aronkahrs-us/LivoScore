@@ -6,6 +6,7 @@ import threading
 import PySimpleGUI as sg
 from .team import Team
 from .obs import Obs
+from .vmix import Vmix
 from .stats import Stats
 from sseclient import SSEClient
 
@@ -14,7 +15,6 @@ class Match:
     def __init__(self, m_id, window):
         self.m_id = int(m_id)
         self.is_running = True
-        self.obsApi = Obs()
         self.set_point = False
         self.match_point = False
         self.window = window
@@ -25,6 +25,15 @@ class Match:
                 config = json.load(openfile)
                 self.league = config["LEAGUE"]
                 self.league_url = config["LEAGUE_URL"]
+        except Exception as e:
+            sg.popup_error(f"AN EXCEPTION OCCURRED!", e)
+        try:
+            with open("./Config/stream_config.json", "r") as openfile:
+                # Reading from json file
+                config = json.load(openfile)
+                self.is_obs = config["OBS"]
+                self.is_vmix = config["VMIX"]
+                self.obsApi = Obs() if self.is_obs else Vmix()
         except Exception as e:
             sg.popup_error(f"AN EXCEPTION OCCURRED!", e)
         try:

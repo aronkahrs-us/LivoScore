@@ -2,17 +2,28 @@ import PySimpleGUI as sg
 from Utils import obs
 from theme import *
 import json
-import os
-
+import platform, os
+from pathlib import Path
+from contextlib import suppress
 
 class ElementsConfig:
     def __init__(self) -> None:
-        T_scn = [[sg.Text("Select Scene")]]
+        try:
+            with open("./Config/stream_config.json", "r") as openfile:
+                config = json.load(openfile)
+                is_obs = config['OBS']
+                is_vmix = config['VMIX']
+        except Exception as e:
+            print('import',e)
+        scenes= obs.Obs().get_scenes() if is_obs else []
+        T_scn = [[sg.Text("" if is_vmix else "Select Scene")]]
         S_scn = [
             [
                 sg.Combo(
-                    obs.Obs().get_scenes(),
-                    default_value="Select Scene",
+                    scenes,
+                    default_value="",
+                    disabled= is_vmix,
+                    visible= is_obs,
                     key="-SCENE-",
                     auto_size_text=True,
                     enable_events=True,
@@ -22,6 +33,7 @@ class ElementsConfig:
                 )
             ]
         ]
+
         T_elmTO = [[sg.Text("Time Out", expand_x=True, expand_y=True)]]
         S_elmTO = [
             [
@@ -294,7 +306,7 @@ class ElementsConfig:
                     for key in config:
                         if key == "SCENE":
                             self.window["-" + key + "-"].update(
-                                value=config[key], visible=True
+                                value=config[key]
                             )
                         else:
                             # self.window['-Elm'+str(x)+'-'].update(value=list(items.keys())[list(items.values()).index(config[key])], visible=True, disabled=False)
@@ -379,8 +391,16 @@ class ElementsConfig:
 
             # Serializing json
             json_object = json.dumps(dictionary, indent=4)
-            filename = "./Config/elem_config.json"
-            os.makedirs(os.path.dirname(filename), exist_ok=True)
-            with open(filename, "w") as outfile:
-                outfile.write(json_object)
-                self.window["-SAVE_TXT-"].update(visible=True)
+            filename = Path("./Config/elem_config.json")
+            if platform.system() == "Darwin":
+                try:
+                    filename.parent.mkdir(mode=777,exist_ok=True, parents=True)
+                except Exception as e:
+                    print(e)
+            else:
+                os.makedirs(filename, exist_ok=True)
+            filename.write_text(json_object)
+            os.makedirs(filename, exist_ok=True)
+            self.window["-SAVE_TXT-"].update(
+                "Saved", text_color="white", visible=True
+            )

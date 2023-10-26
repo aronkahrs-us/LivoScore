@@ -1,15 +1,17 @@
 import PySimpleGUI as sg
 import threading
 import json
-import sys, os
+import requests
+import platform, os
 from theme import *
 from config_elements import ElementsConfig
-from config_obs import ObsConfig
+from config_stream import ObsConfig
 from config_league import LeagueConfig
 from Utils.obs import Obs
 from Utils.apiv3 import Match
 from Utils.league import League
 from Utils.court import Court
+from Utils.remote import Remote
 
 
 class Main:
@@ -60,7 +62,7 @@ class Main:
                 )
             ]
         ]
-        T_Id = [[sg.Text("Match ID", text_color="white", justification="center")]]
+        T_Id = [[sg.Text("Match", text_color="white", justification="center")]]
         I_Id = [
             [
                 sg.Combo(
@@ -113,7 +115,16 @@ class Main:
         # Create the Window
         # splash = sg.Window("Livoscore", icon=logo,
         #                 layout=[[sg.Image(data=logo)]], transparent_color="#002b45", no_titlebar=True, keep_on_top=True).read(timeout=DISPLAY_TIME_MILLISECONDS, close=True)
-        os.makedirs(os.path.dirname("./Config"), exist_ok=True)
+        if platform.system() == "Darwin":
+            try:
+                original_umask = os.umask(0)
+                os.makedirs("Config", 0o777, exist_ok=True)
+            except Exception as e:
+                print(e)
+            finally:
+                os.umask(original_umask)
+        else:
+            os.makedirs("Config", exist_ok=True)
         self.window = sg.Window(
             "Livoscore",
             icon=logo,
@@ -127,9 +138,16 @@ class Main:
             titlebar_background_color="#002B45",
         )
         threading.Thread(target=self.list_matches, daemon=True).start()
+        remt=Remote(self.window)
+        threading.Thread(target=remt.run, daemon=True).start()
         # Event Loop to process "events" and get the "values" of the inputs
         while True:
             event, self.values = self.window.read()
+            print(event,self.values)
+            try:
+                print('match: ',self.match.is_running)
+            except:
+                pass
             if (event == sg.WIN_CLOSED or event == "Cancel"):  # if user closes self.window or clicks cancel
                 if "match" in locals()["self"].__dict__:
                     self.match._stop()
@@ -155,11 +173,15 @@ class Main:
                 self.window["-ST-"].update(disabled=False)
             elif event == "-ST-":
                 try:
-                    if self.match.is_running:
+                    print('try')
+                    if self.match.is_running == True:
+                        self.court.stop()
                         self.match._stop()
                     else:
+                        print('start')
                         threading.Thread(target=self.start_match, daemon=True).start()
-                except:
+                except Exception as e:
+                    print('excp',e)
                     threading.Thread(target=self.start_match, daemon=True).start()
             elif event == "-RELOAD-":
                 threading.Thread(target=self.list_matches, daemon=True).start()
@@ -213,4 +235,5 @@ class Main:
                 ],
                 self.window,
             )
-            threading.Thread(target=Court(self.match).start).start()
+            self.court = Court(self.match)
+            self.court.start()
