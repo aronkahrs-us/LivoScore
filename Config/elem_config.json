@@ -1,42 +1,100 @@
 {
-    "SCENE": "Live",
-    "HOME_NAME": "Home",
-    "AWAY_NAME": "Away",
-    "HOME_LOGO": "Home logo",
-    "AWAY_LOGO": "Away logo",
-    "HOME_POINTS": "Home Score",
-    "AWAY_POINTS": "Away Score",
-    "HOME_SET": "Home Set",
-    "AWAY_SET": "Away Set",
-    "H_SERVE": 60,
-    "A_SERVE": 59,
-    "H_SUBSTITUTION": 85,
-    "A_SUBSTITUTION": 87,
-    "HOME_STATS_PT": "Home tot percent",
-    "AWAY_STATS_PT": "Away tot percent",
-    "HOME_STATS_PuntosT": "Home tot",
-    "AWAY_STATS_PuntosT": "Away tot",
-    "HOME_STATS_P1": "Home set 1 percent",
-    "AWAY_STATS_P1": "Away set 1 percent",
-    "HOME_STATS_S1": "Home set 1",
-    "AWAY_STATS_S1": "Away set 1",
-    "HOME_STATS_P2": "Home set 2 percent",
-    "AWAY_STATS_P2": "Away set 2 percent",
-    "HOME_STATS_S2": "Home set 2",
-    "AWAY_STATS_S2": "Away set 2",
-    "HOME_STATS_P3": "Home set 3 percent",
-    "AWAY_STATS_P3": "Away set 3 percent",
-    "HOME_STATS_S3": "Home set 3",
-    "AWAY_STATS_S3": "Away set 3",
-    "HOME_STATS_P4": "Home set 4 percent",
-    "AWAY_STATS_P4": "Away set 4 percent",
-    "HOME_STATS_S4": "Home set 4",
-    "AWAY_STATS_S4": "Away set 4",
-    "HOME_STATS_P5": "Home set 5 percent",
-    "AWAY_STATS_P5": "Away set 5 percent",
-    "HOME_STATS_S5": "Home set 5",
-    "AWAY_STATS_S5": "Away set 5",
-    "TIME_OUT": 62,
-    "MATCH_POINT": 65,
-    "SET_POINT": 64
+    "HOME_NAME": {
+        "name": "Home Name.Text",
+        "parent": "801e3179-a33a-4151-ba2e-23701ec39968"
+    },
+    "AWAY_NAME": {
+        "name": "Away Name.Text",
+        "parent": "801e3179-a33a-4151-ba2e-23701ec39968"
+    },
+    "HOME_LOGO": {
+        "name": "Home Logo.Source",
+        "parent": "801e3179-a33a-4151-ba2e-23701ec39968"
+    },
+    "AWAY_LOGO": {
+        "name": "Away Logo.Source",
+        "parent": "801e3179-a33a-4151-ba2e-23701ec39968"
+    },
+    "HOME_POINTS": {
+        "name": "Home Score.Text",
+        "parent": "801e3179-a33a-4151-ba2e-23701ec39968"
+    },
+    "AWAY_POINTS": {
+        "name": "Away Score.Text",
+        "parent": "801e3179-a33a-4151-ba2e-23701ec39968"
+    },
+    "HOME_SET": {
+        "name": "Home Set.Text",
+        "parent": "801e3179-a33a-4151-ba2e-23701ec39968"
+    },
+    "AWAY_SET": {
+        "name": "Away Set.Text",
+        "parent": "801e3179-a33a-4151-ba2e-23701ec39968"
+    },
+    "H_SERVE": {
+        "key": "d7812c71-dfda-41ec-bbda-14000d3a7971",
+        "type": "GT",
+        "name": "srv_home",
+        "state": "Paused"
+    },
+    "A_SERVE": {
+        "key": "77dac5c1-b67a-4c45-ac56-2c2d170b57ab",
+        "type": "GT",
+        "name": "srv_away",
+        "state": "Paused"
+    },
+    "H_SUBSTITUTION": {
+        "key": "79ab391b-3f40-46cb-9fe5-e46c047f7228",
+        "type": "GT",
+        "name": "substitution",
+        "state": "Paused",
+        "image": [
+            {
+                "@index": "0",
+                "@name": "Logo.Source",
+                "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_505.jpg"
+            },
+            {
+                "@index": "1",
+                "@name": "Background.Source",
+                "#text": "bc9c57e0-44c0-4328-8169-7d1d91d4ed65\\sustitucion.png"
+            }
+        ]
+    },
+    "A_SUBSTITUTION": {
+        "key": "79ab391b-3f40-46cb-9fe5-e46c047f7228",
+        "type": "GT",
+        "name": "substitution",
+        "state": "Paused",
+        "image": [
+            {
+                "@index": "0",
+                "@name": "Logo.Source",
+                "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_505.jpg"
+            },
+            {
+                "@index": "1",
+                "@name": "Background.Source",
+                "#text": "bc9c57e0-44c0-4328-8169-7d1d91d4ed65\\sustitucion.png"
+            }
+        ]
+    },
+    "TIME_OUT": {
+        "key": "a9c04a46-b782-4b90-9840-330859c3ef94",
+        "type": "Video",
+        "name": "Time_out",
+        "state": "Completed"
+    },
+    "MATCH_POINT": {
+        "key": "1da2f16c-3b95-4b7d-b00a-15ebc206eb04",
+        "type": "Video",
+        "name": "matchpoint",
+        "state": "Completed"
+    },
+    "SET_POINT": {
+        "key": "da5e0144-76cf-45b4-bcf1-3b03601c1a03",
+        "type": "Video",
+        "name": "setpoint",
+        "state": "Paused"
+    }
 }

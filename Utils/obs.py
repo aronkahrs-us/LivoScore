@@ -139,15 +139,9 @@ class Obs:
     def match_point(self, show: bool):
         try:
             elements = self.scene_data
-
-            if show == True:
-                self.client.set_scene_item_enabled(
-                    elements["SCENE"], elements["MATCH_POINT"], True
-                )
-            else:
-                self.client.set_scene_item_enabled(
-                    elements["SCENE"], elements["MATCH_POINT"], False
-                )
+            self.client.set_scene_item_enabled(
+                elements["SCENE"], elements["MATCH_POINT"], show
+            )
             return "OK"
         except:
             return "ERROR"
@@ -155,15 +149,9 @@ class Obs:
     def set_point(self, show: bool):
         try:
             elements = self.scene_data
-
-            if show == True:
-                self.client.set_scene_item_enabled(
-                    elements["SCENE"], elements["SET_POINT"], True
-                )
-            else:
-                self.client.set_scene_item_enabled(
-                    elements["SCENE"], elements["SET_POINT"], False
-                )
+            self.client.set_scene_item_enabled(
+                elements["SCENE"], elements["SET_POINT"], show
+            )
             return "OK"
         except:
             return "ERROR"

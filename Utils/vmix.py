@@ -11,60 +11,84 @@ class Vmix:
                 self.connect = json.load(openfile)
         except:
             pass
+        try:
+            with open("./Config/elem_config.json", "r") as openfile:
+                # Reading from json file
+                self.elements = json.load(openfile)
+        except:
+            pass
         self._get_inputs()
         pass
 
-    def test(self):
-        headers = {
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-            "Accept-Language": "en-US,en",
-            "Cache-Control": "max-age=0",
-            "Connection": "keep-alive",
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Origin": "http://192.168.68.107:8088",
-            "Referer": "http://192.168.68.107:8088/titles/?key=a9188c6c-5852-4e7f-a478-717432399c3f",
-            "Sec-GPC": "1",
-            "Upgrade-Insecure-Requests": "1",
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36",
-        }
+    def test_connection(self):
+        try:
+            response = requests.get("http://{}:{}/api".format(self.connect['IP'],self.connect['PORT']), timeout=5)
+            if response.ok:
+                return 'OK'
+            else:
+                return 'ERROR'
+        except requests.exceptions.Timeout:
+            return "ERROR"
+    
+    def test_connection_params(self, ip, port, passw=None) -> str:
+        try:
+            response = requests.get("http://{}:{}/api".format(ip,port), timeout=5)
+            if response.ok:
+                return 'OK'
+            else:
+                return 'ERROR'
+        except requests.exceptions.Timeout:
+            return "ERROR"
+ 
+    def serve(self,team):
+        if team == '*':
+            self._set_inactive(1,self.elements['A_SERVE']['key'])
+            self._set_active(1,self.elements['H_SERVE']['key'])
+        elif team == 'a':
+            self._set_inactive(1,self.elements['H_SERVE']['key'])
+            self._set_active(1,self.elements['A_SERVE']['key'])
+    
+    def substitution(self,team):
+        if team == '*':
+            self._set_image(self.elements['H_SUBSTITUTION']['key'],self.elements['H_SUBSTITUTION']['image'][0]['@name'],'https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_501.jpg')
+            self._set_active(2,self.elements['H_SUBSTITUTION']['key'])
+        elif team == 'a':
+            self._set_image(self.elements['A_SUBSTITUTION']['key'],self.elements['A_SUBSTITUTION']['image'][0]['@name'],'https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_505.jpg')
+            self._set_active(2,self.elements['A_SUBSTITUTION']['key'])
+        time.sleep(5)
+        self._set_inactive(2,self.elements['A_SUBSTITUTION']['key'])
 
-        params = {
-            "key": "a9188c6c-5852-4e7f-a478-717432399c3f",
-        }
+    def time_out(self):
+        self._set_active(2,self.elements['TIME_OUT']['key'])
+        time.sleep(60)
+        self._set_inactive(2,self.elements['TIME_OUT']['key'])
 
-        data = {
-            "txtHome Name.Text": "HOME",
-            "txtAway Name.Text": "123",
-            "txtHome Set.Text": "0",
-            "txtAway Set.Text": "1",
-            "txtHome Score.Text": "0",
-            "txtAway Score.Text": "0",
-            "Update": "Update",
-        }
+    def match_point(self, show:bool):
+        if show:
+            self._set_active(3,self.elements['MATCH_POINT']['key'])
+        else:
+            self._set_inactive(3,self.elements['MATCH_POINT']['key'])
 
-        response = requests.post(
-            "http://192.168.68.107:8088/titles/",
-            params=params,
-            headers=headers,
-            data=data,
-            verify=False,
-        )
-
+    def set_point(self, show:bool):
+        if show:
+            self._set_active(3,self.elements['SET_POINT']['key'])
+        else:
+            self._set_inactive(3,self.elements['SET_POINT']['key'])
+    
     def _set_active(self,index,input):
         self._set_input('OverlayInput{}In'.format(index),input)
 
     def _set_inactive(self,index,input):
         self._set_input('OverlayInput{}Out'.format(index),input)
 
-    def _set_image(self,input,name,value):
-        self._set_input('SetImage',input,name,value)
-    
-    def _set_text(self,input,name,value):
-        self._set_input('SetText',input,name,value)
+    def _set_input_settings(self,input,value):
+        self._set_input(input=input['parent'],name=input['name'],value=value)
 
-    def _set_input(self,function=None,input=None,name=None,value=None):
+    def _set_input(self,function=None,input=None,name=None,value:dict=None):
+        if function == None:
+            function = 'SetText' if 'text' in value else 'SetImage'
+            value = value['text'] if 'text' in value else value['file']
         req = requests.post('http://{}:{}/API/?Function={}&Input={}&SelectedName={}&Value={}'.format(self.connect['IP'],self.connect['PORT'],function,input,name,value))
-        print(req)
 
     def _get_inputs(self):
         self.inputs={}
@@ -74,27 +98,49 @@ class Vmix:
             data = {
                 'key':x['@key'],
                 'type':x['@type'],
-                'title':x['@title'],
+                'name':x['@title'],
                 'state':x['@state'],
-                'key':x['@key'],
             }
             if x['@type'] == 'GT':
                 try:
                     data['text']=(x['text'])
+                    for k in x['text']:
+                        self.inputs[k['@name']] = {
+                            'name': k['@name'],
+                            'parent': x['@key'],
+                        }
                 except:
                     pass
                 try:
                     data['image']=(x['image'])
+                    for k in x['image']:
+                        self.inputs[k['@name']] = {
+                            'name': k['@name'],
+                            'parent': x['@key'],
+                        }
                 except:
                     pass
             self.inputs[x['@shortTitle']] = data
-        print(self.inputs)
-        pass
+        # for x in self.inputs:
+        #     print(x,self.inputs[x])
+        return self.inputs
 
-
-hand=Vmix()
+# try:
+#     with open("./Config/elem_config.json", "r") as openfile:
+#         # Reading from json file
+#         elements = json.load(openfile)
+# except:
+#     pass
+# hand=Vmix()
+# homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(505)
+# awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(501)
+# hand._set_input_settings(elements["HOME_NAME"], {"text": ''})
+# hand._set_input_settings(elements["HOME_LOGO"], {"file": ''})
+# hand._set_input_settings(elements["AWAY_NAME"], {"text": ''})
+# hand._set_input_settings(elements["AWAY_LOGO"], {"file": ''})
 # hand._set_active(1,hand.inputs['scoreboard']['key'])
 # hand._set_active(2,hand.inputs['Substitution']['key'])
+# hand.set_point(True)
 # time.sleep(2)
 # hand._set_inactive(2,hand.inputs['Substitution']['key'])
 # hand.set_image(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['image'][0]['@name'],'https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_501.jpg')

@@ -2,6 +2,6 @@
     "IP": "192.168.68.107",
     "PORT": "8088",
     "PASS": "test1234",
-    "OBS": true,
-    "VMIX": false
+    "OBS": false,
+    "VMIX": true
 }

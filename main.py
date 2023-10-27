@@ -5,9 +5,10 @@ import requests
 import platform, os
 from theme import *
 from config_elements import ElementsConfig
-from config_stream import ObsConfig
+from config_stream import StreamConfig
 from config_league import LeagueConfig
 from Utils.obs import Obs
+from Utils.vmix import Vmix
 from Utils.apiv3 import Match
 from Utils.league import League
 from Utils.court import Court
@@ -16,8 +17,16 @@ from Utils.remote import Remote
 
 class Main:
     def __init__(self) -> None:
-        DISPLAY_TIME_MILLISECONDS = 1000
+        try:
+            with open("./Config/stream_config.json", "r") as openfile:
+                # Reading from json file
+                config = json.load(openfile)
+                self.is_obs = config["OBS"]
+                self.is_vmix = config["VMIX"]
+        except Exception as e:
+            sg.popup_error(f"AN EXCEPTION OCCURRED!", e)
         sg.theme('LIVO')
+        self.streamer = Obs() if self.is_obs else Vmix()
         # All the stuff inside your self.window.
         T_Local = [
             [
@@ -152,8 +161,8 @@ class Main:
                 if "match" in locals()["self"].__dict__:
                     self.match._stop()
                 break
-            elif event == "Obs Elements":  # if user closes self.window or clicks cancel
-                if Obs().test_connection() != "ERROR":
+            elif event == "Stream Elements":  # if user closes self.window or clicks cancel
+                if self.streamer.test_connection() != "ERROR":
                     ElementsConfig()
                 else:
                     self.window["-ERROR-"].update(
@@ -161,8 +170,8 @@ class Main:
                         text_color="red",
                         visible=True,
                     )
-            elif event == "Obs Config":  # if user closes self.window or clicks cancel
-                ObsConfig()
+            elif event == "Stream Config":  # if user closes self.window or clicks cancel
+                StreamConfig()
             elif (
                 event == "League Config"
             ):  # if user closes self.window or clicks cancel
@@ -223,7 +232,7 @@ class Main:
                 )
 
     def start_match(self):
-        if Obs().test_connection() == "ERROR":
+        if self.streamer.test_connection() == "ERROR":
             self.window["-ERROR-"].update(
                 "OBS is closed or not configured", text_color="red", visible=True
             )

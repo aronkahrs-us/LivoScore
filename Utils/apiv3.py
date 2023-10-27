@@ -33,7 +33,7 @@ class Match:
                 config = json.load(openfile)
                 self.is_obs = config["OBS"]
                 self.is_vmix = config["VMIX"]
-                self.obsApi = Obs() if self.is_obs else Vmix()
+                self.streamer = Obs() if self.is_obs else Vmix()
         except Exception as e:
             sg.popup_error(f"AN EXCEPTION OCCURRED!", e)
         try:
@@ -122,14 +122,14 @@ class Match:
                             self.skill = data["M"][0]["A"][0][-1]["Skill"]
                             if self.action == 0 or self.action == 1:
                                 threading.Thread(
-                                    target=self.obsApi.serve, args=self.serve
+                                    target=self.streamer.serve, args=self.serve
                                 ).start()
                             elif self.action == 2:
                                 threading.Thread(
-                                    target=self.obsApi.substitution, args=self.serve
+                                    target=self.streamer.substitution, args=self.serve
                                 ).start()
                             elif self.action == 3:
-                                threading.Thread(target=self.obsApi.time_out).start()
+                                threading.Thread(target=self.streamer.time_out).start()
                         elif (
                             data["M"][0]["M"] == "updateMatchSetData_ES"
                             or data["M"][0]["M"] == "updateMatchSetData_DV"
@@ -266,8 +266,8 @@ class Match:
             else:
                 self.set_point = False
 
-        self.obsApi.set_point(self.set_point)
-        self.obsApi.match_point(self.match_point)
+        self.streamer.set_point(self.set_point)
+        self.streamer.match_point(self.match_point)
 
     def _update_ui(self):
         if self.status == 0:
@@ -293,10 +293,10 @@ class Match:
             self.window["-AWAY-"].update(visible=False)
             self.window["-ST-"].update("Iniciar", disabled=False)
         self.window["-HOME-"].update(
-            value=self.home.name + " - " + str(self.home.points), visible=True
+            value=self.home.name + " - "+ str(self.home.sets)+ " | " + str(self.home.points), visible=True
         )
         self.window["-AWAY-"].update(
-            value=self.away.name + " - " + str(self.away.points), visible=True
+            value= str(self.away.points) + " | " + str(self.away.sets) + " - " + self.away.name, visible=True
         )
 
     def _make_statistics(self):
@@ -309,8 +309,8 @@ class Match:
         """Gets the logos of the teams in the match"""
         homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.home.id)
         awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.away.id)
-        self.obsApi._set_input_settings(self.elements["HOME_LOGO"], {"file": homeurl})
-        self.obsApi._set_input_settings(self.elements["AWAY_LOGO"], {"file": awayurl})
+        self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": homeurl})
+        self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": awayurl})
 
     def _web_request(self, data):
         """makes the requests to the server with the specified data"""
@@ -370,54 +370,54 @@ class Match:
 
     def _update_stream(self):
         try:
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["HOME_NAME"], {"text": self.home.name}
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["AWAY_NAME"], {"text": self.away.name}
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["HOME_POINTS"], {"text": str(self.home.points)}
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["AWAY_POINTS"], {"text": str(self.away.points)}
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["HOME_SET"], {"text": str(self.home.sets)}
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["AWAY_SET"], {"text": str(self.away.sets)}
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["HOME_STATS_PT"],
                 {"text": str(self.stats.total["Home_percentage"])},
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["AWAY_STATS_PT"],
                 {"text": str(self.stats.total["Away_percentage"])},
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["HOME_STATS_PuntosT"],
                 {"text": str(self.stats.total["Home_points"])},
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["AWAY_STATS_PuntosT"],
                 {"text": str(self.stats.total["Away_points"])},
             )
             for x in self.stats.sets.keys():
-                self.obsApi._set_input_settings(
+                self.streamer._set_input_settings(
                     self.elements["HOME_STATS_P" + str(x.split("_")[1])],
                     {"text": str(self.stats.sets[x]["Home_percentage"])},
                 )
-                self.obsApi._set_input_settings(
+                self.streamer._set_input_settings(
                     self.elements["AWAY_STATS_P" + str(x.split("_")[1])],
                     {"text": str(self.stats.sets[x]["Away_percentage"])},
                 )
-                self.obsApi._set_input_settings(
+                self.streamer._set_input_settings(
                     self.elements["HOME_STATS_S" + str(x.split("_")[1])],
                     {"text": str(self.stats.sets[x]["Home_points"])},
                 )
-                self.obsApi._set_input_settings(
+                self.streamer._set_input_settings(
                     self.elements["AWAY_STATS_S" + str(x.split("_")[1])],
                     {"text": str(self.stats.sets[x]["Away_points"])},
                 )
@@ -427,55 +427,55 @@ class Match:
         
     def _reset_stream(self):
         try:
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["HOME_NAME"], {"text": ""}
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["AWAY_NAME"], {"text": ""}
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["HOME_POINTS"], {"text": ""}
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["AWAY_POINTS"], {"text": ""}
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["HOME_SET"], {"text": ""}
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["AWAY_SET"], {"text": ""}
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["HOME_STATS_PT"], {"text": ""},
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["AWAY_STATS_PT"], {"text": ""},
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["HOME_STATS_PuntosT"], {"text": ""},
             )
-            self.obsApi._set_input_settings(
+            self.streamer._set_input_settings(
                 self.elements["AWAY_STATS_PuntosT"], {"text": ""},
             )
             for x in range(1,6):
-                self.obsApi._set_input_settings(
+                self.streamer._set_input_settings(
                     self.elements["HOME_STATS_P" + str(x)],
                     {"text": ""},
                 )
-                self.obsApi._set_input_settings(
+                self.streamer._set_input_settings(
                     self.elements["AWAY_STATS_P" + str(x)],
                     {"text": ""},
                 )
-                self.obsApi._set_input_settings(
+                self.streamer._set_input_settings(
                     self.elements["HOME_STATS_S" + str(x)],
                     {"text": ""},
                 )
-                self.obsApi._set_input_settings(
+                self.streamer._set_input_settings(
                     self.elements["AWAY_STATS_S" + str(x)],
                     {"text": ""},
                 )
-            self.obsApi._set_input_settings(self.elements["HOME_LOGO"], {"file": ""})
-            self.obsApi._set_input_settings(self.elements["AWAY_LOGO"], {"file": ""})
+            self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": ""})
+            self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": ""})
         except Exception as e:
             print("error", e)
             return e

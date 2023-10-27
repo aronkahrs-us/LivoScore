@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 from Utils import obs
+from Utils import vmix
 from theme import *
 import json
 import platform, os
@@ -11,19 +12,19 @@ class ElementsConfig:
         try:
             with open("./Config/stream_config.json", "r") as openfile:
                 config = json.load(openfile)
-                is_obs = config['OBS']
-                is_vmix = config['VMIX']
+                self.is_obs = config['OBS']
+                self.is_vmix = config['VMIX']
         except Exception as e:
             print('import',e)
-        scenes= obs.Obs().get_scenes() if is_obs else []
-        T_scn = [[sg.Text("" if is_vmix else "Select Scene")]]
+        scenes= obs.Obs().get_scenes() if self.is_obs else []
+        T_scn = [[sg.Text("" if self.is_vmix else "Select Scene")]]
         S_scn = [
             [
                 sg.Combo(
                     scenes,
                     default_value="",
-                    disabled= is_vmix,
-                    visible= is_obs,
+                    disabled= self.is_vmix,
+                    visible= self.is_obs,
                     key="-SCENE-",
                     auto_size_text=True,
                     enable_events=True,
@@ -285,7 +286,9 @@ class ElementsConfig:
         )
         self.get_config()
         while True:
+            print(self.n)
             event, values = self.window.read()
+            print(event,values)
             if event == "-SCENE-":
                 self.get_elements(values["-SCENE-"])
             elif event == "-SAVE-":
@@ -300,8 +303,8 @@ class ElementsConfig:
             with open("./Config/elem_config.json", "r") as openfile:
                 # Reading from json file
                 config = json.load(openfile)
-                items = self.get_elements(config["SCENE"])
-                x = 1
+                items = self.get_elements(config["SCENE"]) if self.is_obs else self.get_elements()
+                x=1
                 if items != "ERROR":
                     for key in config:
                         if key == "SCENE":
@@ -310,9 +313,14 @@ class ElementsConfig:
                             )
                         else:
                             # self.window['-Elm'+str(x)+'-'].update(value=list(items.keys())[list(items.values()).index(config[key])], visible=True, disabled=False)
+                            print(type(config[key]),x)
                             if type(config[key]) == str:
                                 self.window["-Elm" + str(x) + "-"].update(
                                     value=config[key], visible=True, disabled=False
+                                )
+                            elif type(config[key]) == dict:
+                                self.window["-Elm" + str(x) + "-"].update(
+                                    value=config[key]['name'], visible=True, disabled=False
                                 )
                             else:
                                 self.window["-Elm" + str(x) + "-"].update(
@@ -324,18 +332,26 @@ class ElementsConfig:
                                     visible=True,
                                     disabled=False,
                                 )
-                            x = x + 1
+                        x+=1
         except Exception as e:
-            print(e)
-            sg.Popup("Configurar", keep_on_top=True)
+            print('error voy a try 2: ',e)
+            try:
+                if self.is_vmix:
+                    self.get_elements()
+                else:
+                    print(e)
+                    sg.Popup("Configurar", keep_on_top=True)
+            except Exception as e:
+                print(e)
+                sg.Popup("Configurar", keep_on_top=True)
 
-    def get_elements(self, scene):
-        items = obs.Obs().get_scene_items(scene)
+    def get_elements(self, scene=None):
+        items = obs.Obs().get_scene_items(scene) if self.is_obs else vmix.Vmix()._get_inputs()
         if items != "ERROR":
             elements = []
             for x in items:
                 elements.append(x)
-            for x in range(1, self.n + 2):
+            for x in range(1, self.n + 3):
                 self.window["-Elm" + str(x) + "-"].update(
                     value="Select", values=elements, visible=True, disabled=False
                 )
@@ -343,51 +359,68 @@ class ElementsConfig:
 
     def save_config(self):
         event, values = self.window.read()
-        elements = obs.Obs().get_scene_items(values["-SCENE-"])
+        elements = obs.Obs().get_scene_items(values["-SCENE-"]) if self.is_obs else vmix.Vmix()._get_inputs()
         if elements != "ERROR":
             # Data to be written
             dictionary = {
-                "SCENE": values["-SCENE-"],
-                "HOME_NAME": elements[values["-Elm1-"]]["name"],
-                "AWAY_NAME": elements[values["-Elm2-"]]["name"],
-                "HOME_LOGO": elements[values["-Elm3-"]]["name"],
-                "AWAY_LOGO": elements[values["-Elm4-"]]["name"],
-                "HOME_POINTS": elements[values["-Elm5-"]]["name"],
-                "AWAY_POINTS": elements[values["-Elm6-"]]["name"],
-                "HOME_SET": elements[values["-Elm7-"]]["name"],
-                "AWAY_SET": elements[values["-Elm8-"]]["name"],
-                "H_SERVE": elements[values["-Elm9-"]]["id"],
-                "A_SERVE": elements[values["-Elm10-"]]["id"],
-                "H_SUBSTITUTION": elements[values["-Elm11-"]]["id"],
-                "A_SUBSTITUTION": elements[values["-Elm12-"]]["id"],
-                "HOME_STATS_PT": elements[values["-Elm13-"]]["name"],
-                "AWAY_STATS_PT": elements[values["-Elm14-"]]["name"],
-                "HOME_STATS_PuntosT": elements[values["-Elm15-"]]["name"],
-                "AWAY_STATS_PuntosT": elements[values["-Elm16-"]]["name"],
-                "HOME_STATS_P1": elements[values["-Elm17-"]]["name"],
-                "AWAY_STATS_P1": elements[values["-Elm18-"]]["name"],
-                "HOME_STATS_S1": elements[values["-Elm19-"]]["name"],
-                "AWAY_STATS_S1": elements[values["-Elm20-"]]["name"],
-                "HOME_STATS_P2": elements[values["-Elm21-"]]["name"],
-                "AWAY_STATS_P2": elements[values["-Elm22-"]]["name"],
-                "HOME_STATS_S2": elements[values["-Elm23-"]]["name"],
-                "AWAY_STATS_S2": elements[values["-Elm24-"]]["name"],
-                "HOME_STATS_P3": elements[values["-Elm25-"]]["name"],
-                "AWAY_STATS_P3": elements[values["-Elm26-"]]["name"],
-                "HOME_STATS_S3": elements[values["-Elm27-"]]["name"],
-                "AWAY_STATS_S3": elements[values["-Elm28-"]]["name"],
-                "HOME_STATS_P4": elements[values["-Elm29-"]]["name"],
-                "AWAY_STATS_P4": elements[values["-Elm30-"]]["name"],
-                "HOME_STATS_S4": elements[values["-Elm31-"]]["name"],
-                "AWAY_STATS_S4": elements[values["-Elm32-"]]["name"],
-                "HOME_STATS_P5": elements[values["-Elm33-"]]["name"],
-                "AWAY_STATS_P5": elements[values["-Elm34-"]]["name"],
-                "HOME_STATS_S5": elements[values["-Elm35-"]]["name"],
-                "AWAY_STATS_S5": elements[values["-Elm36-"]]["name"],
-                "TIME_OUT": elements[values["-Elm37-"]]["id"],
-                "MATCH_POINT": elements[values["-Elm38-"]]["id"],
-                "SET_POINT": elements[values["-Elm39-"]]["id"],
+                "HOME_NAME": elements[values["-Elm1-"]],
+                "AWAY_NAME": elements[values["-Elm2-"]],
+                "HOME_LOGO": elements[values["-Elm3-"]],
+                "AWAY_LOGO": elements[values["-Elm4-"]],
+                "HOME_POINTS": elements[values["-Elm5-"]],
+                "AWAY_POINTS": elements[values["-Elm6-"]],
+                "HOME_SET": elements[values["-Elm7-"]],
+                "AWAY_SET": elements[values["-Elm8-"]],
+                "H_SERVE": elements[values["-Elm9-"]],
+                "A_SERVE": elements[values["-Elm10-"]],
+                "H_SUBSTITUTION": elements[values["-Elm11-"]],
+                "A_SUBSTITUTION": elements[values["-Elm12-"]],
+                "TIME_OUT": elements[values["-Elm37-"]],
+                "MATCH_POINT": elements[values["-Elm38-"]],
+                "SET_POINT": elements[values["-Elm39-"]],
             }
+            # dictionary = {
+            #     "SCENE": values["-SCENE-"],
+            #     "HOME_NAME": elements[values["-Elm1-"]]["name"],
+            #     "AWAY_NAME": elements[values["-Elm2-"]]["name"],
+            #     "HOME_LOGO": elements[values["-Elm3-"]]["name"],
+            #     "AWAY_LOGO": elements[values["-Elm4-"]]["name"],
+            #     "HOME_POINTS": elements[values["-Elm5-"]]["name"],
+            #     "AWAY_POINTS": elements[values["-Elm6-"]]["name"],
+            #     "HOME_SET": elements[values["-Elm7-"]]["name"],
+            #     "AWAY_SET": elements[values["-Elm8-"]]["name"],
+            #     "H_SERVE": elements[values["-Elm9-"]]["id"],
+            #     "A_SERVE": elements[values["-Elm10-"]]["id"],
+            #     "H_SUBSTITUTION": elements[values["-Elm11-"]]["id"],
+            #     "A_SUBSTITUTION": elements[values["-Elm12-"]]["id"],
+            #     "HOME_STATS_PT": elements[values["-Elm13-"]]["name"],
+            #     "AWAY_STATS_PT": elements[values["-Elm14-"]]["name"],
+            #     "HOME_STATS_PuntosT": elements[values["-Elm15-"]]["name"],
+            #     "AWAY_STATS_PuntosT": elements[values["-Elm16-"]]["name"],
+            #     "HOME_STATS_P1": elements[values["-Elm17-"]]["name"],
+            #     "AWAY_STATS_P1": elements[values["-Elm18-"]]["name"],
+            #     "HOME_STATS_S1": elements[values["-Elm19-"]]["name"],
+            #     "AWAY_STATS_S1": elements[values["-Elm20-"]]["name"],
+            #     "HOME_STATS_P2": elements[values["-Elm21-"]]["name"],
+            #     "AWAY_STATS_P2": elements[values["-Elm22-"]]["name"],
+            #     "HOME_STATS_S2": elements[values["-Elm23-"]]["name"],
+            #     "AWAY_STATS_S2": elements[values["-Elm24-"]]["name"],
+            #     "HOME_STATS_P3": elements[values["-Elm25-"]]["name"],
+            #     "AWAY_STATS_P3": elements[values["-Elm26-"]]["name"],
+            #     "HOME_STATS_S3": elements[values["-Elm27-"]]["name"],
+            #     "AWAY_STATS_S3": elements[values["-Elm28-"]]["name"],
+            #     "HOME_STATS_P4": elements[values["-Elm29-"]]["name"],
+            #     "AWAY_STATS_P4": elements[values["-Elm30-"]]["name"],
+            #     "HOME_STATS_S4": elements[values["-Elm31-"]]["name"],
+            #     "AWAY_STATS_S4": elements[values["-Elm32-"]]["name"],
+            #     "HOME_STATS_P5": elements[values["-Elm33-"]]["name"],
+            #     "AWAY_STATS_P5": elements[values["-Elm34-"]]["name"],
+            #     "HOME_STATS_S5": elements[values["-Elm35-"]]["name"],
+            #     "AWAY_STATS_S5": elements[values["-Elm36-"]]["name"],
+            #     "TIME_OUT": elements[values["-Elm37-"]]["id"],
+            #     "MATCH_POINT": elements[values["-Elm38-"]]["id"],
+            #     "SET_POINT": elements[values["-Elm39-"]]["id"],
+            # }
 
             # Serializing json
             json_object = json.dumps(dictionary, indent=4)
@@ -400,7 +433,6 @@ class ElementsConfig:
             else:
                 os.makedirs(filename, exist_ok=True)
             filename.write_text(json_object)
-            os.makedirs(filename, exist_ok=True)
             self.window["-SAVE_TXT-"].update(
                 "Saved", text_color="white", visible=True
             )

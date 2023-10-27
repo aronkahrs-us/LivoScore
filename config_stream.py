@@ -1,12 +1,13 @@
 import PySimpleGUI as sg
 from Utils.obs import Obs
+from Utils.vmix import Vmix
 from theme import *
 import json
 import platform, os
 from pathlib import Path
 
 
-class ObsConfig:
+class StreamConfig:
     def __init__(self) -> None:
         T_ip = [[sg.Text("Ip Address")]]
         S_ip = [[sg.Input("", enable_events=True, key="-IP-")]]
@@ -76,11 +77,7 @@ class ObsConfig:
             resizable=True,
             finalize=True,
         )
-        try:
-            self.get_config()
-        except Exception as e:
-            print(e)
-            sg.Popup("Configure", keep_on_top=True)
+        self.get_config()
 
         while True:
             event, values = self.window.read()
@@ -95,19 +92,24 @@ class ObsConfig:
         self.window.close()
 
     def get_config(self):
-        with open("./Config/stream_config.json", "r") as openfile:
-            # Reading from json file
-            config = json.load(openfile)
-            self.window["-IP-"].update(value=config["IP"], visible=True)
-            self.window["-PORT-"].update(value=config["PORT"], visible=True)
-            self.window["-PASS-"].update(value=config["PASS"], visible=True)
-            self.window["-OBS-"].update(value=config["OBS"], visible=True)
-            self.window["-VMIX-"].update(value=config["VMIX"], visible=True)
+        try:
+            with open("./Config/stream_config.json", "r") as openfile:
+                # Reading from json file
+                config = json.load(openfile)
+                self.window["-IP-"].update(value=config["IP"], visible=True)
+                self.window["-PORT-"].update(value=config["PORT"], visible=True)
+                self.window["-PASS-"].update(value=config["PASS"], visible=True)
+                self.window["-OBS-"].update(value=config["OBS"], visible=True)
+                self.window["-VMIX-"].update(value=config["VMIX"], visible=True)
+                self.streamer = Obs() if config["OBS"] else Vmix()
+        except Exception as e:
+            print(e)
+            sg.Popup("Configure", keep_on_top=True)
 
     def test_config(self):
         event, values = self.window.read()
         if (
-            Obs().test_connection_params(
+            self.streamer.test_connection_params(
                 values["-IP-"], values["-PORT-"], values["-PASS-"]
             )
             != "ERROR"
@@ -143,7 +145,6 @@ class ObsConfig:
         else:
             os.makedirs(filename, exist_ok=True)
         filename.write_text(json_object)
-        os.makedirs(filename, exist_ok=True)
         self.window["-SAVE_TXT-"].update(
             "Saved", text_color="white", visible=True
         )
