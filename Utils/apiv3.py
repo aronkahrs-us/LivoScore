@@ -311,8 +311,8 @@ class Match:
         homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.home.id)
         awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.away.id)
         if self.is_vmix:
-            wget.download(homeurl, "home.jpg")
-            wget.download(awayurl, "away.jpg")
+            wget.download(homeurl, "./home.jpg")
+            wget.download(awayurl, "./away.jpg")
         else:
             self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": homeurl})
             self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": awayurl})
