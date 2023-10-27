@@ -125,10 +125,17 @@ class Vmix:
         #     print(x,self.inputs[x])
         return dict(sorted(self.inputs.items()))
 
-# homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(505)
+try:
+    with open("./Config/elem_config.json", "r") as openfile:
+        # Reading from json file
+        elements = json.load(openfile)
+except:
+    pass
+hand=Vmix()
+homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(505)
 # awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(501)
 # hand._set_input_settings(elements["HOME_NAME"], {"text": ''})
-# hand._set_input_settings(elements["HOME_LOGO"], {"file": ''})
+hand._set_input_settings(elements["HOME_LOGO"], {"file": homeurl})
 # hand._set_input_settings(elements["AWAY_NAME"], {"text": ''})
 # hand._set_input_settings(elements["AWAY_LOGO"], {"file": ''})
 # hand._set_active(1,hand.inputs['scoreboard']['key'])

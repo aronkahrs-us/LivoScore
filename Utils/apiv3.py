@@ -1,7 +1,7 @@
 import requests
 import time
 import json
-import os
+import wget
 import threading
 import PySimpleGUI as sg
 from .team import Team
@@ -309,8 +309,10 @@ class Match:
         """Gets the logos of the teams in the match"""
         homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.home.id)
         awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.away.id)
-        self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": homeurl})
-        self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": awayurl})
+        wget.download(homeurl, "home.jpg")
+        wget.download(awayurl, "away.jpg")
+        #self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": homeurl})
+        #self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": awayurl})
 
     def _web_request(self, data):
         """makes the requests to the server with the specified data"""
@@ -405,7 +407,6 @@ class Match:
                 {"text": str(self.stats.total["Away_points"])},
             )
             for x in self.stats.sets.keys():
-                print(x)
                 self.streamer._set_input_settings(
                     self.elements["HOME_STATS_P" + str(x.split("_")[1])],
                     {"text": str(self.stats.sets[x]["Home_percentage"])},
