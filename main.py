@@ -23,10 +23,10 @@ class Main:
                 config = json.load(openfile)
                 self.is_obs = config["OBS"]
                 self.is_vmix = config["VMIX"]
+                self.streamer = Obs() if self.is_obs else Vmix()
         except Exception as e:
             sg.popup_error(f"AN EXCEPTION OCCURRED!", e)
         sg.theme('LIVO')
-        self.streamer = Obs() if self.is_obs else Vmix()
         # All the stuff inside your self.window.
         T_Local = [
             [

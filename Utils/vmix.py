@@ -125,30 +125,6 @@ class Vmix:
         #     print(x,self.inputs[x])
         return dict(sorted(self.inputs.items()))
 
-try:
-    with open("./Config/elem_config.json", "r") as openfile:
-        # Reading from json file
-        elements = json.load(openfile)
-except:
-    pass
-hand=Vmix()
-for x in range(1,6):
-    hand._set_input_settings(
-        elements["HOME_STATS_P" + str(x)],
-        {"text": ""},
-    )
-    hand._set_input_settings(
-        elements["AWAY_STATS_P" + str(x)],
-        {"text": ""},
-    )
-    hand._set_input_settings(
-        elements["HOME_STATS_S" + str(x)],
-        {"text": ""},
-    )
-    hand._set_input_settings(
-        elements["AWAY_STATS_S" + str(x)],
-        {"text": ""},
-    )
 # homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(505)
 # awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(501)
 # hand._set_input_settings(elements["HOME_NAME"], {"text": ''})
