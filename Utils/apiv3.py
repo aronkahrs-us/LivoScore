@@ -2,6 +2,7 @@ import requests
 import time
 import json
 import wget
+import os
 import threading
 import PySimpleGUI as sg
 from .team import Team
@@ -486,7 +487,16 @@ class Match:
         self.is_running = False
         self.status = 2
         self._reset_stream()
+        self._delete_files()
         self._update_ui()
 
-
+    def _delete_files(self):
+        files = [
+            'Home',
+            'Away']
+        for file in files:
+            try:
+                os.remove(file+".jpg")
+            except:
+                continue
 # Match(5953,'livosur')
