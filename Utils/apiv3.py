@@ -310,10 +310,12 @@ class Match:
         """Gets the logos of the teams in the match"""
         homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.home.id)
         awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.away.id)
-        wget.download(homeurl, "home.jpg")
-        wget.download(awayurl, "away.jpg")
-        #self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": homeurl})
-        #self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": awayurl})
+        if self.is_vmix:
+            wget.download(homeurl, "home.jpg")
+            wget.download(awayurl, "away.jpg")
+        else:
+            self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": homeurl})
+            self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": awayurl})
 
     def _web_request(self, data):
         """makes the requests to the server with the specified data"""
