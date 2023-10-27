@@ -197,14 +197,9 @@ class LeagueConfig:
 
         # Serializing json
         json_object = json.dumps(dictionary, indent=4)
-        filename = Path("./Config/league_config.json")
-        if platform.system() == "Darwin":
-            try:
-                filename.parent.mkdir(mode=777,exist_ok=True, parents=True)
-            except Exception as e:
-                print(e)
-        else:
-            filename.parent.mkdir(exist_ok=True, parents=True)
-        filename.write_text(json_object)
-        self.window["-SAVE_TXT-"].update(visible=True)
+        filename = "./Config/league_config.json"
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with open(filename, "w") as outfile:
+            outfile.write(json_object)
+            self.window["-SAVE_TXT-"].update(visible=True)
         return True

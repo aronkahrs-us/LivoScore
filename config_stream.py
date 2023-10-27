@@ -136,16 +136,10 @@ class StreamConfig:
 
         # Serializing json
         json_object = json.dumps(dictionary, indent=4)
-        filename = Path("./Config/stream_config.json")
-        if platform.system() == "Darwin":
-            try:
-                filename.parent.mkdir(mode=777, exist_ok=True, parents=True)
-            except Exception as e:
-                print(e)
-                self.window["-SAVE_TXT-"].update("ERROR", text_color="red", visible=True)
-        else:
-            filename.parent.mkdir(exist_ok=True, parents=True)
-        filename.write_text(json_object)
-        self.window["-SAVE_TXT-"].update(
-            "Saved", text_color="white", visible=True
-        )
+        filename = "./Config/stream_config.json"
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with open(filename, "w") as outfile:
+            outfile.write(json_object)
+            self.window["-SAVE_TXT-"].update(
+                "Saved", text_color="white", visible=True
+            )
