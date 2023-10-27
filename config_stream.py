@@ -108,6 +108,7 @@ class StreamConfig:
 
     def test_config(self):
         event, values = self.window.read()
+        self.streamer = Obs() if values["-OBS-"] else Vmix()
         if (
             self.streamer.test_connection_params(
                 values["-IP-"], values["-PORT-"], values["-PASS-"]
