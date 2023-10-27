@@ -405,6 +405,7 @@ class Match:
                 {"text": str(self.stats.total["Away_points"])},
             )
             for x in self.stats.sets.keys():
+                print(x)
                 self.streamer._set_input_settings(
                     self.elements["HOME_STATS_P" + str(x.split("_")[1])],
                     {"text": str(self.stats.sets[x]["Home_percentage"])},

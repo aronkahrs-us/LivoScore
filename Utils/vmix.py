@@ -89,7 +89,7 @@ class Vmix:
             function = 'SetText' if 'text' in value else 'SetImage'
             value = value['text'] if 'text' in value else value['file']
         req = requests.post('http://{}:{}/API/?Function={}&Input={}&SelectedName={}&Value={}'.format(self.connect['IP'],self.connect['PORT'],function,input,name,value))
-
+        print(req)
     def _get_inputs(self):
         self.inputs={}
         req = requests.get("http://{}:{}/api".format(self.connect['IP'],self.connect['PORT'])).content
@@ -123,15 +123,32 @@ class Vmix:
             self.inputs[x['@shortTitle']] = data
         # for x in self.inputs:
         #     print(x,self.inputs[x])
-        return self.inputs
+        return dict(sorted(self.inputs.items()))
 
-# try:
-#     with open("./Config/elem_config.json", "r") as openfile:
-#         # Reading from json file
-#         elements = json.load(openfile)
-# except:
-#     pass
-# hand=Vmix()
+try:
+    with open("./Config/elem_config.json", "r") as openfile:
+        # Reading from json file
+        elements = json.load(openfile)
+except:
+    pass
+hand=Vmix()
+for x in range(1,6):
+    hand._set_input_settings(
+        elements["HOME_STATS_P" + str(x)],
+        {"text": ""},
+    )
+    hand._set_input_settings(
+        elements["AWAY_STATS_P" + str(x)],
+        {"text": ""},
+    )
+    hand._set_input_settings(
+        elements["HOME_STATS_S" + str(x)],
+        {"text": ""},
+    )
+    hand._set_input_settings(
+        elements["AWAY_STATS_S" + str(x)],
+        {"text": ""},
+    )
 # homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(505)
 # awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(501)
 # hand._set_input_settings(elements["HOME_NAME"], {"text": ''})

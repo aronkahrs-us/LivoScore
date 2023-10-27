@@ -9,11 +9,11 @@
     },
     "HOME_LOGO": {
         "name": "Home Logo.Source",
-        "parent": "801e3179-a33a-4151-ba2e-23701ec39968"
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
     },
     "AWAY_LOGO": {
         "name": "Away Logo.Source",
-        "parent": "801e3179-a33a-4151-ba2e-23701ec39968"
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
     },
     "HOME_POINTS": {
         "name": "Home Score.Text",
@@ -78,6 +78,102 @@
                 "#text": "bc9c57e0-44c0-4328-8169-7d1d91d4ed65\\sustitucion.png"
             }
         ]
+    },
+    "HOME_STATS_PT": {
+        "name": "H Total Percent.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "AWAY_STATS_PT": {
+        "name": "A Total Percent.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "HOME_STATS_PuntosT": {
+        "name": "H Total Points.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "AWAY_STATS_PuntosT": {
+        "name": "A Total Points.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "HOME_STATS_P1": {
+        "name": "H Set 1 Percent.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "AWAY_STATS_P1": {
+        "name": "A Set 1 Percent.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "HOME_STATS_S1": {
+        "name": "H Set 1 Points.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "AWAY_STATS_S1": {
+        "name": "A Set 1 Points.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "HOME_STATS_P2": {
+        "name": "H Set 2 Percent.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "AWAY_STATS_P2": {
+        "name": "A Set 2 Percent.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "HOME_STATS_S2": {
+        "name": "H Set 2 Points.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "AWAY_STATS_S2": {
+        "name": "A Set 2 Points.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "HOME_STATS_P3": {
+        "name": "H Set 3 Percent.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "AWAY_STATS_P3": {
+        "name": "A Set 3 Percent.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "HOME_STATS_S3": {
+        "name": "H Set 3 Points.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "AWAY_STATS_S3": {
+        "name": "A Set 3 Points.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "HOME_STATS_P4": {
+        "name": "H Set 4 Percent.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "AWAY_STATS_P4": {
+        "name": "A Set 4 Percent.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "HOME_STATS_S4": {
+        "name": "H Set 4 Points.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "AWAY_STATS_S4": {
+        "name": "A Set 4 Points.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "HOME_STATS_P5": {
+        "name": "H Set 5 Percent.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "AWAY_STATS_P5": {
+        "name": "A Set 5 Percent.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "HOME_STATS_S5": {
+        "name": "H Set 5 Points.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
+    },
+    "AWAY_STATS_S5": {
+        "name": "A Set 5 Points.Text",
+        "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
     },
     "TIME_OUT": {
         "key": "a9c04a46-b782-4b90-9840-330859c3ef94",
