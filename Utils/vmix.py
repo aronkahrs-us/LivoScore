@@ -10,7 +10,7 @@ class Vmix:
                 # Reading from json file
                 self.connect = json.load(openfile)
                 self.session = requests.Session()
-                self.session.auth = ('admin', 'test') 
+                self.session.auth = ('admin', self.connect['PASS']) 
                 self._get_inputs()
         except:
             pass

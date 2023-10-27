@@ -234,7 +234,7 @@ class Main:
     def start_match(self):
         if self.streamer.test_connection() == "ERROR":
             self.window["-ERROR-"].update(
-                "OBS is closed or not configured", text_color="red", visible=True
+                "{} is closed or not configured".format("OBS" if self.is_obs else "vMix"), text_color="red", visible=True
             )
         else:
             self.window["-ERROR-"].update("Starting", text_color="green", visible=True)
