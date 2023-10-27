@@ -311,8 +311,7 @@ class Match:
         homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.home.id)
         awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.away.id)
         if self.is_vmix:
-            wget.download(homeurl, "./home.jpg")
-            wget.download(awayurl, "./away.jpg")
+            self.streamer.update_logos(homeurl,awayurl)
         else:
             self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": homeurl})
             self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": awayurl})
@@ -489,16 +488,6 @@ class Match:
         self.is_running = False
         self.status = 2
         self._reset_stream()
-        self._delete_files()
         self._update_ui()
 
-    def _delete_files(self):
-        files = [
-            'Home',
-            'Away']
-        for file in files:
-            try:
-                os.remove(file+".jpg")
-            except:
-                continue
 # Match(5953,'livosur')

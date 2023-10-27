@@ -75,6 +75,13 @@ class Vmix:
         else:
             self._set_inactive(3,self.elements['SET_POINT']['key'])
     
+    def update_logos(self,home:str=None,away:str=None):
+        for x in self.inputs:
+            if ('home' in x.lower() or 'h' in x.lower()) and 'logo' in x.lower():
+                self._set_input_settings(self.inputs[x],{'file': home})
+            elif ('away' in x.lower() or 'a' in x.lower()) and 'logo' in x.lower():
+                self._set_input_settings(self.inputs[x],{'file': away})
+
     def _set_active(self,index,input):
         self._set_input('OverlayInput{}In'.format(index),input)
 
@@ -90,6 +97,7 @@ class Vmix:
             value = value['text'] if 'text' in value else value['file']
         req = requests.post('http://{}:{}/API/?Function={}&Input={}&SelectedName={}&Value={}'.format(self.connect['IP'],self.connect['PORT'],function,input,name,value))
         print(req)
+    
     def _get_inputs(self):
         self.inputs={}
         req = requests.get("http://{}:{}/api".format(self.connect['IP'],self.connect['PORT'])).content
@@ -125,17 +133,17 @@ class Vmix:
         #     print(x,self.inputs[x])
         return dict(sorted(self.inputs.items()))
 
-try:
-    with open("./Config/elem_config.json", "r") as openfile:
-        # Reading from json file
-        elements = json.load(openfile)
-except:
-    pass
-hand=Vmix()
-homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(505)
-# awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(501)
+# try:
+#     with open("./Config/elem_config.json", "r") as openfile:
+#         # Reading from json file
+#         elements = json.load(openfile)
+# except:
+#     pass
+# hand=Vmix()
+# homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(507)
+# awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(503)
 # hand._set_input_settings(elements["HOME_NAME"], {"text": ''})
-hand._set_input_settings(elements["HOME_LOGO"], {"file": homeurl})
+# hand.update_logos(homeurl,awayurl)
 # hand._set_input_settings(elements["AWAY_NAME"], {"text": ''})
 # hand._set_input_settings(elements["AWAY_LOGO"], {"file": ''})
 # hand._set_active(1,hand.inputs['scoreboard']['key'])
