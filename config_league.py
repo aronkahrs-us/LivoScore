@@ -204,7 +204,7 @@ class LeagueConfig:
             except Exception as e:
                 print(e)
         else:
-            os.makedirs(filename, exist_ok=True)
+            filename.parent.mkdir(exist_ok=True, parents=True)
         filename.write_text(json_object)
         self.window["-SAVE_TXT-"].update(visible=True)
         return True

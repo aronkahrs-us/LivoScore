@@ -455,7 +455,7 @@ class ElementsConfig:
                 except Exception as e:
                     print(e)
             else:
-                os.makedirs(filename, exist_ok=True)
+                filename.parent.mkdir(exist_ok=True, parents=True)
             filename.write_text(json_object)
             self.window["-SAVE_TXT-"].update(
                 "Saved", text_color="white", visible=True
