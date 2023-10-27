@@ -9,6 +9,7 @@ class Vmix:
             with open("./Config/stream_config.json", "r") as openfile:
                 # Reading from json file
                 self.connect = json.load(openfile)
+                self._get_inputs()
         except:
             pass
         try:
@@ -17,7 +18,6 @@ class Vmix:
                 self.elements = json.load(openfile)
         except:
             pass
-        self._get_inputs()
         pass
 
     def test_connection(self):
