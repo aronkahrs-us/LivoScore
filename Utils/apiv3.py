@@ -478,8 +478,11 @@ class Match:
                     self.elements["AWAY_STATS_S" + str(x)],
                     {"text": ""},
                 )
-            self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": ""})
-            self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": ""})
+            if self.is_vmix:
+                self.streamer.update_logos("","")
+            else:
+                self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": ""})
+                self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": ""})
         except Exception as e:
             print("error", e)
             return e
