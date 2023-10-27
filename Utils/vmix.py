@@ -9,6 +9,8 @@ class Vmix:
             with open("./Config/stream_config.json", "r") as openfile:
                 # Reading from json file
                 self.connect = json.load(openfile)
+                self.session = requests.Session()
+                self.session.auth = ('admin', 'test') 
                 self._get_inputs()
         except:
             pass
@@ -22,7 +24,7 @@ class Vmix:
 
     def test_connection(self):
         try:
-            response = requests.get("http://{}:{}/api".format(self.connect['IP'],self.connect['PORT']), timeout=5)
+            response = self.session.get("http://{}:{}/api".format(self.connect['IP'],self.connect['PORT']), timeout=5)
             if response.ok:
                 return 'OK'
             else:
@@ -32,7 +34,9 @@ class Vmix:
     
     def test_connection_params(self, ip, port, passw=None) -> str:
         try:
-            response = requests.get("http://{}:{}/api".format(ip,port), timeout=5)
+            session = requests.Session()
+            session.auth = ('admin', passw) 
+            response = session.get("http://{}:{}/api".format(ip,port), timeout=5)
             if response.ok:
                 return 'OK'
             else:
@@ -95,12 +99,12 @@ class Vmix:
         if function == None:
             function = 'SetText' if 'text' in value else 'SetImage'
             value = value['text'] if 'text' in value else value['file']
-        req = requests.post('http://{}:{}/API/?Function={}&Input={}&SelectedName={}&Value={}'.format(self.connect['IP'],self.connect['PORT'],function,input,name,value))
+        req = self.session.post('http://{}:{}/API/?Function={}&Input={}&SelectedName={}&Value={}'.format(self.connect['IP'],self.connect['PORT'],function,input,name,value))
         print(req)
     
     def _get_inputs(self):
         self.inputs={}
-        req = requests.get("http://{}:{}/api".format(self.connect['IP'],self.connect['PORT'])).content
+        req = self.session.get("http://{}:{}/api".format(self.connect['IP'],self.connect['PORT'])).content
         inputs_xlm = xmltodict.parse(req)["vmix"]["inputs"]["input"]
         for x in inputs_xlm:
             data = {
@@ -133,17 +137,17 @@ class Vmix:
         #     print(x,self.inputs[x])
         return dict(sorted(self.inputs.items()))
 
-# try:
-#     with open("./Config/elem_config.json", "r") as openfile:
-#         # Reading from json file
-#         elements = json.load(openfile)
-# except:
-#     pass
-# hand=Vmix()
-# homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(507)
-# awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(503)
-# hand._set_input_settings(elements["HOME_NAME"], {"text": ''})
-# hand.update_logos(homeurl,awayurl)
+try:
+    with open("./Config/elem_config.json", "r") as openfile:
+        # Reading from json file
+        elements = json.load(openfile)
+except:
+    pass
+hand=Vmix()
+homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(507)
+awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(503)
+hand._set_input_settings(elements["HOME_NAME"], {"text": ''})
+hand.update_logos(homeurl,awayurl)
 # hand._set_input_settings(elements["AWAY_NAME"], {"text": ''})
 # hand._set_input_settings(elements["AWAY_LOGO"], {"file": ''})
 # hand._set_active(1,hand.inputs['scoreboard']['key'])
