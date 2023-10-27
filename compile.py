@@ -5,7 +5,7 @@ PyInstaller.__main__.run([
     '--onefile',
     '--windowed',
     '--clean',
-    '-i=/Users/aronkahrs/Desktop/LivoScore/livoscore.ico',
+    '-i=livoscore.ico',
     '-n=LivoScore',
     '--osx-bundle-identifier=com.ak.volley.livoscore',
     '--debug=imports',

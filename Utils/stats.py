@@ -82,14 +82,21 @@ class Stats:
         except:
             pass
 
-    def _scrap_stats(self):
-        URL = "https://livosur-web.dataproject.com/MatchStatistics.aspx?mID={}".format(6020)
+    def _match_history(self,h_id,a_id):
+        URL = "https://livosur-web.dataproject.com/MatchStatistics.aspx?mID={}".format(6088)
         r = requests.get(URL) 
         
         soup = BeautifulSoup(r.content, 'lxml') 
-        table = soup.find('tr', attrs = {'id':'__0'})
         idin=soup.find_all('div', attrs = {'id':'RPL_HisotryMatches'})
+        won=[]
         for x in idin:
-            print(x.find('span', attrs = {'id':'LB_SetResult'}))
+            result = x.find('span', attrs = {'id':'LB_SetResult'}).text.replace(" ","").split('-')
+            home = (x.find('span', attrs = {'id':'LB_SetResult'}).parent.parent.parent.parent).find('input', attrs = {'id':'HF_HomeTeamID'})['value']
+            away = (x.find('span', attrs = {'id':'LB_SetResult'}).parent.parent.parent.parent).find('input', attrs = {'id':'HF_GuestTeamID'})['value']
+            if result[0]>result[1] and home == h_id:
+                won.append(home)
+            elif away == a_id:
+                won.append(away)
+        print(won)
 
 Stats()._scrap_stats()
