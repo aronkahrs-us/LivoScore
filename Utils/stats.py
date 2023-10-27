@@ -1,3 +1,6 @@
+import requests 
+from bs4 import BeautifulSoup
+
 class Stats:
     def __init__(self) -> None:
         self.total = {
@@ -78,3 +81,15 @@ class Stats:
             )
         except:
             pass
+
+    def _scrap_stats(self):
+        URL = "https://livosur-web.dataproject.com/MatchStatistics.aspx?mID={}".format(6020)
+        r = requests.get(URL) 
+        
+        soup = BeautifulSoup(r.content, 'lxml') 
+        table = soup.find('tr', attrs = {'id':'__0'})
+        idin=soup.find_all('div', attrs = {'id':'RPL_HisotryMatches'})
+        for x in idin:
+            print(x.find('span', attrs = {'id':'LB_SetResult'}))
+
+Stats()._scrap_stats()
