@@ -55,7 +55,7 @@ class Main:
             ]
         ]
         B_Iniciar = [[sg.Button("Start", key="-ST-", border_width=0, disabled=True)]]
-        B_Reload = [[sg.Button("🔄", key="-RELOAD-", button_color="#002B45", border_width=0)]]
+        B_Reload = [[sg.Button("🔄", key="-RELOAD-", button_color="white on #002B45", border_width=0)]]
         T_Error = [
             [
                 sg.Text(
@@ -119,7 +119,7 @@ class Main:
                 sg.Column(
                     T_Visita, element_justification="c", expand_x=True, expand_y=True
                 ),
-            ],
+            ]
         ]
         # Create the Window
         # splash = sg.Window("Livoscore", icon=logo,
@@ -152,7 +152,6 @@ class Main:
         # Event Loop to process "events" and get the "values" of the inputs
         while True:
             event, self.values = self.window.read()
-            print(event,self.values)
             try:
                 print('match: ',self.match.is_running)
             except:
@@ -166,7 +165,7 @@ class Main:
                     ElementsConfig()
                 else:
                     self.window["-ERROR-"].update(
-                        "OBS not configured or closed",
+                        "{} is closed or not configured".format("OBS" if self.is_obs else "vMix"),
                         text_color="red",
                         visible=True,
                     )
@@ -186,11 +185,14 @@ class Main:
                     if self.match.is_running == True:
                         self.court.stop()
                         self.match._stop()
+                        self.match.is_running = False
+                        self.window["-RELOAD-"].update(disabled=False)
                     else:
                         print('start')
                         threading.Thread(target=self.start_match, daemon=True).start()
                 except Exception as e:
                     print('excp',e)
+                    self.window["-RELOAD-"].update(disabled=True)
                     threading.Thread(target=self.start_match, daemon=True).start()
             elif event == "-RELOAD-":
                 threading.Thread(target=self.list_matches, daemon=True).start()
@@ -246,3 +248,4 @@ class Main:
             )
             self.court = Court(self.match)
             self.court.start()
+            self.window["-RELOAD-"].update(disabled=True)

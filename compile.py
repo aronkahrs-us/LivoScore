@@ -11,5 +11,6 @@ PyInstaller.__main__.run([
     '--debug=imports',
     '--add-data=Utils:Utils'
     '--hidden-import=_ssl',
+    '--target-architecture=x86_64',
     '--hidden-import=requests,time,json,os,threading,PySimpleGUI,sseclient,flask,ssl,bs4,datetime,obsws_python,platform,lxml,_ssl',
 ])

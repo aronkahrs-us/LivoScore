@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 class Stats:
-    def __init__(self) -> None:
+    def __init__(self,l_url) -> None:
         self.total = {
             "Total_points": 0,
             "Home_points": 0,
@@ -10,10 +10,12 @@ class Stats:
             "Home_percentage": "0",
             "Away_percentage": "0",
         }
+        self.league_url=l_url
         self.sets = {}
         pass
 
     def initiate(self, data, current_set):
+        self._match_history(data['ChampionshipMatchID'],data['Home'],data['Guest'])
         sets = ["Set{}Home", "Set{}Guest"]
         for i in range(1, current_set + 1):
             try:
@@ -82,21 +84,68 @@ class Stats:
         except:
             pass
 
-    def _match_history(self,h_id,a_id):
-        URL = "https://livosur-web.dataproject.com/MatchStatistics.aspx?mID={}".format(6088)
-        r = requests.get(URL) 
+    def _match_history(self,m_id,h_id,a_id):
+        URL = "{}/MatchStatistics.aspx?mID={}".format(self.league_url,m_id)
+        r = requests.get(URL)
+        self.comp_id= r.url.split('ID=')[-1]
         
-        soup = BeautifulSoup(r.content, 'lxml') 
+        soup = BeautifulSoup(r.content, 'lxml')
         idin=soup.find_all('div', attrs = {'id':'RPL_HisotryMatches'})
         won=[]
         for x in idin:
             result = x.find('span', attrs = {'id':'LB_SetResult'}).text.replace(" ","").split('-')
-            home = (x.find('span', attrs = {'id':'LB_SetResult'}).parent.parent.parent.parent).find('input', attrs = {'id':'HF_HomeTeamID'})['value']
-            away = (x.find('span', attrs = {'id':'LB_SetResult'}).parent.parent.parent.parent).find('input', attrs = {'id':'HF_GuestTeamID'})['value']
+            home = int((x.find('span', attrs = {'id':'LB_SetResult'}).parent.parent.parent.parent).find('input', attrs = {'id':'HF_HomeTeamID'})['value'])
+            away = int((x.find('span', attrs = {'id':'LB_SetResult'}).parent.parent.parent.parent).find('input', attrs = {'id':'HF_GuestTeamID'})['value'])
             if result[0]>result[1] and home == h_id:
                 won.append(home)
             elif away == a_id:
                 won.append(away)
-        print(won)
-
-Stats()._scrap_stats()
+        print("Home has won {} of {} matches".format(won.count(h_id),len(won)))
+        print("Away has won {} of {} matches".format(won.count(a_id),len(won)))
+        self.home=self._team_stats(h_id)
+        self.away=self._team_stats(a_id)
+        
+    def _team_stats(self,t_id):
+        team = {
+            'played': 0,
+            'won': 0,
+            'lost': 0,
+            'set_total': 0,
+            'set_won': 0,
+            'set_lost': 0,
+            'set_percent': 0,
+            'points_total': 0,
+            'points_won': 0,
+            'points_lost': 0,
+            'points_percent': 0,
+            'result_30': 0,
+            'result_31': 0,
+            'result_32': 0,
+            'result_23': 0,
+            'result_13': 0,
+            'result_03': 0,
+        }
+        URL = "{}/CompetitionStandings.aspx?ID={}".format(self.league_url,self.comp_id)
+        r = requests.get(URL)
+        soup = BeautifulSoup(r.content, 'lxml')
+        tables=soup.find_all('input', attrs = {'value':str(t_id)})
+        for x in tables:
+            team['played'] += int(x.parent.parent.find('span', attrs = {'id':'MatchesPlayed'}).text) if x.parent.parent.find('span', attrs = {'id':'MatchesPlayed'}) != None else 0
+            team['won'] += int(x.parent.parent.find('span', attrs = {'id':'WonMatches'}).text) if x.parent.parent.find('span', attrs = {'id':'WonMatches'}) != None else 0
+            team['lost'] += int(x.parent.parent.find('span', attrs = {'id':'LostMatches'}).text) if x.parent.parent.find('span', attrs = {'id':'LostMatches'}) != None else 0
+            team['set_total'] += int(x.parent.parent.find('span', attrs = {'id':'SetsWon'}).text)+int(x.parent.parent.find('span', attrs = {'id':'SetsLost'}).text) if x.parent.parent.find('span', attrs = {'id':'SetsWon'}) != None else 0
+            team['set_won'] += int(x.parent.parent.find('span', attrs = {'id':'SetsWon'}).text) if x.parent.parent.find('span', attrs = {'id':'SetsWon'}) != None else 0
+            team['set_lost'] += int(x.parent.parent.find('span', attrs = {'id':'SetsLost'}).text) if x.parent.parent.find('span', attrs = {'id':'SetsLost'}) != None else 0
+            team['points_total'] += int(x.parent.parent.find('span', attrs = {'id':'PuntiFatti'}).text)+int(x.parent.parent.find('span', attrs = {'id':'PuntiSubiti'}).text) if x.parent.parent.find('span', attrs = {'id':'PuntiFatti'}) != None else 0
+            team['points_won'] += int(x.parent.parent.find('span', attrs = {'id':'PuntiFatti'}).text) if x.parent.parent.find('span', attrs = {'id':'PuntiFatti'}) != None else 0
+            team['points_lost'] += int(x.parent.parent.find('span', attrs = {'id':'PuntiSubiti'}).text) if x.parent.parent.find('span', attrs = {'id':'PuntiSubiti'}) != None else 0
+            team['result_30'] += int(x.parent.parent.find('span', attrs = {'id':'Final30'}).text) if x.parent.parent.find('span', attrs = {'id':'Final30'}) != None else 0
+            team['result_31'] += int(x.parent.parent.find('span', attrs = {'id':'Final31'}).text) if x.parent.parent.find('span', attrs = {'id':'Final31'}) != None else 0
+            team['result_32'] += int(x.parent.parent.find('span', attrs = {'id':'Final32'}).text) if x.parent.parent.find('span', attrs = {'id':'Final32'}) != None else 0
+            team['result_23'] += int(x.parent.parent.find('span', attrs = {'id':'Final23'}).text) if x.parent.parent.find('span', attrs = {'id':'Final23'}) != None else 0
+            team['result_13'] += int(x.parent.parent.find('span', attrs = {'id':'Final13'}).text) if x.parent.parent.find('span', attrs = {'id':'Final13'}) != None else 0
+            team['result_03'] += int(x.parent.parent.find('span', attrs = {'id':'Final03'}).text) if x.parent.parent.find('span', attrs = {'id':'Final03'}) != None else 0
+        team['set_percent'] = round((team['set_won']*100)/team['set_total'])
+        team['points_percent'] = round((team['points_won']*100)/team['points_total'])
+        return team
+#Stats("https://livosur-web.dataproject.com").test(6126)

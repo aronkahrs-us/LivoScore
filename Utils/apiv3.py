@@ -1,8 +1,6 @@
 import requests
 import time
 import json
-import wget
-import os
 import threading
 import PySimpleGUI as sg
 from .team import Team
@@ -10,7 +8,7 @@ from .obs import Obs
 from .vmix import Vmix
 from .stats import Stats
 from sseclient import SSEClient
-
+from bs4 import BeautifulSoup
 
 class Match:
     def __init__(self, m_id, window):
@@ -19,13 +17,13 @@ class Match:
         self.set_point = False
         self.match_point = False
         self.window = window
-        self.stats = Stats()
         try:
             with open("./Config/league_config.json", "r") as openfile:
                 # Reading from json file
                 config = json.load(openfile)
                 self.league = config["LEAGUE"]
                 self.league_url = config["LEAGUE_URL"]
+                self.stats = Stats(self.league_url)
         except Exception as e:
             sg.popup_error(f"AN EXCEPTION OCCURRED!", e)
         try:
@@ -127,7 +125,7 @@ class Match:
                                 ).start()
                             elif self.action == 2:
                                 threading.Thread(
-                                    target=self.streamer.substitution, args=self.serve
+                                    target=self.streamer.substitution, args=(self.serve,self.home.id,self.away.id)
                                 ).start()
                             elif self.action == 3:
                                 threading.Thread(target=self.streamer.time_out).start()
@@ -219,6 +217,10 @@ class Match:
         self._reset_stream()
         self._update_ui()
         self._get_logos()
+        self._get_referes()
+        self._update_stream()
+        self.streamer.set_sp_stat(self.stats.home,self.stats.away)
+        self.streamer.set_results(self.stats.home,self.stats.away)
 
     def _get_players(self, team_id):
         """Get the list of players of the team"""
@@ -266,10 +268,14 @@ class Match:
                 self.set_point = True
             else:
                 self.set_point = False
-
-        self.streamer.set_point(self.set_point)
-        self.streamer.match_point(self.match_point)
-
+        print('set point :', self.set_point)
+        print('match point :', self.match_point)
+        if self.set_point:
+            self.streamer.match_point(self.match_point)
+            self.streamer.set_point(self.set_point)
+        elif self.match_point:
+            self.streamer.set_point(self.set_point)
+            self.streamer.match_point(self.match_point)
     def _update_ui(self):
         if self.status == 0:
             self.window["-ID-"].update(disabled=False)
@@ -315,6 +321,14 @@ class Match:
         else:
             self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": homeurl})
             self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": awayurl})
+
+    def _get_referes(self):
+        URL = "{}/MatchStatistics.aspx?mID={}".format(self.league_url,self.m_id)
+        r = requests.get(URL)
+        
+        soup = BeautifulSoup(r.content, 'lxml')
+        ref=soup.find('span', attrs = {'id':'Content_Main_LB_Referees'}).text.split('-')
+        self.streamer.update_referees(ref)
 
     def _web_request(self, data):
         """makes the requests to the server with the specified data"""
@@ -480,6 +494,7 @@ class Match:
                 )
             if self.is_vmix:
                 self.streamer.update_logos("","")
+                self.streamer.update_referees(['',''])
             else:
                 self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": ""})
                 self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": ""})

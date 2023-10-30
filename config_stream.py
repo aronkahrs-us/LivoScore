@@ -2,9 +2,9 @@ import PySimpleGUI as sg
 from Utils.obs import Obs
 from Utils.vmix import Vmix
 from theme import *
+import threading
 import json
-import platform, os
-from pathlib import Path
+import os
 
 
 class StreamConfig:
@@ -81,7 +81,6 @@ class StreamConfig:
 
         while True:
             event, values = self.window.read()
-            print(values)
             if event == "-SAVE-":
                 self.save_config()
             elif event == "-TEST-":
@@ -108,6 +107,9 @@ class StreamConfig:
 
     def test_config(self):
         event, values = self.window.read()
+        self.window["-SAVE_TXT-"].update(
+                value="Testing...", text_color="white", visible=True
+            )
         self.streamer = Obs() if values["-OBS-"] else Vmix()
         if (
             self.streamer.test_connection_params(

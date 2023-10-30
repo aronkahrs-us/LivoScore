@@ -34,25 +34,22 @@
     "H_SERVE": {
         "key": "d7812c71-dfda-41ec-bbda-14000d3a7971",
         "type": "GT",
-        "name": "srv_home",
-        "state": "Paused"
+        "name": "Serve Home"
     },
     "A_SERVE": {
         "key": "77dac5c1-b67a-4c45-ac56-2c2d170b57ab",
         "type": "GT",
-        "name": "srv_away",
-        "state": "Paused"
+        "name": "Serve Away"
     },
     "H_SUBSTITUTION": {
         "key": "79ab391b-3f40-46cb-9fe5-e46c047f7228",
         "type": "GT",
-        "name": "substitution",
-        "state": "Paused",
+        "name": "Substitution",
         "image": [
             {
                 "@index": "0",
                 "@name": "Logo.Source",
-                "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_505.jpg"
+                "#text": "49e48839-91cb-4d97-9ef7-8fc5cbb9135c\\home (1).jpg"
             },
             {
                 "@index": "1",
@@ -64,13 +61,12 @@
     "A_SUBSTITUTION": {
         "key": "79ab391b-3f40-46cb-9fe5-e46c047f7228",
         "type": "GT",
-        "name": "substitution",
-        "state": "Paused",
+        "name": "Substitution",
         "image": [
             {
                 "@index": "0",
                 "@name": "Logo.Source",
-                "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_505.jpg"
+                "#text": "49e48839-91cb-4d97-9ef7-8fc5cbb9135c\\home (1).jpg"
             },
             {
                 "@index": "1",
@@ -178,19 +174,294 @@
     "TIME_OUT": {
         "key": "a9c04a46-b782-4b90-9840-330859c3ef94",
         "type": "Video",
-        "name": "Time_out",
-        "state": "Completed"
+        "name": "Time Out"
     },
     "MATCH_POINT": {
         "key": "1da2f16c-3b95-4b7d-b00a-15ebc206eb04",
         "type": "Video",
-        "name": "matchpoint",
-        "state": "Completed"
+        "name": "Match Point"
     },
     "SET_POINT": {
         "key": "da5e0144-76cf-45b4-bcf1-3b03601c1a03",
         "type": "Video",
-        "name": "setpoint",
-        "state": "Paused"
+        "name": "Set Point"
+    },
+    "REFEREES": {
+        "key": "d9cceb24-b2e2-4f5a-aaf3-97fe02fd25a1",
+        "type": "GT",
+        "name": "Referees",
+        "text": [
+            {
+                "@index": "0",
+                "@name": "Ref2.Text"
+            },
+            {
+                "@index": "1",
+                "@name": "Ref1.Text"
+            },
+            {
+                "@index": "2",
+                "@name": "Referees.Text",
+                "#text": "Referees"
+            }
+        ]
+    },
+    "SP_STAT_H": {
+        "key": "3f2d934b-7652-4d6e-b42c-da21c41b5f0e",
+        "type": "GT",
+        "name": "Points Won Home",
+        "text": [
+            {
+                "@index": "0",
+                "@name": "Stat Name.Text",
+                "#text": "Sets Ganados"
+            },
+            {
+                "@index": "1",
+                "@name": "Stat Value.Text",
+                "#text": "47%"
+            },
+            {
+                "@index": "2",
+                "@name": "Campeonato.Text",
+                "#text": "Campeonato"
+            }
+        ],
+        "image": {
+            "@index": "0",
+            "@name": "SStat Home Logo.Source_1"
+        }
+    },
+    "PP_STAT_H": {
+        "key": "e3d19484-2f2b-48b2-8a34-bcde62be746c",
+        "type": "GT",
+        "name": "Sets won Home",
+        "text": [
+            {
+                "@index": "0",
+                "@name": "Stat Name.Text",
+                "#text": "Puntos Ganados"
+            },
+            {
+                "@index": "1",
+                "@name": "Stat Value.Text",
+                "#text": "49%"
+            },
+            {
+                "@index": "2",
+                "@name": "Campeonato.Text",
+                "#text": "Campeonato"
+            }
+        ],
+        "image": {
+            "@index": "0",
+            "@name": "SStat Home Logo.Source"
+        }
+    },
+    "SP_STAT_A": {
+        "key": "2f2f23de-0b6b-4acd-b2cb-8f7a75ad6361",
+        "type": "GT",
+        "name": "Sets Won Away",
+        "text": [
+            {
+                "@index": "0",
+                "@name": "Stat Name.Text",
+                "#text": "Sets Ganados"
+            },
+            {
+                "@index": "1",
+                "@name": "Stat Value.Text",
+                "#text": "91%"
+            },
+            {
+                "@index": "2",
+                "@name": "Campeonato.Text",
+                "#text": "Campeonato"
+            }
+        ],
+        "image": {
+            "@index": "0",
+            "@name": "SStat Away Logo.Source"
+        }
+    },
+    "PP_STAT_A": {
+        "key": "b9edc9d1-0b00-42c7-843d-a631dc60b024",
+        "type": "GT",
+        "name": "Points Won Away",
+        "text": [
+            {
+                "@index": "0",
+                "@name": "Stat Name.Text",
+                "#text": "Puntos Ganados"
+            },
+            {
+                "@index": "1",
+                "@name": "Stat Value.Text",
+                "#text": "59%"
+            },
+            {
+                "@index": "2",
+                "@name": "Campeonato.Text",
+                "#text": "Campeonato"
+            }
+        ],
+        "image": {
+            "@index": "0",
+            "@name": "SStat Away Logo.Source_1"
+        }
+    },
+    "RESULTS_H": {
+        "key": "ea388180-1979-4bf6-8461-ea82ec245b8f",
+        "type": "GT",
+        "name": "Results Home",
+        "text": [
+            {
+                "@index": "0",
+                "@name": "home r03.Text",
+                "#text": "10"
+            },
+            {
+                "@index": "1",
+                "@name": "home r13.Text",
+                "#text": "10"
+            },
+            {
+                "@index": "2",
+                "@name": "home r23.Text",
+                "#text": "10"
+            },
+            {
+                "@index": "3",
+                "@name": "home r32.Text",
+                "#text": "10"
+            },
+            {
+                "@index": "4",
+                "@name": "home r31.Text",
+                "#text": "10"
+            },
+            {
+                "@index": "5",
+                "@name": "home r30.Text",
+                "#text": "10"
+            },
+            {
+                "@index": "6",
+                "@name": "03.Text",
+                "#text": "0-3"
+            },
+            {
+                "@index": "7",
+                "@name": "13.Text",
+                "#text": "1-3"
+            },
+            {
+                "@index": "8",
+                "@name": "23.Text",
+                "#text": "2-3"
+            },
+            {
+                "@index": "9",
+                "@name": "32.Text",
+                "#text": "3-2"
+            },
+            {
+                "@index": "10",
+                "@name": "31.Text",
+                "#text": "3-1"
+            },
+            {
+                "@index": "11",
+                "@name": "30.Text",
+                "#text": "3-0"
+            },
+            {
+                "@index": "12",
+                "@name": "TextBlock1.Text",
+                "#text": "Resultados"
+            }
+        ],
+        "image": {
+            "@index": "0",
+            "@name": "R Home Logo.Source",
+            "#text": "de7ed96c-92e0-4238-907f-16d27dc630c7\\home (1).jpg"
+        }
+    },
+    "RESULTS_A": {
+        "key": "ab9290af-be6f-470b-8198-64004556e4bd",
+        "type": "GT",
+        "name": "Results Away",
+        "text": [
+            {
+                "@index": "0",
+                "@name": "away r03.Text",
+                "#text": "10"
+            },
+            {
+                "@index": "1",
+                "@name": "away r13.Text",
+                "#text": "10"
+            },
+            {
+                "@index": "2",
+                "@name": "away r23.Text",
+                "#text": "10"
+            },
+            {
+                "@index": "3",
+                "@name": "away r32.Text",
+                "#text": "10"
+            },
+            {
+                "@index": "4",
+                "@name": "away r31.Text",
+                "#text": "10"
+            },
+            {
+                "@index": "5",
+                "@name": "away r30.Text",
+                "#text": "10"
+            },
+            {
+                "@index": "6",
+                "@name": "03.Text",
+                "#text": "0-3"
+            },
+            {
+                "@index": "7",
+                "@name": "13.Text",
+                "#text": "1-3"
+            },
+            {
+                "@index": "8",
+                "@name": "23.Text",
+                "#text": "2-3"
+            },
+            {
+                "@index": "9",
+                "@name": "32.Text",
+                "#text": "3-2"
+            },
+            {
+                "@index": "10",
+                "@name": "31.Text",
+                "#text": "3-1"
+            },
+            {
+                "@index": "11",
+                "@name": "30.Text",
+                "#text": "3-0"
+            },
+            {
+                "@index": "12",
+                "@name": "TextBlock1.Text",
+                "#text": "Resultados"
+            }
+        ],
+        "image": {
+            "@index": "0",
+            "@name": "R AwayLogo.Source",
+            "#text": "ca9e3dc4-a569-4f97-863c-2a8991966886\\home (1).jpg"
+        }
     }
 }

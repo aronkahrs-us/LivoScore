@@ -11,7 +11,7 @@ class Vmix:
                 self.connect = json.load(openfile)
                 self.session = requests.Session()
                 self.session.auth = ('admin', self.connect['PASS']) 
-                self._get_inputs()
+                
         except:
             pass
         try:
@@ -20,7 +20,8 @@ class Vmix:
                 self.elements = json.load(openfile)
         except:
             pass
-        pass
+        self.l_team =''
+        self._get_inputs()
 
     def test_connection(self):
         try:
@@ -45,19 +46,22 @@ class Vmix:
             return "ERROR"
  
     def serve(self,team):
-        if team == '*':
-            self._set_inactive(1,self.elements['A_SERVE']['key'])
-            self._set_active(1,self.elements['H_SERVE']['key'])
-        elif team == 'a':
-            self._set_inactive(1,self.elements['H_SERVE']['key'])
-            self._set_active(1,self.elements['A_SERVE']['key'])
+        self.l_team
+        if self.l_team != team:
+            if team == '*':
+                self._set_inactive(1,self.elements['A_SERVE']['key'])
+                self._set_active(1,self.elements['H_SERVE']['key'])
+            elif team == 'a':
+                self._set_inactive(1,self.elements['H_SERVE']['key'])
+                self._set_active(1,self.elements['A_SERVE']['key'])
+        self.l_team=team
     
-    def substitution(self,team):
+    def substitution(self,team,h_id,a_id):
         if team == '*':
-            self._set_image(self.elements['H_SUBSTITUTION']['key'],self.elements['H_SUBSTITUTION']['image'][0]['@name'],'https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_501.jpg')
+            self._set_input(input=self.elements['H_SUBSTITUTION']['key'],name=self.elements['H_SUBSTITUTION']['image'][0]['@name'],value={'file':'https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg'.format(h_id)})
             self._set_active(2,self.elements['H_SUBSTITUTION']['key'])
         elif team == 'a':
-            self._set_image(self.elements['A_SUBSTITUTION']['key'],self.elements['A_SUBSTITUTION']['image'][0]['@name'],'https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_505.jpg')
+            self._set_input(input=self.elements['A_SUBSTITUTION']['key'],name=self.elements['A_SUBSTITUTION']['image'][0]['@name'],value={'file':'https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg'.format(a_id)})
             self._set_active(2,self.elements['A_SUBSTITUTION']['key'])
         time.sleep(5)
         self._set_inactive(2,self.elements['A_SUBSTITUTION']['key'])
@@ -86,6 +90,41 @@ class Vmix:
             elif ('away' in x.lower() or 'a' in x.lower()) and 'logo' in x.lower():
                 self._set_input_settings(self.inputs[x],{'file': away})
 
+    def update_referees(self,names:list):
+        for x in self.elements['REFEREES']['text']:
+            self._set_input_settings(self.inputs[x['@name']],{'text': names[-1]})
+            names.pop(-1)
+            if len(names) == 0:
+                break
+
+    def set_sp_stat(self,home,away):
+        #HOME
+        self._set_input(input=self.elements['SP_STAT_H']['key'],name=self.elements['SP_STAT_H']['text'][0]['@name'],value={'text': 'Sets Ganados'})
+        self._set_input(input=self.elements['SP_STAT_H']['key'],name=self.elements['SP_STAT_H']['text'][1]['@name'],value={'text': str(home['set_percent'])+'%'})
+        self._set_input(input=self.elements['PP_STAT_H']['key'],name=self.elements['PP_STAT_H']['text'][0]['@name'],value={'text': 'Puntos Ganados'})
+        self._set_input(input=self.elements['PP_STAT_H']['key'],name=self.elements['PP_STAT_H']['text'][1]['@name'],value={'text': str(home['points_percent'])+'%'})
+        #AWAY
+        self._set_input(input=self.elements['SP_STAT_A']['key'],name=self.elements['SP_STAT_A']['text'][0]['@name'],value={'text': 'Sets Ganados'})
+        self._set_input(input=self.elements['SP_STAT_A']['key'],name=self.elements['SP_STAT_A']['text'][1]['@name'],value={'text': str(away['set_percent'])+'%'})
+        self._set_input(input=self.elements['PP_STAT_A']['key'],name=self.elements['PP_STAT_A']['text'][0]['@name'],value={'text': 'Puntos Ganados'})
+        self._set_input(input=self.elements['PP_STAT_A']['key'],name=self.elements['PP_STAT_A']['text'][1]['@name'],value={'text': str(away['points_percent'])+'%'})
+
+    def set_results(self,home,away):
+        #HOME
+        self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][0]['@name'],value={'text': str(home['result_03'])})
+        self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][1]['@name'],value={'text': str(home['result_13'])})
+        self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][2]['@name'],value={'text': str(home['result_23'])})
+        self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][3]['@name'],value={'text': str(home['result_32'])})
+        self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][4]['@name'],value={'text': str(home['result_31'])})
+        self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][5]['@name'],value={'text': str(home['result_30'])})
+        #AWAY
+        self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][0]['@name'],value={'text': str(away['result_03'])})
+        self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][1]['@name'],value={'text': str(away['result_13'])})
+        self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][2]['@name'],value={'text': str(away['result_23'])})
+        self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][3]['@name'],value={'text': str(away['result_32'])})
+        self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][4]['@name'],value={'text': str(away['result_31'])})
+        self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][5]['@name'],value={'text': str(away['result_30'])})
+
     def _set_active(self,index,input):
         self._set_input('OverlayInput{}In'.format(index),input)
 
@@ -93,14 +132,13 @@ class Vmix:
         self._set_input('OverlayInput{}Out'.format(index),input)
 
     def _set_input_settings(self,input,value):
-        self._set_input(input=input['parent'],name=input['name'],value=value)
+        self._set_input(input=input['parent'],name=input['name'].replace('_1',''),value=value)
 
     def _set_input(self,function=None,input=None,name=None,value:dict=None):
         if function == None:
             function = 'SetText' if 'text' in value else 'SetImage'
             value = value['text'] if 'text' in value else value['file']
         req = self.session.post('http://{}:{}/API/?Function={}&Input={}&SelectedName={}&Value={}'.format(self.connect['IP'],self.connect['PORT'],function,input,name,value))
-        print(req)
     
     def _get_inputs(self):
         self.inputs={}
@@ -111,7 +149,6 @@ class Vmix:
                 'key':x['@key'],
                 'type':x['@type'],
                 'name':x['@title'],
-                'state':x['@state'],
             }
             if x['@type'] == 'GT':
                 try:
@@ -121,54 +158,32 @@ class Vmix:
                             'name': k['@name'],
                             'parent': x['@key'],
                         }
-                except:
+                except Exception as e:
                     pass
                 try:
                     data['image']=(x['image'])
-                    for k in x['image']:
+                    if type(x['image']) == list:
+                        for k in x['image']:
+                            self.inputs[k['@name']] = {
+                                'name': k['@name'],
+                                'parent': x['@key'],
+                            }
+                    else:
+                        k=x['image']
+                        if k['@name'] in self.inputs:
+                            k['@name']=k['@name']+'_1'
                         self.inputs[k['@name']] = {
-                            'name': k['@name'],
-                            'parent': x['@key'],
-                        }
-                except:
+                                'name': k['@name'],
+                                'parent': x['@key'],
+                            }
+                except Exception as e:
                     pass
             self.inputs[x['@shortTitle']] = data
         # for x in self.inputs:
-        #     print(x,self.inputs[x])
+        #    print(x)
+        #    print(self.inputs[x])
+        #    print('____')
         return dict(sorted(self.inputs.items()))
 
-try:
-    with open("./Config/elem_config.json", "r") as openfile:
-        # Reading from json file
-        elements = json.load(openfile)
-except:
-    pass
-hand=Vmix()
-homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(507)
-awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(503)
-hand._set_input_settings(elements["HOME_NAME"], {"text": ''})
-hand.update_logos(homeurl,awayurl)
-# hand._set_input_settings(elements["AWAY_NAME"], {"text": ''})
-# hand._set_input_settings(elements["AWAY_LOGO"], {"file": ''})
-# hand._set_active(1,hand.inputs['scoreboard']['key'])
-# hand._set_active(2,hand.inputs['Substitution']['key'])
-# hand.set_point(True)
-# time.sleep(2)
-# hand._set_inactive(2,hand.inputs['Substitution']['key'])
-# hand.set_image(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['image'][0]['@name'],'https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_501.jpg')
-# hand.set_image(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['image'][1]['@name'],'https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_505.jpg')
-# hand.set_text(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['text'][0]['@name'],'Nacional')
-# hand.set_text(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['text'][1]['@name'],'Sanjo')
-# hand.set_text(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['text'][2]['@name'],'1')
-# hand.set_text(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['text'][3]['@name'],'1')
-# hand.set_text(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['text'][4]['@name'],'1')
-# hand.set_text(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['text'][5]['@name'],'1')
-# time.sleep(5)
-# hand.set_image(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['image'][0]['@name'],'')
-# hand.set_image(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['image'][1]['@name'],'')
-# hand.set_text(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['text'][0]['@name'],'')
-# hand.set_text(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['text'][1]['@name'],'')
-# hand.set_text(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['text'][2]['@name'],'')
-# hand.set_text(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['text'][3]['@name'],'')
-# hand.set_text(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['text'][4]['@name'],'')
-# hand.set_text(hand.inputs['scoreboard']['key'],hand.inputs['scoreboard']['text'][5]['@name'],'')
+    def _add_input(self,value,name):
+        req = self.session.post('http://{}:{}/API/?Function=AddInput&Value={}&SelectedName={}'.format(self.connect['IP'],self.connect['PORT'],value,name))

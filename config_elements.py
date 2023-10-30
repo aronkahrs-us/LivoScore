@@ -83,6 +83,118 @@ class ElementsConfig:
                 )
             ]
         ]
+        T_elmREF = [[sg.Text("Referees", expand_x=True, expand_y=True)]]
+        S_elmREF = [
+            [
+                sg.Combo(
+                    [],
+                    default_value="Select Element",
+                    key="-Elm40-",
+                    auto_size_text=True,
+                    enable_events=True,
+                    disabled=True,
+                    expand_x=True,
+                    expand_y=True,
+                    readonly=True,
+                )
+            ]
+        ]
+        T_elmSPH = [[sg.Text("Sets % Home", expand_x=True, expand_y=True)]]
+        S_elmSPH = [
+            [
+                sg.Combo(
+                    [],
+                    default_value="Select Element",
+                    key="-Elm41-",
+                    auto_size_text=True,
+                    enable_events=True,
+                    disabled=True,
+                    expand_x=True,
+                    expand_y=True,
+                    readonly=True,
+                )
+            ]
+        ]
+        T_elmPPH = [[sg.Text("Points % Home", expand_x=True, expand_y=True)]]
+        S_elmPPH = [
+            [
+                sg.Combo(
+                    [],
+                    default_value="Select Element",
+                    key="-Elm42-",
+                    auto_size_text=True,
+                    enable_events=True,
+                    disabled=True,
+                    expand_x=True,
+                    expand_y=True,
+                    readonly=True,
+                )
+            ]
+        ]
+        T_elmSPA = [[sg.Text("Sets % Away", expand_x=True, expand_y=True)]]
+        S_elmSPA = [
+            [
+                sg.Combo(
+                    [],
+                    default_value="Select Element",
+                    key="-Elm43-",
+                    auto_size_text=True,
+                    enable_events=True,
+                    disabled=True,
+                    expand_x=True,
+                    expand_y=True,
+                    readonly=True,
+                )
+            ]
+        ]
+        T_elmPPA = [[sg.Text("Points % Away", expand_x=True, expand_y=True)]]
+        S_elmPPA = [
+            [
+                sg.Combo(
+                    [],
+                    default_value="Select Element",
+                    key="-Elm44-",
+                    auto_size_text=True,
+                    enable_events=True,
+                    disabled=True,
+                    expand_x=True,
+                    expand_y=True,
+                    readonly=True,
+                )
+            ]
+        ]
+        T_elmRH = [[sg.Text("Results Home", expand_x=True, expand_y=True)]]
+        S_elmRH = [
+            [
+                sg.Combo(
+                    [],
+                    default_value="Select Element",
+                    key="-Elm45-",
+                    auto_size_text=True,
+                    enable_events=True,
+                    disabled=True,
+                    expand_x=True,
+                    expand_y=True,
+                    readonly=True,
+                )
+            ]
+        ]
+        T_elmRA = [[sg.Text("Results Away", expand_x=True, expand_y=True)]]
+        S_elmRA = [
+            [
+                sg.Combo(
+                    [],
+                    default_value="Select Element",
+                    key="-Elm46-",
+                    auto_size_text=True,
+                    enable_events=True,
+                    disabled=True,
+                    expand_x=True,
+                    expand_y=True,
+                    readonly=True,
+                )
+            ]
+        ]
         T_Save = [[sg.Text("Saved", key="-SAVE_TXT-", visible=False)]]
         B_Save = [[sg.Button("Save", key="-SAVE-")]]
         t_main_elem = ["Name", "Logo", "Points", "Sets", "Serve", "Substitution"]
@@ -102,6 +214,46 @@ class ElementsConfig:
         ]
         main_layout = []
         stats_layout = []
+        stats2_layout = [[
+            sg.Column(
+                    T_elmSPH, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    S_elmSPH, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    T_elmSPA, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    S_elmSPA, element_justification="left", expand_x=True, expand_y=True
+                ),
+        ],[
+            sg.Column(
+                    T_elmPPH, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    S_elmPPH, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    T_elmPPA, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    S_elmPPA, element_justification="left", expand_x=True, expand_y=True
+                ),
+        ],[
+            sg.Column(
+                    T_elmRH, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    S_elmRH, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    T_elmRA, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    S_elmRA, element_justification="left", expand_x=True, expand_y=True
+                ),
+        ]]
         self.n = 1
         for i in t_main_elem:
             main_layout.append(
@@ -185,6 +337,12 @@ class ElementsConfig:
                 sg.Column(
                     S_elmTO, element_justification="left", expand_x=True, expand_y=True
                 ),
+                sg.Column(
+                    T_elmREF, element_justification="left", expand_x=True, expand_y=True
+                ),
+                sg.Column(
+                    S_elmREF, element_justification="left", expand_x=True, expand_y=True
+                ),
             ]
         )
         for i in t_stats_elem:
@@ -257,7 +415,7 @@ class ElementsConfig:
             [sg.HorizontalSeparator(pad=(10, 10))],
             [
                 sg.TabGroup(
-                    [[sg.Tab("Main", main_layout), sg.Tab("Stats", stats_layout)]],
+                    [[sg.Tab("Main", main_layout), sg.Tab("Stats", stats_layout), sg.Tab("Stats 2", stats2_layout)]],
                     s=(750, 450),
                     expand_x=True,
                     expand_y=True,
@@ -286,7 +444,6 @@ class ElementsConfig:
         )
         self.get_config()
         while True:
-            print(self.n)
             event, values = self.window.read()
             print(event,values)
             if event == "-SCENE-":
@@ -351,7 +508,7 @@ class ElementsConfig:
             elements = []
             for x in items:
                 elements.append(x)
-            for x in range(1, self.n + 3):
+            for x in range(1, self.n + 10):
                 self.window["-Elm" + str(x) + "-"].update(
                     value="Select", values=elements, visible=True, disabled=False
                 )
@@ -402,6 +559,13 @@ class ElementsConfig:
                 "TIME_OUT": elements[values["-Elm37-"]],
                 "MATCH_POINT": elements[values["-Elm38-"]],
                 "SET_POINT": elements[values["-Elm39-"]],
+                "REFEREES": elements[values["-Elm40-"]],
+                "SP_STAT_H": elements[values["-Elm41-"]],
+                "PP_STAT_H": elements[values["-Elm42-"]],
+                "SP_STAT_A": elements[values["-Elm43-"]],
+                "PP_STAT_A": elements[values["-Elm44-"]],
+                "RESULTS_H": elements[values["-Elm45-"]],
+                "RESULTS_A": elements[values["-Elm46-"]],
             }
             # dictionary = {
             #     "SCENE": values["-SCENE-"],
