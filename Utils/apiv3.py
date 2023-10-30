@@ -507,5 +507,3 @@ class Match:
         self.status = 2
         self._reset_stream()
         self._update_ui()
-
-# Match(5953,'livosur')
