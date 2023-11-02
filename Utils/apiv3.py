@@ -178,6 +178,7 @@ class Match:
         )
         self.stats.initiate(data, self.current_set)
         self.status = data["Status"]
+        self.window.write_event_value('STARTED',1)
         self._reset_stream()
         self._update_ui()
         self._get_logos()
@@ -190,7 +191,6 @@ class Match:
         self.streamer.update_coaches('Home',self.home.coach)
         self.streamer.update_coaches('Away',self.away.coach)
         self.streamer.update_match_history(self.stats.match_history['played'],self.stats.match_history['won_home'],self.stats.match_history['won_away'])
-        self.window.write_event_value('STARTED',1)
 
     def _process_msg(self,msg):
         if self.is_running == False:
