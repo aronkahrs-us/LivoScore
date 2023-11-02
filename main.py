@@ -170,7 +170,7 @@ class Main:
             if (event == sg.WIN_CLOSED or event == "Cancel"):  # if user closes self.window or clicks cancel
                 # if a match is ongoing, stops before closing
                 if "match" in locals()["self"].__dict__:
-                    self.match._stop()
+                    self.match._stop(close=True)
                 break
             elif event == "Stream Elements":  # if user opens Elements config, checks if streaming sowtfare is available
                 if self.streamer.test_connection() != "ERROR":

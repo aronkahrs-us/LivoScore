@@ -556,8 +556,9 @@ class Match:
             print("error reset", e)
             return e
 
-    def _stop(self):
+    def _stop(self, close=None):
         self.is_running = False
-        self.status = 2
-        self._reset_stream()
-        self._update_ui()
+        if close==None:
+            self.status = 2
+            self._reset_stream()
+            self._update_ui()
