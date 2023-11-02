@@ -16,18 +16,22 @@ from Utils.remote import Remote
 
 
 class Main:
+    """GUI and main responsabilities like starting the match and the nessesary configuration"""
     def __init__(self) -> None:
+        """Init of Main"""
         try:
+            # Gets the streamer configuration and sets it
             with open("./Config/stream_config.json", "r") as openfile:
-                # Reading from json file
                 config = json.load(openfile)
                 self.is_obs = config["OBS"]
                 self.is_vmix = config["VMIX"]
                 self.streamer = Obs() if self.is_obs else Vmix()
         except Exception as e:
-            sg.popup_error(f"AN EXCEPTION OCCURRED!", e)
+            # If couldn't get the configuration shows a popup
+            sg.popup(f"Configuration not found, make sure to set everything up!")
+        # Sets theme
         sg.theme('LIVO')
-        # All the stuff inside your self.window.
+        # UI Elements
         T_Local = [
             [
                 sg.Text(
@@ -88,6 +92,7 @@ class Main:
                 )
             ]
         ]
+        #Main Layout
         layout = [
             [sg.Menu(menu_def, font=("Bebas", 15))],
             [
@@ -121,9 +126,7 @@ class Main:
                 ),
             ]
         ]
-        # Create the Window
-        # splash = sg.Window("Livoscore", icon=logo,
-        #                 layout=[[sg.Image(data=logo)]], transparent_color="#002b45", no_titlebar=True, keep_on_top=True).read(timeout=DISPLAY_TIME_MILLISECONDS, close=True)
+        # Makes the config directory, depends on the os the way to create it
         if platform.system() == "Darwin":
             try:
                 original_umask = os.umask(0)
@@ -134,6 +137,7 @@ class Main:
                 os.umask(original_umask)
         else:
             os.makedirs("Config", exist_ok=True)
+        # Create window
         self.window = sg.Window(
             "Livoscore",
             icon=logo,
@@ -147,75 +151,78 @@ class Main:
             titlebar_background_color="#002B45",
         )
         threading.Thread(target=self.list_matches, daemon=True).start()
-        # remt=Remote(self.window)
-        # threading.Thread(target=remt.run, daemon=True).start()
-        # Event Loop to process "events" and get the "values" of the inputs
+        #####################################################################
+        ################    ON DEVELOPEMENT #################################
+        #####################################################################
+        # remt=Remote(self.window)                                          #
+        # threading.Thread(target=remt.run, daemon=True).start()            #
+        # Event Loop to process "events" and get the "values" of the inputs #
+        #####################################################################
+
+        #Main Loop, handles events
         while True:
             event, self.values = self.window.read()
-            try:
-                print('match: ',self.match.is_running)
-            except:
-                pass
+
             if (event == sg.WIN_CLOSED or event == "Cancel"):  # if user closes self.window or clicks cancel
+                # if a match is ongoing, stops before closing
                 if "match" in locals()["self"].__dict__:
                     self.match._stop()
                 break
-            elif event == "Stream Elements":  # if user closes self.window or clicks cancel
+            elif event == "Stream Elements":  # if user opens Elements config, checks if streaming sowtfare is available
                 if self.streamer.test_connection() != "ERROR":
+                    # if available then opens the Elements config
                     ElementsConfig()
                 else:
+                    # if unavailable shows error message
                     self.window["-ERROR-"].update(
                         "{} is closed or not configured".format("OBS" if self.is_obs else "vMix"),
                         text_color="red",
                         visible=True,
                     )
-            elif event == "Stream Config":  # if user closes self.window or clicks cancel
+            elif event == "Stream Config":  # if user opens stream config
                 StreamConfig()
-            elif (
-                event == "League Config"
-            ):  # if user closes self.window or clicks cancel
+            elif event == "League Config":  # if user opens League config
                 LeagueConfig()
-            elif (
-                event == "-ID-" and self.values["-ID-"] != ""
-            ):  # if user closes self.window or clicks cancel
+            elif event == "-ID-" and self.values["-ID-"] != "":  # if match list populates
                 self.window["-ST-"].update(disabled=False)
-            elif event == "-ST-":
+            elif event == "-ST-":   # if user starts/stops a match
                 try:
                     print('try')
-                    if self.match.is_running == True:
+                    if "match" in locals()["self"].__dict__ and self.match.is_running == True:  # if match exists and is running, stops it
                         if self.is_obs:
                             self.court.stop()
                         self.match._stop()
                         self.match.is_running = False
                         self.window["-RELOAD-"].update(disabled=False)
-                    else:
-                        print('start')
+                    else:   # if match does not exist or is not runing, starts a new match
+                        self.window["-RELOAD-"].update(disabled=True)
                         threading.Thread(target=self.start_match, daemon=True).start()
                 except Exception as e:
                     print('excp',e)
-                    self.window["-RELOAD-"].update(disabled=True)
-                    threading.Thread(target=self.start_match, daemon=True).start()
-            elif event == "-RELOAD-":
+
+            elif event == "-RELOAD-":   # if user reloads matches
                 threading.Thread(target=self.list_matches, daemon=True).start()
-            elif event == "STARTED":
+            elif event == "STARTED":    # Match started, stops "starting.." animation
                 self.starting_run=False
                 self.window["-ERROR-"].update(visible=False)
-
+        # Closes main window
         self.window.close()
 
     def list_matches(self):
+        """Method to get and lists matches in the dropdown"""
         try:
+            # Get league configuration
             with open("./Config/league_config.json", "r") as openfile:
-                # Reading from json file
                 config = json.load(openfile)
-            self.window["-ID-"].update(
-                values=[], value="Loading...", visible=True, disabled=True
-            )
+            # starts loading text animation
+            threading.Thread(target=self._starting,args=('-ID-','Loading'),daemon=True).start() #Starts animation
             self.window["-RELOAD-"].update(disabled=True)
+            # Get the matches from the selected league, if a team is provided, then it filters only the matches of that team
             if 'TEAM' in config.keys():
                 self.matches = League().get_ready_matches(config['TEAM'])
             else:
                 self.matches = League().get_ready_matches()
+            # if there are matches, shows them in the dropdown, if not then it shows no matches and disables the dropdown
             if self.matches == {}:
                 self.window["-ID-"].update(
                     values=[], value="No Matches Today", visible=True, disabled=True
@@ -229,6 +236,7 @@ class Main:
                 )
             self.window["-RELOAD-"].update(disabled=False)
         except Exception as e:
+            #waits for the window to be set and shows an error
             while "window" not in locals()["self"].__dict__:
                 pass
             else:
@@ -238,32 +246,34 @@ class Main:
                 )
 
     def start_match(self):
+        """Method to start matches, gets the match id of the match selected in the dropdown and if streamer available creates a new match"""
         if self.streamer.test_connection() == "ERROR":
             self.window["-ERROR-"].update(
                 "{} is closed or not configured".format("OBS" if self.is_obs else "vMix"), text_color="red", visible=True
             )
         else:
-            threading.Thread(target=self._starting,daemon=True).start()
+            threading.Thread(target=self._starting,args=('-ERROR-','Starting'),daemon=True).start() #Starts animation
             self.match = Match(
                 list(self.matches.keys())[
                     list(self.matches.values()).index(self.values["-ID-"])
                 ],
                 self.window,
-            )
-            if self.is_obs:
+            )   #creates new match
+            if self.is_obs: # if streamer is obs, starts flask server with pleayers
                 self.court = Court(self.match)
                 self.court.start()
             self.window["-RELOAD-"].update(disabled=True)
             self.window["-ID-"].update(disabled=True)
         
-    def _starting(self):
+    def _starting(self,id,text):
+        """ Method to animate 'Starting...' text"""
         self.starting_run = True
         while self.starting_run:
-            self.window["-ERROR-"].update("Starting", text_color="green", visible=True)
+            self.window[id].update(text, text_color="green", visible=True)
             time.sleep(0.5)
-            self.window["-ERROR-"].update("Starting.", text_color="green", visible=True)
+            self.window[id].update("{}.".format(text), text_color="green", visible=True)
             time.sleep(0.5)
-            self.window["-ERROR-"].update("Starting..", text_color="green", visible=True)
+            self.window[id].update("{}..".format(text), text_color="green", visible=True)
             time.sleep(0.5)
-            self.window["-ERROR-"].update("Starting...", text_color="green", visible=True)
+            self.window[id].update("{}...".format(text), text_color="green", visible=True)
             time.sleep(0.5)
