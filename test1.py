@@ -1,6 +1,6 @@
 import requests
 import json
-
+from bs4 import BeautifulSoup
 class test:
     def __init__(self,m_id) -> None:
         self.id =m_id
@@ -107,4 +107,18 @@ class test:
         ).json()
         self.credentials = response
 
-test(5996).join()
+def _get_coach(url, team_id):
+    try:
+        URL = "{}/CompetitionTeamDetails.aspx?TeamID={}".format(url,team_id)
+        r = requests.get(URL)
+        soup = BeautifulSoup(r.content, 'lxml')
+        coach=soup.find('div',attrs={'id':'Content_Main_RP_Choaches_RPL_CoachList_0'})
+        coach=coach.find('p',attrs={'class':'p_margin_1'}).text
+        coach=coach.split(' ')
+        coach = coach[1] + ' ' + coach[0]
+        print(coach)
+    except:
+        pass
+
+
+_get_coach('https://livosur-web.dataproject.com',247)

@@ -195,6 +195,22 @@ class ElementsConfig:
                 )
             ]
         ]
+        T_elmWIN = [[sg.Text("Winner", expand_x=True, expand_y=True)]]
+        S_elmWIN = [
+            [
+                sg.Combo(
+                    [],
+                    default_value="Select Element",
+                    key="-Elm47-",
+                    auto_size_text=True,
+                    enable_events=True,
+                    disabled=True,
+                    expand_x=True,
+                    expand_y=True,
+                    readonly=True,
+                )
+            ]
+        ]
         T_Save = [[sg.Text("Saved", key="-SAVE_TXT-", visible=False)]]
         B_Save = [[sg.Button("Save", key="-SAVE-")]]
         t_main_elem = ["Name", "Logo", "Points", "Sets", "Serve", "Substitution"]
@@ -252,6 +268,13 @@ class ElementsConfig:
                 ),
             sg.Column(
                     S_elmRA, element_justification="left", expand_x=True, expand_y=True
+                ),
+        ],[
+            sg.Column(
+                    T_elmWIN, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    S_elmWIN, element_justification="left", expand_x=True, expand_y=True
                 ),
         ]]
         self.n = 1
@@ -508,7 +531,7 @@ class ElementsConfig:
             elements = []
             for x in items:
                 elements.append(x)
-            for x in range(1, self.n + 10):
+            for x in range(1, self.n + 11):
                 self.window["-Elm" + str(x) + "-"].update(
                     value="Select", values=elements, visible=True, disabled=False
                 )
@@ -566,6 +589,7 @@ class ElementsConfig:
                 "PP_STAT_A": elements[values["-Elm44-"]],
                 "RESULTS_H": elements[values["-Elm45-"]],
                 "RESULTS_A": elements[values["-Elm46-"]],
+                "WINNER": elements[values["-Elm47-"]],
             }
             # dictionary = {
             #     "SCENE": values["-SCENE-"],

@@ -45,35 +45,31 @@
         "key": "79ab391b-3f40-46cb-9fe5-e46c047f7228",
         "type": "GT",
         "name": "Substitution",
-        "image": [
-            {
-                "@index": "0",
-                "@name": "Logo.Source",
-                "#text": "49e48839-91cb-4d97-9ef7-8fc5cbb9135c\\home (1).jpg"
-            },
-            {
-                "@index": "1",
-                "@name": "Background.Source",
-                "#text": "bc9c57e0-44c0-4328-8169-7d1d91d4ed65\\sustitucion.png"
-            }
-        ]
+        "text": {
+            "@index": "0",
+            "@name": "TextBlock1.Text",
+            "#text": "Sustituci\u00f3n"
+        },
+        "image": {
+            "@index": "0",
+            "@name": "Logo.Source",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_502.jpg"
+        }
     },
     "A_SUBSTITUTION": {
         "key": "79ab391b-3f40-46cb-9fe5-e46c047f7228",
         "type": "GT",
         "name": "Substitution",
-        "image": [
-            {
-                "@index": "0",
-                "@name": "Logo.Source",
-                "#text": "49e48839-91cb-4d97-9ef7-8fc5cbb9135c\\home (1).jpg"
-            },
-            {
-                "@index": "1",
-                "@name": "Background.Source",
-                "#text": "bc9c57e0-44c0-4328-8169-7d1d91d4ed65\\sustitucion.png"
-            }
-        ]
+        "text": {
+            "@index": "0",
+            "@name": "TextBlock1.Text",
+            "#text": "Sustituci\u00f3n"
+        },
+        "image": {
+            "@index": "0",
+            "@name": "Logo.Source",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_502.jpg"
+        }
     },
     "HOME_STATS_PT": {
         "name": "H Total Percent.Text",
@@ -172,19 +168,41 @@
         "parent": "f8cc1c44-1cb4-448f-a13d-26ddfaec4326"
     },
     "TIME_OUT": {
-        "key": "a9c04a46-b782-4b90-9840-330859c3ef94",
-        "type": "Video",
-        "name": "Time Out"
+        "key": "17d8e2e8-1b76-4351-85e5-af764b40c9d6",
+        "type": "GT",
+        "name": "Time Out",
+        "text": [
+            {
+                "@index": "0",
+                "@name": "Timer.Text",
+                "#text": "59"
+            },
+            {
+                "@index": "1",
+                "@name": "TextBlock1.Text",
+                "#text": "Tiempo"
+            }
+        ]
     },
     "MATCH_POINT": {
-        "key": "1da2f16c-3b95-4b7d-b00a-15ebc206eb04",
-        "type": "Video",
-        "name": "Match Point"
+        "key": "1e1574a7-f717-4b3e-a4bd-80f4fbec4fa0",
+        "type": "GT",
+        "name": "Match Point",
+        "text": {
+            "@index": "0",
+            "@name": "TextBlock1.Text",
+            "#text": "Match Point"
+        }
     },
     "SET_POINT": {
-        "key": "da5e0144-76cf-45b4-bcf1-3b03601c1a03",
-        "type": "Video",
-        "name": "Set Point"
+        "key": "078564f5-2c38-46c4-bb92-b27ddc3ef2b1",
+        "type": "GT",
+        "name": "Set Point",
+        "text": {
+            "@index": "0",
+            "@name": "TextBlock1.Text",
+            "#text": "Set Point"
+        }
     },
     "REFEREES": {
         "key": "d9cceb24-b2e2-4f5a-aaf3-97fe02fd25a1",
@@ -193,11 +211,13 @@
         "text": [
             {
                 "@index": "0",
-                "@name": "Ref2.Text"
+                "@name": "Ref2.Text",
+                "#text": "Botta Mora Gonzalo"
             },
             {
                 "@index": "1",
-                "@name": "Ref1.Text"
+                "@name": "Ref1.Text",
+                "#text": "Botta Ratto Fernando"
             },
             {
                 "@index": "2",
@@ -207,9 +227,9 @@
         ]
     },
     "SP_STAT_H": {
-        "key": "3f2d934b-7652-4d6e-b42c-da21c41b5f0e",
+        "key": "e3d19484-2f2b-48b2-8a34-bcde62be746c",
         "type": "GT",
-        "name": "Points Won Home",
+        "name": "Sets won Home",
         "text": [
             {
                 "@index": "0",
@@ -219,7 +239,7 @@
             {
                 "@index": "1",
                 "@name": "Stat Value.Text",
-                "#text": "47%"
+                "#text": "55%"
             },
             {
                 "@index": "2",
@@ -229,13 +249,14 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "SStat Home Logo.Source_1"
+            "@name": "SStat Home Logo.Source",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_529.jpg"
         }
     },
     "PP_STAT_H": {
-        "key": "e3d19484-2f2b-48b2-8a34-bcde62be746c",
+        "key": "3f2d934b-7652-4d6e-b42c-da21c41b5f0e",
         "type": "GT",
-        "name": "Sets won Home",
+        "name": "Points Won Home",
         "text": [
             {
                 "@index": "0",
@@ -245,7 +266,7 @@
             {
                 "@index": "1",
                 "@name": "Stat Value.Text",
-                "#text": "49%"
+                "#text": "53%"
             },
             {
                 "@index": "2",
@@ -255,7 +276,8 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "SStat Home Logo.Source"
+            "@name": "SStat Home Logo.Source_1",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_529.jpg"
         }
     },
     "SP_STAT_A": {
@@ -271,7 +293,7 @@
             {
                 "@index": "1",
                 "@name": "Stat Value.Text",
-                "#text": "91%"
+                "#text": "39%"
             },
             {
                 "@index": "2",
@@ -281,7 +303,8 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "SStat Away Logo.Source"
+            "@name": "SStat Away Logo.Source",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_522.jpg"
         }
     },
     "PP_STAT_A": {
@@ -297,7 +320,7 @@
             {
                 "@index": "1",
                 "@name": "Stat Value.Text",
-                "#text": "59%"
+                "#text": "48%"
             },
             {
                 "@index": "2",
@@ -307,7 +330,8 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "SStat Away Logo.Source_1"
+            "@name": "SStat Away Logo.Source_1",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_522.jpg"
         }
     },
     "RESULTS_H": {
@@ -318,32 +342,32 @@
             {
                 "@index": "0",
                 "@name": "home r03.Text",
-                "#text": "10"
+                "#text": "1"
             },
             {
                 "@index": "1",
                 "@name": "home r13.Text",
-                "#text": "10"
+                "#text": "3"
             },
             {
                 "@index": "2",
                 "@name": "home r23.Text",
-                "#text": "10"
+                "#text": "0"
             },
             {
                 "@index": "3",
                 "@name": "home r32.Text",
-                "#text": "10"
+                "#text": "1"
             },
             {
                 "@index": "4",
                 "@name": "home r31.Text",
-                "#text": "10"
+                "#text": "1"
             },
             {
                 "@index": "5",
                 "@name": "home r30.Text",
-                "#text": "10"
+                "#text": "3"
             },
             {
                 "@index": "6",
@@ -384,7 +408,7 @@
         "image": {
             "@index": "0",
             "@name": "R Home Logo.Source",
-            "#text": "de7ed96c-92e0-4238-907f-16d27dc630c7\\home (1).jpg"
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_529.jpg"
         }
     },
     "RESULTS_A": {
@@ -395,32 +419,32 @@
             {
                 "@index": "0",
                 "@name": "away r03.Text",
-                "#text": "10"
+                "#text": "3"
             },
             {
                 "@index": "1",
                 "@name": "away r13.Text",
-                "#text": "10"
+                "#text": "2"
             },
             {
                 "@index": "2",
                 "@name": "away r23.Text",
-                "#text": "10"
+                "#text": "1"
             },
             {
                 "@index": "3",
                 "@name": "away r32.Text",
-                "#text": "10"
+                "#text": "1"
             },
             {
                 "@index": "4",
                 "@name": "away r31.Text",
-                "#text": "10"
+                "#text": "0"
             },
             {
                 "@index": "5",
                 "@name": "away r30.Text",
-                "#text": "10"
+                "#text": "2"
             },
             {
                 "@index": "6",
@@ -460,8 +484,23 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "R AwayLogo.Source",
-            "#text": "ca9e3dc4-a569-4f97-863c-2a8991966886\\home (1).jpg"
+            "@name": "R Away Logo.Source",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_522.jpg"
+        }
+    },
+    "WINNER": {
+        "key": "682ad255-a843-4c08-8323-c53199a4ddc1",
+        "type": "GT",
+        "name": "Winner",
+        "text": {
+            "@index": "0",
+            "@name": "Winner Name.Text",
+            "#text": "CDV CENTRO DE DESARROLLO CAMPE\u00d3N!!!"
+        },
+        "image": {
+            "@index": "0",
+            "@name": "Winner Logo.Source",
+            "#text": "d547d1df-e1d7-4298-9e10-8f046deb6349\\home (1).jpg"
         }
     }
 }

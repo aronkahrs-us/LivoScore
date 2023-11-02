@@ -15,7 +15,10 @@ class Stats:
         pass
 
     def initiate(self, data, current_set):
-        self._match_history(data['ChampionshipMatchID'],data['Home'],data['Guest'])
+        try:
+            self._match_history(data['ChampionshipMatchID'],data['Home'],data['Guest'])
+        except:
+            pass
         sets = ["Set{}Home", "Set{}Guest"]
         for i in range(1, current_set + 1):
             try:

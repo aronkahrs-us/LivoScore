@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 import threading
 import json
-import requests
+import time
 import platform, os
 from theme import *
 from config_elements import ElementsConfig
@@ -147,8 +147,8 @@ class Main:
             titlebar_background_color="#002B45",
         )
         threading.Thread(target=self.list_matches, daemon=True).start()
-        remt=Remote(self.window)
-        threading.Thread(target=remt.run, daemon=True).start()
+        # remt=Remote(self.window)
+        # threading.Thread(target=remt.run, daemon=True).start()
         # Event Loop to process "events" and get the "values" of the inputs
         while True:
             event, self.values = self.window.read()
@@ -183,7 +183,8 @@ class Main:
                 try:
                     print('try')
                     if self.match.is_running == True:
-                        self.court.stop()
+                        if self.is_obs:
+                            self.court.stop()
                         self.match._stop()
                         self.match.is_running = False
                         self.window["-RELOAD-"].update(disabled=False)
@@ -196,6 +197,9 @@ class Main:
                     threading.Thread(target=self.start_match, daemon=True).start()
             elif event == "-RELOAD-":
                 threading.Thread(target=self.list_matches, daemon=True).start()
+            elif event == "STARTED":
+                self.starting_run=False
+                self.window["-ERROR-"].update(visible=False)
 
         self.window.close()
 
@@ -239,13 +243,27 @@ class Main:
                 "{} is closed or not configured".format("OBS" if self.is_obs else "vMix"), text_color="red", visible=True
             )
         else:
-            self.window["-ERROR-"].update("Starting", text_color="green", visible=True)
+            threading.Thread(target=self._starting,daemon=True).start()
             self.match = Match(
                 list(self.matches.keys())[
                     list(self.matches.values()).index(self.values["-ID-"])
                 ],
                 self.window,
             )
-            self.court = Court(self.match)
-            self.court.start()
+            if self.is_obs:
+                self.court = Court(self.match)
+                self.court.start()
             self.window["-RELOAD-"].update(disabled=True)
+            self.window["-ID-"].update(disabled=True)
+        
+    def _starting(self):
+        self.starting_run = True
+        while self.starting_run:
+            self.window["-ERROR-"].update("Starting", text_color="green", visible=True)
+            time.sleep(0.5)
+            self.window["-ERROR-"].update("Starting.", text_color="green", visible=True)
+            time.sleep(0.5)
+            self.window["-ERROR-"].update("Starting..", text_color="green", visible=True)
+            time.sleep(0.5)
+            self.window["-ERROR-"].update("Starting...", text_color="green", visible=True)
+            time.sleep(0.5)

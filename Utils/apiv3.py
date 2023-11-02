@@ -16,6 +16,7 @@ class Match:
         self.is_running = True
         self.set_point = False
         self.match_point = False
+        self.l_tot_points=0
         self.window = window
         try:
             with open("./Config/league_config.json", "r") as openfile:
@@ -56,7 +57,7 @@ class Match:
             "Sec-Fetch-Site": "cross-site",
         }
         self.negotiate()
-        threading.Thread(target=self.connect).start()
+        threading.Thread(target=self.connect, daemon=True).start()
         # self.connect()
 
     def negotiate(self):
@@ -106,55 +107,14 @@ class Match:
         # Iterate through SSE events
         x = 0
         for msg in messages:
-            if self.is_running == False:
-                print("STOP")
-                break
+            th = threading.Thread(target=self._process_msg, args=(msg,),daemon=True)
+            th.run()
             try:
-                data = msg.data.replace("'", '"')
-                if data != "initialized" and data != "{}":
-                    data = json.loads(data)
-                    try:
-                        if data["M"][0]["M"] == "refreshPlayByPlayData":
-                            self.rally = data["M"][0]["A"][0][-1]
-                            self.serve = data["M"][0]["A"][0][-1]["Team"]
-                            self.action = data["M"][0]["A"][0][-1]["RallyT"]
-                            self.skill = data["M"][0]["A"][0][-1]["Skill"]
-                            if self.action == 0 or self.action == 1:
-                                threading.Thread(
-                                    target=self.streamer.serve, args=self.serve
-                                ).start()
-                            elif self.action == 2:
-                                threading.Thread(
-                                    target=self.streamer.substitution, args=(self.serve,self.home.id,self.away.id)
-                                ).start()
-                            elif self.action == 3:
-                                threading.Thread(target=self.streamer.time_out).start()
-                        elif (
-                            data["M"][0]["M"] == "updateMatchSetData_ES"
-                            or data["M"][0]["M"] == "updateMatchSetData_DV"
-                        ):
-                            self.current_set = data["M"][0]["A"][0]["SN"]
-                            self.home.points = data["M"][0]["A"][0]["HP"]
-                            self.away.points = data["M"][0]["A"][0]["GP"]
-                        elif (
-                            data["M"][0]["M"] == "updateMatchScoreData_ES"
-                            or data["M"][0]["M"] == "updateMatchScoreData_DV"
-                        ):
-                            self.home.sets = data["M"][0]["A"][0]["H"]
-                            self.away.sets = data["M"][0]["A"][0]["G"]
-                            self.status = data["M"][0]["A"][0]["S"]
-                    finally:
-                        if self.status == 2:
-                            self._stop()
-                        threading.Thread(target=self._set_point).start()
-                        threading.Thread(target=self._make_statistics).start()
-                        threading.Thread(target=self._update_stream).start()
-                        threading.Thread(target=self._update_ui).start()
-
+                th = threading.Thread(target=self._process_msg, args=(next(messages),),daemon=True)
+                th.run()
             except Exception as e:
                 print(e)
-                pass
-
+    
     def start(self):
         params = {
             "transport": "serverSentEvents",
@@ -203,6 +163,8 @@ class Match:
             data["Set" + str(self.current_set) + "Home"],
             data["WonSetHome"],
             self._get_players(data["Home"]),
+            self._get_coach(data["Home"]),
+            "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(data["Home"])
         )
 
         self.away = Team(
@@ -211,6 +173,8 @@ class Match:
             data["Set" + str(self.current_set) + "Guest"],
             data["WonSetGuest"],
             self._get_players(data["Guest"]),
+            self._get_coach(data["Guest"]),
+            "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(data["Guest"])
         )
         self.stats.initiate(data, self.current_set)
         self.status = data["Status"]
@@ -221,6 +185,67 @@ class Match:
         self._update_stream()
         self.streamer.set_sp_stat(self.stats.home,self.stats.away)
         self.streamer.set_results(self.stats.home,self.stats.away)
+        self.streamer.update_players('H',self.home.players)
+        self.streamer.update_players('A',self.away.players)
+        self.streamer.update_coaches('Home',self.home.coach)
+        self.streamer.update_coaches('Away',self.away.coach)
+        self.window.write_event_value('STARTED',1)
+
+    def _process_msg(self,msg):
+        if self.is_running == False:
+                print("STOP")
+                return 'break'
+        try:
+            data = msg.data.replace("'", '"')
+            if data != "initialized" and data != "{}":
+                data = json.loads(data)
+                try:
+                    if data["M"][0]["M"] == "refreshPlayByPlayData":
+                        self.rally = data["M"][0]["A"][0][-1]
+                        self.serve = data["M"][0]["A"][0][-1]["Team"]
+                        self.action = data["M"][0]["A"][0][-1]["RallyT"]
+                        self.skill = data["M"][0]["A"][0][-1]["Skill"]
+                        if self.action == 0 or self.action == 1:
+                            threading.Thread(
+                                target=self.streamer.serve, args=(self.serve), daemon=True
+                            ).start()
+                        elif self.action == 2:
+                            threading.Thread(
+                                target=self.streamer.substitution, args=(self.serve,self.home.logo,self.away.logo), daemon=True
+                            ).start()
+                        elif self.action == 3:
+                            threading.Thread(target=self.streamer.time_out, daemon=True).start()
+                    elif (
+                        data["M"][0]["M"] == "updateMatchSetData_ES"
+                        or data["M"][0]["M"] == "updateMatchSetData_DV"
+                    ):
+                        self.current_set = data["M"][0]["A"][0]["SN"]
+                        self.home.points = data["M"][0]["A"][0]["HP"]
+                        self.away.points = data["M"][0]["A"][0]["GP"]
+                    elif (
+                        data["M"][0]["M"] == "updateMatchScoreData_ES"
+                        or data["M"][0]["M"] == "updateMatchScoreData_DV"
+                    ):
+                        self.home.sets = data["M"][0]["A"][0]["H"]
+                        self.away.sets = data["M"][0]["A"][0]["G"]
+                        self.status = data["M"][0]["A"][0]["S"]
+                finally:
+                    if self.status == 2:
+                        self._stop()
+                    threading.Thread(target=self._set_point, daemon=True).start()
+                    threading.Thread(target=self._make_statistics, daemon=True).start()
+                    threading.Thread(target=self._winner, daemon=True).start()
+                    threading.Thread(target=self._update_stream, daemon=True).start()
+                    threading.Thread(target=self._update_ui, daemon=True).start()
+        except Exception as e:
+            print(e)
+            pass
+
+    def _winner(self):
+        if self.home.sets == 3:
+            self.streamer.update_winner(self.home)
+        elif self.away.sets == 3:
+            self.streamer.update_winner(self.away)
 
     def _get_players(self, team_id):
         """Get the list of players of the team"""
@@ -236,46 +261,65 @@ class Match:
         data = self._web_request(data_rq)
         players = {}
         for player in data:
-            players[str(player["N"])] = player["NM"] + " " + player["SR"]
+            players[str(player["NM"])] = {
+                'Name':player["NM"].strip().capitalize() + " " + player["SR"].strip().capitalize(),
+                'Number':str(player["N"])
+            }
         return players
+
+    def _get_coach(self, team_id):
+        try:
+            URL = "{}/CompetitionTeamDetails.aspx?TeamID={}".format(self.league_url,team_id)
+            r = requests.get(URL)
+            soup = BeautifulSoup(r.content, 'lxml')
+            coach=soup.find('div',attrs={'id':'Content_Main_RP_Choaches_RPL_CoachList_0'})
+            coach=coach.find('p',attrs={'class':'p_margin_1'}).text
+            coach=coach.split(' ')
+            coach = coach[1] + ' ' + coach[0]
+            return coach
+        except:
+            return 'No encontrado (inserte manualmente)'
 
     def _set_point(self):
         self.set_point = False
         self.match_point = False
+        self.tot_points=self.home.points+self.away.points
+        print('Points Difference: ', abs(self.home.points-self.away.points))
         if self.current_set == 5:
-            if self.home.points >= 14 and self.home.points - self.away.points >= 2:
+            if self.home.points >= 14 and self.home.points - self.away.points >= 0.9:
                 self.match_point = True
-            elif self.away.points >= 14 and self.away.points - self.home.points >= 2:
+            elif self.away.points >= 14 and self.away.points - self.home.points >= 0.9:
                 self.match_point = True
             else:
                 self.match_point = False
         elif self.home.sets >= 2 or self.away.sets >= 2:
-            if self.home.sets >= 2 and self.home.points >= 24 and self.home.points - self.away.points >= 1:
+            if self.home.sets >= 2 and self.home.points >= 24 and self.home.points - self.away.points >= 0.9:
                 self.match_point = True
-            elif self.away.sets >= 2 and self.away.points >= 24 and self.away.points - self.home.points >= 1:
+            elif self.away.sets >= 2 and self.away.points >= 24 and self.away.points - self.home.points >= 0.9:
                 self.match_point = True
-            elif self.home.sets >= 2 and self.away.points >= 24 and self.away.points - self.home.points >= 1:
+            elif self.home.sets >= 2 and self.away.points >= 24 and self.away.points - self.home.points >= 0.9:
                 self.set_point = True
-            if self.away.sets >= 2 and self.home.points >= 24 and self.home.points - self.away.points >= 1:
+            if self.away.sets >= 2 and self.home.points >= 24 and self.home.points - self.away.points >= 0.9:
                 self.set_point = True
             else:
                 self.match_point = False
                 self.set_point = False
         else:
-            if self.home.points >= 24 and self.home.points - self.away.points >= 2:
+            if self.home.points >= 24 and self.home.points - self.away.points >= 0.9:
                 self.set_point = True
-            elif self.away.points >= 24 and self.away.points - self.home.points >= 2:
+            elif self.away.points >= 24 and self.away.points - self.home.points >= 0.9:
                 self.set_point = True
             else:
                 self.set_point = False
-        print('set point :', self.set_point)
-        print('match point :', self.match_point)
-        if self.set_point:
-            self.streamer.match_point(self.match_point)
-            self.streamer.set_point(self.set_point)
-        elif self.match_point:
-            self.streamer.set_point(self.set_point)
-            self.streamer.match_point(self.match_point)
+        if self.tot_points != self.l_tot_points:
+            if self.set_point:
+                self.streamer.match_point(self.match_point)
+                self.streamer.set_point(self.set_point)
+            elif self.match_point:
+                self.streamer.set_point(self.set_point)
+                self.streamer.match_point(self.match_point)
+        self.l_tot_points=self.tot_points
+    
     def _update_ui(self):
         if self.status == 0:
             self.window["-ID-"].update(disabled=False)
@@ -314,21 +358,22 @@ class Match:
 
     def _get_logos(self):
         """Gets the logos of the teams in the match"""
-        homeurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.home.id)
-        awayurl="https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(self.away.id)
         if self.is_vmix:
-            self.streamer.update_logos(homeurl,awayurl)
+            self.streamer.update_logos(self.home.logo,self.away.logo)
         else:
-            self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": homeurl})
-            self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": awayurl})
+            self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": self.home.logo})
+            self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": self.away.logo})
 
     def _get_referes(self):
-        URL = "{}/MatchStatistics.aspx?mID={}".format(self.league_url,self.m_id)
-        r = requests.get(URL)
-        
-        soup = BeautifulSoup(r.content, 'lxml')
-        ref=soup.find('span', attrs = {'id':'Content_Main_LB_Referees'}).text.split('-')
-        self.streamer.update_referees(ref)
+        try:
+            URL = "{}/MatchStatistics.aspx?mID={}".format(self.league_url,self.m_id)
+            r = requests.get(URL)
+            
+            soup = BeautifulSoup(r.content, 'lxml')
+            ref=soup.find('span', attrs = {'id':'Content_Main_LB_Referees'}).text.split('-')
+            self.streamer.update_referees(ref)
+        except:
+            pass
 
     def _web_request(self, data):
         """makes the requests to the server with the specified data"""
@@ -388,12 +433,15 @@ class Match:
 
     def _update_stream(self):
         try:
-            self.streamer._set_input_settings(
-                self.elements["HOME_NAME"], {"text": self.home.name}
-            )
-            self.streamer._set_input_settings(
-                self.elements["AWAY_NAME"], {"text": self.away.name}
-            )
+            if self.is_vmix:
+                self.streamer.update_names(self.home.name,self.away.name)
+            else:
+                self.streamer._set_input_settings(
+                    self.elements["HOME_NAME"], {"text": self.home.name}
+                )
+                self.streamer._set_input_settings(
+                    self.elements["AWAY_NAME"], {"text": self.away.name}
+                )
             self.streamer._set_input_settings(
                 self.elements["HOME_POINTS"], {"text": str(self.home.points)}
             )
@@ -440,7 +488,7 @@ class Match:
                     {"text": str(self.stats.sets[x]["Away_points"])},
                 )
         except Exception as e:
-            print("error", e)
+            print("error update", e)
             return e
         
     def _reset_stream(self):
@@ -494,12 +542,16 @@ class Match:
                 )
             if self.is_vmix:
                 self.streamer.update_logos("","")
+                self.streamer.update_names("","")
                 self.streamer.update_referees(['',''])
+                self.streamer.update_players(clear=True)
+                self.streamer.update_coaches(clear=True)
+                self.streamer.update_winner(clear=True)
             else:
                 self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": ""})
                 self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": ""})
         except Exception as e:
-            print("error", e)
+            print("error reset", e)
             return e
 
     def _stop(self):
