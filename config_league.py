@@ -175,7 +175,7 @@ class LeagueConfig:
                 self.window["-TEAM-"].update(disabled=False)
                 self.window["-CHECK-TEAM-"].update(value=True)
 
-    def save_config(self):
+    def save_config(self) -> bool:
         self.window["-SAVE_TXT-"].update(visible=False)
         # Data to be written
         if self.values['-CHECK-TEAM-']:

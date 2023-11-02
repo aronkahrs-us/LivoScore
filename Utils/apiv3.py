@@ -248,7 +248,7 @@ class Match:
         elif self.away.sets == 3:
             self.streamer.update_winner(self.away)
 
-    def _get_players(self, team_id):
+    def _get_players(self, team_id) -> dict:
         """Get the list of players of the team"""
         data_rq = {
             "data": '{"H":"signalrlivehubfederations","M":"getRosterData","A":["'
@@ -268,7 +268,7 @@ class Match:
             }
         return players
 
-    def _get_coach(self, team_id):
+    def _get_coach(self, team_id) -> str:
         try:
             URL = "{}/CompetitionTeamDetails.aspx?TeamID={}".format(self.league_url,team_id)
             r = requests.get(URL)

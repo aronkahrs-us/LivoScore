@@ -23,7 +23,7 @@ class Vmix:
         self.l_team =''
         self._get_inputs()
 
-    def test_connection(self):
+    def test_connection(self) -> str:
         try:
             response = self.session.get("http://{}:{}/api".format(self.connect['IP'],self.connect['PORT']), timeout=5)
             if response.ok:
@@ -252,7 +252,7 @@ class Vmix:
             value = value['text'] if 'text' in value else value['file']
         self.session.post('http://{}:{}/API/?Function={}&Input={}&SelectedName={}&Value={}'.format(self.connect['IP'],self.connect['PORT'],function,input,name,value))
     
-    def _get_inputs(self):
+    def _get_inputs(self) -> dict:
         self.inputs={}
         try:
             req = self.session.get("http://{}:{}/api".format(self.connect['IP'],self.connect['PORT']),timeout=5).content

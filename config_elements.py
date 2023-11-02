@@ -546,7 +546,7 @@ class ElementsConfig:
                 print(e)
                 sg.Popup("Configurar", keep_on_top=True)
 
-    def get_elements(self, scene=None):
+    def get_elements(self, scene=None) -> list:
         items = obs.Obs().get_scene_items(scene) if self.is_obs else vmix.Vmix()._get_inputs()
         if items != "ERROR":
             elements = []
