@@ -258,9 +258,11 @@ class Main:
                 "{} is closed or not configured".format("OBS" if self.is_obs else "vMix"), text_color="red", visible=True
             )
         else:
+            self.window["-RELOAD-"].update(disabled=True)
+            self.window["-ID-"].update(disabled=True)
             self.window["-ERROR-"].update(text_color="green", visible=True)
-            th_starting = threading.Thread(target=self._starting,args=('-ERROR-','Starting'),daemon=True) #Starts animation
-            th_starting.start()
+            self.th_starting = threading.Thread(target=self._starting,args=('-ERROR-','Starting'),daemon=True) #Starts animation
+            self.th_starting.start()
             self.match = Match(
                 list(self.matches.keys())[
                     list(self.matches.values()).index(self.values["-ID-"])
@@ -270,8 +272,6 @@ class Main:
             if self.is_obs: # if streamer is obs, starts flask server with pleayers
                 self.court = Court(self.match)
                 self.court.start()
-            self.window["-RELOAD-"].update(disabled=True)
-            self.window["-ID-"].update(disabled=True)
         
     def _starting(self,id,text):
         """ Method to animate 'Starting...' text"""

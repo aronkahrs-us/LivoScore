@@ -558,7 +558,7 @@ class Match:
 
     def _stop(self, close=None):
         self.is_running = False
-        if close==None:
-            self.status = 2
-            self._reset_stream()
+        self.status = 2
+        self._reset_stream()
+        if close == None:
             self._update_ui()
