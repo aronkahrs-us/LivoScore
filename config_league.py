@@ -148,12 +148,12 @@ class LeagueConfig:
             sg.Popup("Configure", keep_on_top=True)
 
         while True:
-            event, values = self.window.read()
+            event, self.values = self.window.read()
             if event == "-SAVE-":
                 self.save_config()
                 self.window.write_event_value("-RELOAD-", "")
             if event == "-CHECK-TEAM-":
-                self.window["-TEAM-"].update(disabled=not values['-CHECK-TEAM-'])
+                self.window["-TEAM-"].update(disabled=not self.values['-CHECK-TEAM-'])
 
             elif event == "Exit" or event == sg.WIN_CLOSED:
                 break
@@ -177,20 +177,19 @@ class LeagueConfig:
 
     def save_config(self):
         self.window["-SAVE_TXT-"].update(visible=False)
-        event, values = self.window.read()
         # Data to be written
-        if values['-CHECK-TEAM-']:
+        if self.values['-CHECK-TEAM-']:
             dictionary = {
-                "LEAGUE_URL": DOMAINS[values["-LEAGUE-"]],
-                "LEAGUE": DOMAINS[values["-LEAGUE-"]]
+                "LEAGUE_URL": DOMAINS[self.values["-LEAGUE-"]],
+                "LEAGUE": DOMAINS[self.values["-LEAGUE-"]]
                 .replace("https://", "")
                 .replace("-web.dataproject.com", ""),
-                "TEAM": str(values["-TEAM-"]).lower()
+                "TEAM": str(self.values["-TEAM-"]).lower()
             }
         else:
             dictionary = {
-                "LEAGUE_URL": DOMAINS[values["-LEAGUE-"]],
-                "LEAGUE": DOMAINS[values["-LEAGUE-"]]
+                "LEAGUE_URL": DOMAINS[self.values["-LEAGUE-"]],
+                "LEAGUE": DOMAINS[self.values["-LEAGUE-"]]
                 .replace("https://", "")
                 .replace("-web.dataproject.com", ""),
             }

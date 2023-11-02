@@ -27,8 +27,12 @@ class Main:
                 self.is_vmix = config["VMIX"]
                 self.streamer = Obs() if self.is_obs else Vmix()
         except Exception as e:
-            # If couldn't get the configuration shows a popup
-            sg.popup(f"Configuration not found, make sure to set everything up!")
+            # If couldn't connect to streamer
+            if "streamer" in locals()["self"].__dict__ and self.streamer.inputs == {}:
+                sg.popup("Check that OBS is open!" if self.is_obs else "Check that OBS is open!")
+            else:
+                # If couldn't get the configuration shows a popup
+                sg.popup(f"Configuration not found, make sure to set everything up!")
         # Sets theme
         sg.theme('LIVO')
         # UI Elements
@@ -215,7 +219,8 @@ class Main:
             with open("./Config/league_config.json", "r") as openfile:
                 config = json.load(openfile)
             # starts loading text animation
-            threading.Thread(target=self._starting,args=('-ID-','Loading'),daemon=True).start() #Starts animation
+            th=threading.Thread(target=self._starting,args=('-ID-','Loading'),daemon=True) #Starts animation
+            th.start()
             self.window["-RELOAD-"].update(disabled=True)
             # Get the matches from the selected league, if a team is provided, then it filters only the matches of that team
             if 'TEAM' in config.keys():
@@ -223,6 +228,8 @@ class Main:
             else:
                 self.matches = League().get_ready_matches()
             # if there are matches, shows them in the dropdown, if not then it shows no matches and disables the dropdown
+            self.starting_run=False
+            th.join()
             if self.matches == {}:
                 self.window["-ID-"].update(
                     values=[], value="No Matches Today", visible=True, disabled=True
@@ -252,6 +259,7 @@ class Main:
                 "{} is closed or not configured".format("OBS" if self.is_obs else "vMix"), text_color="red", visible=True
             )
         else:
+            self.window["-ERROR-"].update(text_color="green", visible=True)
             threading.Thread(target=self._starting,args=('-ERROR-','Starting'),daemon=True).start() #Starts animation
             self.match = Match(
                 list(self.matches.keys())[
@@ -269,11 +277,11 @@ class Main:
         """ Method to animate 'Starting...' text"""
         self.starting_run = True
         while self.starting_run:
-            self.window[id].update(text, text_color="green", visible=True)
             time.sleep(0.5)
-            self.window[id].update("{}.".format(text), text_color="green", visible=True)
+            self.window[id].update(text)
             time.sleep(0.5)
-            self.window[id].update("{}..".format(text), text_color="green", visible=True)
+            self.window[id].update("{}.".format(text))
             time.sleep(0.5)
-            self.window[id].update("{}...".format(text), text_color="green", visible=True)
+            self.window[id].update("{}..".format(text))
             time.sleep(0.5)
+            self.window[id].update("{}...".format(text))

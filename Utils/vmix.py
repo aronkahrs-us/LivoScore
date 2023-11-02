@@ -2,6 +2,7 @@ import requests
 import xmltodict
 import json
 import time
+import urllib3.exceptions as urlexp
 
 class Vmix:
     def __init__(self) -> None:
@@ -11,7 +12,6 @@ class Vmix:
                 self.connect = json.load(openfile)
                 self.session = requests.Session()
                 self.session.auth = ('admin', self.connect['PASS']) 
-                
         except:
             pass
         try:
@@ -30,7 +30,7 @@ class Vmix:
                 return 'OK'
             else:
                 return 'ERROR'
-        except requests.exceptions.Timeout:
+        except:
             return "ERROR"
     
     def test_connection_params(self, ip, port, passw=None) -> str:
@@ -42,7 +42,7 @@ class Vmix:
                 return 'OK'
             else:
                 return 'ERROR'
-        except requests.exceptions.Timeout:
+        except:
             return "ERROR"
  
     def serve(self,team):
@@ -228,48 +228,54 @@ class Vmix:
     
     def _get_inputs(self):
         self.inputs={}
-        req = self.session.get("http://{}:{}/api".format(self.connect['IP'],self.connect['PORT'])).content
-        inputs_xlm = xmltodict.parse(req)["vmix"]["inputs"]["input"]
-        for x in inputs_xlm:
-            data = {
-                'key':x['@key'],
-                'type':x['@type'],
-                'name':x['@title'],
-            }
-            if x['@type'] == 'GT':
-                try:
-                    data['text']=(x['text'])
-                    for k in x['text']:
-                        self.inputs[k['@name']] = {
-                            'name': k['@name'],
-                            'parent': x['@key'],
-                        }
-                except Exception as e:
-                    pass
-                try:
-                    data['image']=(x['image'])
-                    if type(x['image']) == list:
-                        for k in x['image']:
+        try:
+            req = self.session.get("http://{}:{}/api".format(self.connect['IP'],self.connect['PORT']),timeout=5).content
+            inputs_xlm = xmltodict.parse(req)["vmix"]["inputs"]["input"]
+            for x in inputs_xlm:
+                data = {
+                    'key':x['@key'],
+                    'type':x['@type'],
+                    'name':x['@title'],
+                }
+                if x['@type'] == 'GT':
+                    try:
+                        data['text']=(x['text'])
+                        for k in x['text']:
                             self.inputs[k['@name']] = {
                                 'name': k['@name'],
                                 'parent': x['@key'],
                             }
-                    else:
-                        k=x['image']
-                        if k['@name'] in self.inputs:
-                            k['@name']=k['@name']+'_1'
-                        self.inputs[k['@name']] = {
-                                'name': k['@name'],
-                                'parent': x['@key'],
-                            }
-                except Exception as e:
-                    pass
-            self.inputs[x['@shortTitle']] = data
-        # for x in self.inputs:
-        #    print(x)
-        #    print(self.inputs[x])
-        #    print('____')
-        return dict(sorted(self.inputs.items()))
+                    except Exception as e:
+                        pass
+                    try:
+                        data['image']=(x['image'])
+                        if type(x['image']) == list:
+                            for k in x['image']:
+                                self.inputs[k['@name']] = {
+                                    'name': k['@name'],
+                                    'parent': x['@key'],
+                                }
+                        else:
+                            k=x['image']
+                            if k['@name'] in self.inputs:
+                                k['@name']=k['@name']+'_1'
+                            self.inputs[k['@name']] = {
+                                    'name': k['@name'],
+                                    'parent': x['@key'],
+                                }
+                    except Exception as e:
+                        print(e)
+                self.inputs[x['@shortTitle']] = data
+            # for x in self.inputs:
+            #    print(x)
+            #    print(self.inputs[x])
+            #    print('____')
+            return dict(sorted(self.inputs.items()))
+        except requests.exceptions.ConnectionError as e:
+            self.inputs = {}
 
     def _add_input(self,value,name):
         self.session.post('http://{}:{}/API/?Function=AddInput&Value={}&SelectedName={}'.format(self.connect['IP'],self.connect['PORT'],value,name))
+
+v=Vmix()
+v.test_connection()

@@ -1,14 +1,15 @@
+import os
+import json
+from theme import *
 import PySimpleGUI as sg
 from Utils.obs import Obs
 from Utils.vmix import Vmix
-from theme import *
-import threading
-import json
-import os
 
 
 class StreamConfig:
+    """GUI for stream config and all the responsabilities related"""
     def __init__(self) -> None:
+        """Init GUI and elements"""
         T_ip = [[sg.Text("Ip Address")]]
         S_ip = [[sg.Input("", enable_events=True, key="-IP-")]]
         T_port = [[sg.Text("Port")]]
@@ -20,7 +21,7 @@ class StreamConfig:
         T_Save = [[sg.Text("Saved", key="-SAVE_TXT-", visible=False)]]
         B_Save = [[sg.Button("Save", key="-SAVE-")]]
         B_Test = [[sg.Button("Test Connection", key="-TEST-")]]
-
+        # Config layout
         layout = [
             [
                 sg.Column(
@@ -66,6 +67,7 @@ class StreamConfig:
                 ),
             ],
         ]
+        #Starts window
         self.window = sg.Window(
             "Livoscore - Stream Config",
             icon=logo,
@@ -77,13 +79,14 @@ class StreamConfig:
             resizable=True,
             finalize=True,
         )
+        # get the streamer configuration, if exists
         self.get_config()
-
+        # Stream config, handles events
         while True:
-            event, values = self.window.read()
-            if event == "-SAVE-":
+            event, self.values = self.window.read()
+            if event == "-SAVE-":   # if user saves config
                 self.save_config()
-            elif event == "-TEST-":
+            elif event == "-TEST-": # if user test config
                 self.test_config()
             elif event == "Exit" or event == sg.WIN_CLOSED:
                 break
@@ -106,17 +109,13 @@ class StreamConfig:
             sg.Popup("Configure", keep_on_top=True)
 
     def test_config(self):
-        event, values = self.window.read()
         self.window["-SAVE_TXT-"].update(
                 value="Testing...", text_color="white", visible=True
             )
-        self.streamer = Obs() if values["-OBS-"] else Vmix()
-        if (
-            self.streamer.test_connection_params(
-                values["-IP-"], values["-PORT-"], values["-PASS-"]
-            )
-            != "ERROR"
-        ):
+        self.streamer = Obs() if self.values["-OBS-"] else Vmix()
+        if self.streamer.test_connection_params(
+                self.values["-IP-"], self.values["-PORT-"], self.values["-PASS-"]
+            ) != "ERROR":
             self.window["-SAVE_TXT-"].update(
                 value="OK", text_color="green", visible=True
             )
@@ -126,16 +125,14 @@ class StreamConfig:
             )
 
     def save_config(self):
-        event, values = self.window.read()
         # Data to be written
         dictionary = {
-            "IP": values["-IP-"],
-            "PORT": values["-PORT-"],
-            "PASS": values["-PASS-"],
-            "OBS": values["-OBS-"],
-            "VMIX": values["-VMIX-"],
+            "IP": self.values["-IP-"],
+            "PORT": self.values["-PORT-"],
+            "PASS": self.values["-PASS-"],
+            "OBS": self.values["-OBS-"],
+            "VMIX": self.values["-VMIX-"],
         }
-
         # Serializing json
         json_object = json.dumps(dictionary, indent=4)
         filename = "./Config/stream_config.json"
