@@ -211,6 +211,22 @@ class ElementsConfig:
                 )
             ]
         ]
+        T_elmMHI = [[sg.Text("Match History", expand_x=True, expand_y=True)]]
+        S_elmMHI = [
+            [
+                sg.Combo(
+                    [],
+                    default_value="Select Element",
+                    key="-Elm48-",
+                    auto_size_text=True,
+                    enable_events=True,
+                    disabled=True,
+                    expand_x=True,
+                    expand_y=True,
+                    readonly=True,
+                )
+            ]
+        ]
         T_Save = [[sg.Text("Saved", key="-SAVE_TXT-", visible=False)]]
         B_Save = [[sg.Button("Save", key="-SAVE-")]]
         t_main_elem = ["Name", "Logo", "Points", "Sets", "Serve", "Substitution"]
@@ -275,6 +291,12 @@ class ElementsConfig:
                 ),
             sg.Column(
                     S_elmWIN, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    T_elmMHI, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    S_elmMHI, element_justification="left", expand_x=True, expand_y=True
                 ),
         ]]
         self.n = 1
@@ -492,7 +514,7 @@ class ElementsConfig:
                             )
                         else:
                             # self.window['-Elm'+str(x)+'-'].update(value=list(items.keys())[list(items.values()).index(config[key])], visible=True, disabled=False)
-                            print(type(config[key]),x)
+                            # print(type(config[key]),x)
                             if type(config[key]) == str:
                                 self.window["-Elm" + str(x) + "-"].update(
                                     value=config[key], visible=True, disabled=False
@@ -530,7 +552,7 @@ class ElementsConfig:
             elements = []
             for x in items:
                 elements.append(x)
-            for x in range(1, self.n + 11):
+            for x in range(1, self.n + 12):
                 self.window["-Elm" + str(x) + "-"].update(
                     value="Select", values=elements, visible=True, disabled=False
                 )
@@ -589,6 +611,7 @@ class ElementsConfig:
                     "RESULTS_H": elements[self.values["-Elm45-"]],
                     "RESULTS_A": elements[self.values["-Elm46-"]],
                     "WINNER": elements[self.values["-Elm47-"]],
+                    "MATCH_HISTORY": elements[self.values["-Elm48-"]],
                 }
             elif self.is_obs:
                 dictionary = {

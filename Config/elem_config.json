@@ -211,13 +211,11 @@
         "text": [
             {
                 "@index": "0",
-                "@name": "Ref2.Text",
-                "#text": "Botta Mora Gonzalo"
+                "@name": "Ref2.Text"
             },
             {
                 "@index": "1",
-                "@name": "Ref1.Text",
-                "#text": "Botta Ratto Fernando"
+                "@name": "Ref1.Text"
             },
             {
                 "@index": "2",
@@ -249,8 +247,7 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "SStat Home Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_529.jpg"
+            "@name": "SStat Home Logo.Source"
         }
     },
     "PP_STAT_H": {
@@ -260,8 +257,7 @@
         "text": [
             {
                 "@index": "0",
-                "@name": "Stat Name.Text",
-                "#text": "Puntos Ganados"
+                "@name": "Stat Name.Text"
             },
             {
                 "@index": "1",
@@ -276,8 +272,7 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "SStat Home Logo.Source_1",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_529.jpg"
+            "@name": "SStat Home Logo.Source_1"
         }
     },
     "SP_STAT_A": {
@@ -303,8 +298,7 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "SStat Away Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_522.jpg"
+            "@name": "SStat Away Logo.Source"
         }
     },
     "PP_STAT_A": {
@@ -330,8 +324,7 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "SStat Away Logo.Source_1",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_522.jpg"
+            "@name": "SStat Away Logo.Source_1"
         }
     },
     "RESULTS_H": {
@@ -407,8 +400,7 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "R Home Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_529.jpg"
+            "@name": "R Home Logo.Source"
         }
     },
     "RESULTS_A": {
@@ -484,8 +476,7 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "R Away Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_522.jpg"
+            "@name": "R Away Logo.Source"
         }
     },
     "WINNER": {
@@ -494,13 +485,65 @@
         "name": "Winner",
         "text": {
             "@index": "0",
-            "@name": "Winner Name.Text",
-            "#text": "CDV CENTRO DE DESARROLLO CAMPE\u00d3N!!!"
+            "@name": "Winner Name.Text"
         },
         "image": {
             "@index": "0",
-            "@name": "Winner Logo.Source",
-            "#text": "d547d1df-e1d7-4298-9e10-8f046deb6349\\home (1).jpg"
+            "@name": "Winner Logo.Source"
         }
+    },
+    "MATCH_HISTORY": {
+        "key": "91ce6875-8107-4d0e-835b-dcde68333a86",
+        "type": "GT",
+        "name": "Match History",
+        "text": [
+            {
+                "@index": "0",
+                "@name": "Historial5.Text",
+                "#text": "Victorias:"
+            },
+            {
+                "@index": "1",
+                "@name": "Won Away.Text",
+                "#text": "NN"
+            },
+            {
+                "@index": "2",
+                "@name": "Historial4.Text",
+                "#text": "Victorias:"
+            },
+            {
+                "@index": "3",
+                "@name": "Won Home.Text",
+                "#text": "NN"
+            },
+            {
+                "@index": "4",
+                "@name": "Total matches.Text",
+                "#text": "NN"
+            },
+            {
+                "@index": "5",
+                "@name": "Historial1.Text",
+                "#text": "Jugados:"
+            },
+            {
+                "@index": "6",
+                "@name": "Historial.Text",
+                "#text": "Historial"
+            }
+        ],
+        "image": [
+            {
+                "@index": "0",
+                "@name": "Hist Away Logo.Source",
+                "#text": "bea2eb39-d120-4a2e-888d-df0314d6b593\\home (1).jpg"
+            },
+            {
+                "@index": "1",
+                "@name": "Hist Home Logo.Source",
+                "#text": "bea2eb39-d120-4a2e-888d-df0314d6b593\\home (1).jpg"
+            }
+        ]
     }
 }

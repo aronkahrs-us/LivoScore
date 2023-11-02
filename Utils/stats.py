@@ -109,8 +109,14 @@ class Stats:
                     won.append(away)
                 elif away == a_id:
                     won.append(away)
-        print("Home has won {} of {} matches".format(won.count(h_id),len(won)))
-        print("Away has won {} of {} matches".format(won.count(a_id),len(won)))
+    
+        won_home = str(won.count(h_id)) if len(won) > 0 else "No Encontrado"
+        won_away = str(won.count(a_id)) if len(won) > 0 else "No Encontrado"
+        self.match_history={
+            'played': str(len(won)) if len(won) > 0 else "No Encontrado",
+            'won_home': won_home,
+            'won_away': won_away,
+        }
         teams_stats=self._team_stats(h_id,a_id)
         self.home=teams_stats['home']
         self.away=teams_stats['away']

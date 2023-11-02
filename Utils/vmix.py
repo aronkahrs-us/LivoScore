@@ -101,9 +101,9 @@ class Vmix:
     def update_logos(self,home:str=None,away:str=None):
         try:
             for x in self.inputs:
-                if ('home' in x.lower() or 'h' in x.lower()) and 'logo' in x.lower():
+                if 'home' in x.lower() and 'logo' in x.lower():
                     self._set_input_settings(self.inputs[x],{'file': home})
-                elif ('away' in x.lower() or 'a' in x.lower()) and 'logo' in x.lower():
+                elif 'away' in x.lower() and 'logo' in x.lower():
                     self._set_input_settings(self.inputs[x],{'file': away})
         except Exception as e:
             print('update_logos',e)
@@ -166,6 +166,32 @@ class Vmix:
                 self._set_input(input=self.elements['WINNER']['key'],name=self.elements['WINNER']['image']['@name'],value={'file': team.logo})
         except Exception as e:
             print('update_winner',e)
+    
+    def update_match_history(self,total=None,home=None,away=None,clear=None):
+        try:
+            if clear:
+                self._set_input(input=self.elements['MATCH_HISTORY']['key'],
+                                name=[value['@name'] for value in self.elements['MATCH_HISTORY']['text'] if 'total matches' in value['@name'].lower()][0],
+                                value={'text': 'NN'})
+                self._set_input(input=self.elements['MATCH_HISTORY']['key'],
+                                name=[value['@name'] for value in self.elements['MATCH_HISTORY']['text'] if 'won home' in value['@name'].lower()][0],
+                                value={'text': 'NN'})
+                self._set_input(input=self.elements['MATCH_HISTORY']['key'],
+                                name=[value['@name'] for value in self.elements['MATCH_HISTORY']['text'] if 'won away' in value['@name'].lower()][0],
+                                value={'text': 'NN'})
+            else:
+                self._set_input(input=self.elements['MATCH_HISTORY']['key'],
+                                name=[value['@name'] for value in self.elements['MATCH_HISTORY']['text'] if 'total matches' in value['@name'].lower()][0],
+                                value={'text': total})
+                self._set_input(input=self.elements['MATCH_HISTORY']['key'],
+                                name=[value['@name'] for value in self.elements['MATCH_HISTORY']['text'] if 'won home' in value['@name'].lower()][0],
+                                value={'text': home})
+                self._set_input(input=self.elements['MATCH_HISTORY']['key'],
+                                name=[value['@name'] for value in self.elements['MATCH_HISTORY']['text'] if 'won away' in value['@name'].lower()][0],
+                                value={'text': away})
+                #self._set_input(input=self.elements['MATCH_HISTORY']['key'],name=self.elements['MATCH_HISTORY']['image']['@name'],value={'file': team.logo})
+        except Exception as e:
+            print('update_match_history',e)
 
     def update_referees(self,names:list):
         try:
@@ -264,7 +290,7 @@ class Vmix:
                                     'parent': x['@key'],
                                 }
                     except Exception as e:
-                        print(e)
+                        pass
                 self.inputs[x['@shortTitle']] = data
             # for x in self.inputs:
             #    print(x)
@@ -278,4 +304,4 @@ class Vmix:
         self.session.post('http://{}:{}/API/?Function=AddInput&Value={}&SelectedName={}'.format(self.connect['IP'],self.connect['PORT'],value,name))
 
 v=Vmix()
-v.test_connection()
+v.update_match_history(clear=True)

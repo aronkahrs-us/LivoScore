@@ -208,7 +208,6 @@ class Main:
                 threading.Thread(target=self.list_matches, daemon=True).start()
             elif event == "STARTED":    # Match started, stops "starting.." animation
                 self.starting_run=False
-                self.window["-ERROR-"].update(visible=False)
         # Closes main window
         self.window.close()
 
@@ -260,7 +259,8 @@ class Main:
             )
         else:
             self.window["-ERROR-"].update(text_color="green", visible=True)
-            threading.Thread(target=self._starting,args=('-ERROR-','Starting'),daemon=True).start() #Starts animation
+            th_starting = threading.Thread(target=self._starting,args=('-ERROR-','Starting'),daemon=True) #Starts animation
+            th_starting.start()
             self.match = Match(
                 list(self.matches.keys())[
                     list(self.matches.values()).index(self.values["-ID-"])
