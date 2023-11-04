@@ -549,6 +549,7 @@ class Match:
                 self.streamer.update_coaches(clear=True)
                 self.streamer.update_winner(clear=True)
                 self.streamer.update_match_history(clear=True)
+                self.streamer.set_results(clear=True)
             else:
                 self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": ""})
                 self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": ""})

@@ -218,22 +218,21 @@ class Vmix:
         except Exception as e:
             print('set_sp_stat',e)
 
-    def set_results(self,home,away):
+    def set_results(self,home=None,away=None, clear:bool=None):
+        rs= ['result_03','result_13','result_23','result_32','result_31','result_30']
         try:
-            #HOME
-            self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][0]['@name'],value={'text': str(home['result_03'])})
-            self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][1]['@name'],value={'text': str(home['result_13'])})
-            self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][2]['@name'],value={'text': str(home['result_23'])})
-            self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][3]['@name'],value={'text': str(home['result_32'])})
-            self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][4]['@name'],value={'text': str(home['result_31'])})
-            self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][5]['@name'],value={'text': str(home['result_30'])})
-            #AWAY
-            self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][0]['@name'],value={'text': str(away['result_03'])})
-            self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][1]['@name'],value={'text': str(away['result_13'])})
-            self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][2]['@name'],value={'text': str(away['result_23'])})
-            self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][3]['@name'],value={'text': str(away['result_32'])})
-            self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][4]['@name'],value={'text': str(away['result_31'])})
-            self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][5]['@name'],value={'text': str(away['result_30'])})
+            if clear:
+                for i in range(0,6):
+                    #HOME
+                    self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][i]['@name'],value={'text': '0'})
+                    #AWAY
+                    self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][i]['@name'],value={'text': '0'})
+            else:
+                for i in range(0,6):
+                    #HOME
+                    self._set_input(input=self.elements['RESULTS_H']['key'],name=self.elements['RESULTS_H']['text'][i]['@name'],value={'text': str(home[rs[i]])})
+                    #AWAY
+                    self._set_input(input=self.elements['RESULTS_A']['key'],name=self.elements['RESULTS_A']['text'][i]['@name'],value={'text': str(away[rs[i]])})
         except Exception as e:
             print('set_results',e)
 
