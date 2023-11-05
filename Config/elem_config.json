@@ -53,7 +53,7 @@
         "image": {
             "@index": "0",
             "@name": "Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_502.jpg"
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
         }
     },
     "A_SUBSTITUTION": {
@@ -68,7 +68,7 @@
         "image": {
             "@index": "0",
             "@name": "Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_502.jpg"
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
         }
     },
     "HOME_STATS_PT": {
@@ -211,11 +211,13 @@
         "text": [
             {
                 "@index": "0",
-                "@name": "Ref2.Text"
+                "@name": "Ref2.Text",
+                "#text": "Silva Janet"
             },
             {
                 "@index": "1",
-                "@name": "Ref1.Text"
+                "@name": "Ref1.Text",
+                "#text": "Cassese Miguel"
             },
             {
                 "@index": "2",
@@ -237,7 +239,7 @@
             {
                 "@index": "1",
                 "@name": "Stat Value.Text",
-                "#text": "55%"
+                "#text": "25%"
             },
             {
                 "@index": "2",
@@ -247,7 +249,8 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "SStat Home Logo.Source"
+            "@name": "SStat Home Logo.Source",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
         }
     },
     "PP_STAT_H": {
@@ -257,12 +260,13 @@
         "text": [
             {
                 "@index": "0",
-                "@name": "Stat Name.Text"
+                "@name": "Stat Name.Text",
+                "#text": "Puntos Ganados"
             },
             {
                 "@index": "1",
                 "@name": "Stat Value.Text",
-                "#text": "53%"
+                "#text": "44%"
             },
             {
                 "@index": "2",
@@ -272,7 +276,8 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "SStat Home Logo.Source_1"
+            "@name": "SStat Home Logo.Source_1",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
         }
     },
     "SP_STAT_A": {
@@ -288,7 +293,7 @@
             {
                 "@index": "1",
                 "@name": "Stat Value.Text",
-                "#text": "39%"
+                "#text": "3%"
             },
             {
                 "@index": "2",
@@ -298,7 +303,8 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "SStat Away Logo.Source"
+            "@name": "SStat Away Logo.Source",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_461.jpg"
         }
     },
     "PP_STAT_A": {
@@ -314,7 +320,7 @@
             {
                 "@index": "1",
                 "@name": "Stat Value.Text",
-                "#text": "48%"
+                "#text": "35%"
             },
             {
                 "@index": "2",
@@ -324,7 +330,8 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "SStat Away Logo.Source_1"
+            "@name": "SStat Away Logo.Source_1",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_461.jpg"
         }
     },
     "RESULTS_H": {
@@ -335,32 +342,32 @@
             {
                 "@index": "0",
                 "@name": "home r03.Text",
-                "#text": "1"
+                "#text": "7"
             },
             {
                 "@index": "1",
                 "@name": "home r13.Text",
-                "#text": "3"
+                "#text": "1"
             },
             {
                 "@index": "2",
                 "@name": "home r23.Text",
-                "#text": "0"
+                "#text": "1"
             },
             {
                 "@index": "3",
                 "@name": "home r32.Text",
-                "#text": "1"
+                "#text": "0"
             },
             {
                 "@index": "4",
                 "@name": "home r31.Text",
-                "#text": "1"
+                "#text": "0"
             },
             {
                 "@index": "5",
                 "@name": "home r30.Text",
-                "#text": "3"
+                "#text": "2"
             },
             {
                 "@index": "6",
@@ -400,7 +407,8 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "R Home Logo.Source"
+            "@name": "R Home Logo.Source",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
         }
     },
     "RESULTS_A": {
@@ -411,22 +419,22 @@
             {
                 "@index": "0",
                 "@name": "away r03.Text",
-                "#text": "3"
+                "#text": "10"
             },
             {
                 "@index": "1",
                 "@name": "away r13.Text",
-                "#text": "2"
+                "#text": "1"
             },
             {
                 "@index": "2",
                 "@name": "away r23.Text",
-                "#text": "1"
+                "#text": "0"
             },
             {
                 "@index": "3",
                 "@name": "away r32.Text",
-                "#text": "1"
+                "#text": "0"
             },
             {
                 "@index": "4",
@@ -436,7 +444,7 @@
             {
                 "@index": "5",
                 "@name": "away r30.Text",
-                "#text": "2"
+                "#text": "0"
             },
             {
                 "@index": "6",
@@ -476,7 +484,8 @@
         ],
         "image": {
             "@index": "0",
-            "@name": "R Away Logo.Source"
+            "@name": "R Away Logo.Source",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_461.jpg"
         }
     },
     "WINNER": {
@@ -485,11 +494,13 @@
         "name": "Winner",
         "text": {
             "@index": "0",
-            "@name": "Winner Name.Text"
+            "@name": "Winner Name.Text",
+            "#text": "JMLM UNIVERSITARIO CAMPEON!!"
         },
         "image": {
             "@index": "0",
-            "@name": "Winner Logo.Source"
+            "@name": "Winner Logo.Source",
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
         }
     },
     "MATCH_HISTORY": {
@@ -537,13 +548,15 @@
             {
                 "@index": "0",
                 "@name": "Hist Away Logo.Source",
-                "#text": "bea2eb39-d120-4a2e-888d-df0314d6b593\\home (1).jpg"
+                "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_461.jpg"
             },
             {
                 "@index": "1",
                 "@name": "Hist Home Logo.Source",
-                "#text": "bea2eb39-d120-4a2e-888d-df0314d6b593\\home (1).jpg"
+                "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
             }
         ]
-    }
+    },
+    "AUTOMATE_TIME_OUT": true,
+    "IS_FINAL": true
 }

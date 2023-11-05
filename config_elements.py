@@ -227,6 +227,31 @@ class ElementsConfig:
                 )
             ]
         ]
+        T_elmATO = [[sg.Text("Automate Time Out", expand_x=True, expand_y=True)]]
+        S_elmATO = [
+            [
+                sg.Checkbox(
+                    text='Automate Time Out',
+                    default=True,
+                    key="-Elm49-",
+                    enable_events=True,
+                    disabled=True,
+                )
+            ]
+        ]
+
+        T_elmISF = [[sg.Text("Is Championship Final?", expand_x=True, expand_y=True)]]
+        S_elmISF = [
+            [
+                sg.Checkbox(
+                    text='Is Championship Final?',
+                    default=True,
+                    key="-Elm50-",
+                    enable_events=True,
+                    disabled=True,
+                )
+            ]
+        ]
         T_Save = [[sg.Text("Saved", key="-SAVE_TXT-", visible=False)]]
         B_Save = [[sg.Button("Save", key="-SAVE-")]]
         t_main_elem = ["Name", "Logo", "Points", "Sets", "Serve", "Substitution"]
@@ -299,6 +324,16 @@ class ElementsConfig:
                     S_elmMHI, element_justification="left", expand_x=True, expand_y=True
                 ),
         ]]
+        misc_layout = [
+            [
+            sg.Column(
+                    S_elmATO, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    S_elmISF, element_justification="left", expand_x=True, expand_y=True
+                ),
+        ]
+        ]
         self.n = 1
         for i in t_main_elem:
             main_layout.append(
@@ -460,7 +495,7 @@ class ElementsConfig:
             [sg.HorizontalSeparator(pad=(10, 10))],
             [
                 sg.TabGroup(
-                    [[sg.Tab("Main", main_layout), sg.Tab("Stats", stats_layout), sg.Tab("Stats 2", stats2_layout)]],
+                    [[sg.Tab("Main", main_layout), sg.Tab("Stats", stats_layout), sg.Tab("Stats 2", stats2_layout), sg.Tab("Misc", misc_layout)]],
                     s=(750, 450),
                     expand_x=True,
                     expand_y=True,
@@ -523,6 +558,10 @@ class ElementsConfig:
                                 self.window["-Elm" + str(x) + "-"].update(
                                     value=config[key]['name'], visible=True, disabled=False
                                 )
+                            elif type(config[key]) == bool:
+                                self.window["-Elm" + str(x) + "-"].update(
+                                    value=config[key], visible=True, disabled=False
+                                )
                             else:
                                 self.window["-Elm" + str(x) + "-"].update(
                                     value=[
@@ -552,10 +591,13 @@ class ElementsConfig:
             elements = []
             for x in items:
                 elements.append(x)
-            for x in range(1, self.n + 12):
-                self.window["-Elm" + str(x) + "-"].update(
-                    value="Select", values=elements, visible=True, disabled=False
-                )
+            for x in range(1, self.n + 14):
+                try:
+                    self.window["-Elm" + str(x) + "-"].update(
+                        value="Select", values=elements, visible=True, disabled=False
+                    )
+                except:
+                    self.window["-Elm" + str(x) + "-"].update(visible=True, disabled=False)
         return items
 
     def save_config(self):
@@ -612,6 +654,8 @@ class ElementsConfig:
                     "RESULTS_A": elements[self.values["-Elm46-"]],
                     "WINNER": elements[self.values["-Elm47-"]],
                     "MATCH_HISTORY": elements[self.values["-Elm48-"]],
+                    "AUTOMATE_TIME_OUT": self.values["-Elm49-"],
+                    "IS_FINAL": self.values["-Elm50-"],
                 }
             elif self.is_obs:
                 dictionary = {

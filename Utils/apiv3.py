@@ -6,9 +6,11 @@ import PySimpleGUI as sg
 from .team import Team
 from .obs import Obs
 from .vmix import Vmix
-from .stats import Stats
+from .stats import TeamStats
+from .player import Player
 from sseclient import SSEClient
 from bs4 import BeautifulSoup
+
 
 class Match:
     def __init__(self, m_id, window):
@@ -16,7 +18,7 @@ class Match:
         self.is_running = True
         self.set_point = False
         self.match_point = False
-        self.l_tot_points=0
+        self.l_tot_points = 0
         self.window = window
         try:
             with open("./Config/league_config.json", "r") as openfile:
@@ -24,7 +26,7 @@ class Match:
                 config = json.load(openfile)
                 self.league = config["LEAGUE"]
                 self.league_url = config["LEAGUE_URL"]
-                self.stats = Stats(self.league_url)
+                self.stats = TeamStats(self.league_url)
         except Exception as e:
             sg.popup_error(f"AN EXCEPTION OCCURRED!", e)
         try:
@@ -107,14 +109,16 @@ class Match:
         # Iterate through SSE events
         x = 0
         for msg in messages:
-            th = threading.Thread(target=self._process_msg, args=(msg,),daemon=True)
+            th = threading.Thread(target=self._process_msg, args=(msg,), daemon=True)
             th.run()
-            try:
-                th = threading.Thread(target=self._process_msg, args=(next(messages),),daemon=True)
-                th.run()
-            except Exception as e:
-                print(e)
-    
+            # try:
+            #     th = threading.Thread(
+            #         target=self._process_msg, args=(next(messages),), daemon=True
+            #     )
+            #     th.run()
+            # except Exception as e:
+            #     print(e)
+
     def start(self):
         params = {
             "transport": "serverSentEvents",
@@ -164,7 +168,9 @@ class Match:
             data["WonSetHome"],
             self._get_players(data["Home"]),
             self._get_coach(data["Home"]),
-            "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(data["Home"])
+            "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(
+                data["Home"]
+            ),
         )
 
         self.away = Team(
@@ -174,28 +180,34 @@ class Match:
             data["WonSetGuest"],
             self._get_players(data["Guest"]),
             self._get_coach(data["Guest"]),
-            "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(data["Guest"])
+            "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(
+                data["Guest"]
+            ),
         )
         self.stats.initiate(data, self.current_set)
         self.status = data["Status"]
-        self.window.write_event_value('STARTED',1)
+        self.window.write_event_value("STARTED", 1)
         self._reset_stream()
         self._update_ui()
         self._get_logos()
         self._get_referes()
         self._update_stream()
-        self.streamer.set_sp_stat(self.stats.home,self.stats.away)
-        self.streamer.set_results(self.stats.home,self.stats.away)
-        self.streamer.update_players('H',self.home.players)
-        self.streamer.update_players('A',self.away.players)
-        self.streamer.update_coaches('Home',self.home.coach)
-        self.streamer.update_coaches('Away',self.away.coach)
-        self.streamer.update_match_history(self.stats.match_history['played'],self.stats.match_history['won_home'],self.stats.match_history['won_away'])
+        self.streamer.set_sp_stat(self.stats.home, self.stats.away)
+        self.streamer.set_results(self.stats.home, self.stats.away)
+        self.streamer.update_players("H", self.home.players)
+        self.streamer.update_players("A", self.away.players)
+        self.streamer.update_coaches("Home", self.home.coach)
+        self.streamer.update_coaches("Away", self.away.coach)
+        self.streamer.update_match_history(
+            self.stats.match_history["played"],
+            self.stats.match_history["won_home"],
+            self.stats.match_history["won_away"],
+        )
 
-    def _process_msg(self,msg):
+    def _process_msg(self, msg):
         if self.is_running == False:
-                print("STOP")
-                return 'break'
+            print("STOP")
+            return "break"
         try:
             data = msg.data.replace("'", '"')
             if data != "initialized" and data != "{}":
@@ -208,14 +220,20 @@ class Match:
                         self.skill = data["M"][0]["A"][0][-1]["Skill"]
                         if self.action == 0 or self.action == 1:
                             threading.Thread(
-                                target=self.streamer.serve, args=(self.serve), daemon=True
+                                target=self.streamer.serve,
+                                args=(self.serve),
+                                daemon=True,
                             ).start()
                         elif self.action == 2:
                             threading.Thread(
-                                target=self.streamer.substitution, args=(self.serve,self.home.logo,self.away.logo), daemon=True
+                                target=self.streamer.substitution,
+                                args=(self.serve, self.home.logo, self.away.logo),
+                                daemon=True,
                             ).start()
                         elif self.action == 3:
-                            threading.Thread(target=self.streamer.time_out, daemon=True).start()
+                            threading.Thread(
+                                target=self.streamer.time_out, daemon=True
+                            ).start()
                     elif (
                         data["M"][0]["M"] == "updateMatchSetData_ES"
                         or data["M"][0]["M"] == "updateMatchSetData_DV"
@@ -230,11 +248,17 @@ class Match:
                         self.home.sets = data["M"][0]["A"][0]["H"]
                         self.away.sets = data["M"][0]["A"][0]["G"]
                         self.status = data["M"][0]["A"][0]["S"]
+                    elif data["M"][0]["M"] == "updatePlayerStatisticsData":
+                        print('player stats')
+                        if data["M"][0]["A"][0][1] == self.home.id:   
+                            threading.Thread(target=self._update_statistics,args=(True,self.home.players,data["M"][0]["A"][0][0]), daemon=True).start()
+                        elif data["M"][0]["A"][0][1] == self.away.id:
+                            threading.Thread(target=self._update_statistics,args=(True,self.away.players,data["M"][0]["A"][0][0]), daemon=True).start()
                 finally:
-                    if self.status == 2:
-                        self._stop()
+                    # if self.status == 2:
+                    #     self._stop()
                     threading.Thread(target=self._set_point, daemon=True).start()
-                    threading.Thread(target=self._make_statistics, daemon=True).start()
+                    threading.Thread(target=self._update_statistics, daemon=True).start()
                     threading.Thread(target=self._winner, daemon=True).start()
                     threading.Thread(target=self._update_stream, daemon=True).start()
                     threading.Thread(target=self._update_ui, daemon=True).start()
@@ -248,7 +272,7 @@ class Match:
         elif self.away.sets == 3:
             self.streamer.update_winner(self.away)
 
-    def _get_players(self, team_id) -> dict:
+    def _get_players(self, team_id) -> list:
         """Get the list of players of the team"""
         data_rq = {
             "data": '{"H":"signalrlivehubfederations","M":"getRosterData","A":["'
@@ -260,32 +284,33 @@ class Match:
             + '"]}',
         }
         data = self._web_request(data_rq)
-        players = {}
+        players = []
         for player in data:
-            players[str(player["NM"])] = {
-                'Name':player["NM"].strip().capitalize() + " " + player["SR"].strip().capitalize(),
-                'Number':str(player["N"])
-            }
+            name=player["NM"].strip().capitalize() + " " + player["SR"].strip().capitalize()
+            players.append(Player(self.league,team_id,player["PID"],name,player["N"]))
         return players
 
     def _get_coach(self, team_id) -> str:
         try:
-            URL = "{}/CompetitionTeamDetails.aspx?TeamID={}".format(self.league_url,team_id)
+            URL = "{}/CompetitionTeamDetails.aspx?TeamID={}".format(
+                self.league_url, team_id
+            )
             r = requests.get(URL)
-            soup = BeautifulSoup(r.content, 'lxml')
-            coach=soup.find('div',attrs={'id':'Content_Main_RP_Choaches_RPL_CoachList_0'})
-            coach=coach.find('p',attrs={'class':'p_margin_1'}).text
-            coach=coach.split(' ')
-            coach = coach[1] + ' ' + coach[0]
+            soup = BeautifulSoup(r.content, "lxml")
+            coach = soup.find(
+                "div", attrs={"id": "Content_Main_RP_Choaches_RPL_CoachList_0"}
+            )
+            coach = coach.find("p", attrs={"class": "p_margin_1"}).text
+            coach = coach.split(" ")
+            coach = coach[1] + " " + coach[0]
             return coach
         except:
-            return 'No encontrado (inserte manualmente)'
+            return "No encontrado (inserte manualmente)"
 
     def _set_point(self):
         self.set_point = False
         self.match_point = False
-        self.tot_points=self.home.points+self.away.points
-        print('Points Difference: ', abs(self.home.points-self.away.points))
+        self.tot_points = self.home.points + self.away.points
         if self.current_set == 5:
             if self.home.points >= 14 and self.home.points - self.away.points >= 0.9:
                 self.match_point = True
@@ -293,14 +318,30 @@ class Match:
                 self.match_point = True
             else:
                 self.match_point = False
-        elif self.home.sets >= 2 or self.away.sets >= 2:
-            if self.home.sets >= 2 and self.home.points >= 24 and self.home.points - self.away.points >= 0.9:
+        elif self.home.sets == 2 or self.away.sets == 2:
+            if (
+                self.home.sets == 2
+                and self.home.points >= 24
+                and self.home.points - self.away.points >= 0.9
+            ):
                 self.match_point = True
-            elif self.away.sets >= 2 and self.away.points >= 24 and self.away.points - self.home.points >= 0.9:
+            elif (
+                self.away.sets == 2
+                and self.away.points >= 24
+                and self.away.points - self.home.points >= 0.9
+            ):
                 self.match_point = True
-            elif self.home.sets >= 2 and self.away.points >= 24 and self.away.points - self.home.points >= 0.9:
+            elif (
+                self.home.sets == 2
+                and self.away.points >= 24
+                and self.away.points - self.home.points >= 0.9
+            ):
                 self.set_point = True
-            if self.away.sets >= 2 and self.home.points >= 24 and self.home.points - self.away.points >= 0.9:
+            elif (
+                self.away.sets == 2
+                and self.home.points >= 24
+                and self.home.points - self.away.points >= 0.9
+            ):
                 self.set_point = True
             else:
                 self.match_point = False
@@ -319,8 +360,8 @@ class Match:
             elif self.match_point:
                 self.streamer.set_point(self.set_point)
                 self.streamer.match_point(self.match_point)
-        self.l_tot_points=self.tot_points
-    
+        self.l_tot_points = self.tot_points
+
     def _update_ui(self):
         if self.status == 0:
             self.window["-ID-"].update(disabled=False)
@@ -345,33 +386,53 @@ class Match:
             self.window["-AWAY-"].update(visible=False)
             self.window["-ST-"].update("Iniciar", disabled=False)
         self.window["-HOME-"].update(
-            value=self.home.name + " - "+ str(self.home.sets)+ " | " + str(self.home.points), visible=True
+            value=self.home.name
+            + " - "
+            + str(self.home.sets)
+            + " | "
+            + str(self.home.points),
+            visible=True,
         )
         self.window["-AWAY-"].update(
-            value= str(self.away.points) + " | " + str(self.away.sets) + " - " + self.away.name, visible=True
+            value=str(self.away.points)
+            + " | "
+            + str(self.away.sets)
+            + " - "
+            + self.away.name,
+            visible=True,
         )
 
-    def _make_statistics(self):
+    def _update_statistics(self,upd_player:bool=None,players:list=None,data:dict=None):
         try:
-            self.stats.update(self.home.points, self.away.points, self.current_set)
+            if upd_player:
+                for player in players:
+                    player.stats._update(data)
+            else:
+                self.stats.update(self.home.points, self.away.points, self.current_set)
         except:
             pass
 
     def _get_logos(self):
         """Gets the logos of the teams in the match"""
         if self.is_vmix:
-            self.streamer.update_logos(self.home.logo,self.away.logo)
+            self.streamer.update_logos(self.home.logo, self.away.logo)
         else:
-            self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": self.home.logo})
-            self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": self.away.logo})
+            self.streamer._set_input_settings(
+                self.elements["HOME_LOGO"], {"file": self.home.logo}
+            )
+            self.streamer._set_input_settings(
+                self.elements["AWAY_LOGO"], {"file": self.away.logo}
+            )
 
     def _get_referes(self):
         try:
-            URL = "{}/MatchStatistics.aspx?mID={}".format(self.league_url,self.m_id)
+            URL = "{}/MatchStatistics.aspx?mID={}".format(self.league_url, self.m_id)
             r = requests.get(URL)
-            
-            soup = BeautifulSoup(r.content, 'lxml')
-            ref=soup.find('span', attrs = {'id':'Content_Main_LB_Referees'}).text.split('-')
+
+            soup = BeautifulSoup(r.content, "lxml")
+            ref = soup.find(
+                "span", attrs={"id": "Content_Main_LB_Referees"}
+            ).text.split("-")
             self.streamer.update_referees(ref)
         except:
             pass
@@ -435,7 +496,7 @@ class Match:
     def _update_stream(self):
         try:
             if self.is_vmix:
-                self.streamer.update_names(self.home.name,self.away.name)
+                self.streamer.update_names(self.home.name, self.away.name)
             else:
                 self.streamer._set_input_settings(
                     self.elements["HOME_NAME"], {"text": self.home.name}
@@ -491,40 +552,36 @@ class Match:
         except Exception as e:
             print("error update", e)
             return e
-        
+
     def _reset_stream(self):
         try:
-            self.streamer._set_input_settings(
-                self.elements["HOME_NAME"], {"text": ""}
-            )
-            self.streamer._set_input_settings(
-                self.elements["AWAY_NAME"], {"text": ""}
-            )
+            self.streamer._set_input_settings(self.elements["HOME_NAME"], {"text": ""})
+            self.streamer._set_input_settings(self.elements["AWAY_NAME"], {"text": ""})
             self.streamer._set_input_settings(
                 self.elements["HOME_POINTS"], {"text": ""}
             )
             self.streamer._set_input_settings(
                 self.elements["AWAY_POINTS"], {"text": ""}
             )
+            self.streamer._set_input_settings(self.elements["HOME_SET"], {"text": ""})
+            self.streamer._set_input_settings(self.elements["AWAY_SET"], {"text": ""})
             self.streamer._set_input_settings(
-                self.elements["HOME_SET"], {"text": ""}
+                self.elements["HOME_STATS_PT"],
+                {"text": ""},
             )
             self.streamer._set_input_settings(
-                self.elements["AWAY_SET"], {"text": ""}
+                self.elements["AWAY_STATS_PT"],
+                {"text": ""},
             )
             self.streamer._set_input_settings(
-                self.elements["HOME_STATS_PT"], {"text": ""},
+                self.elements["HOME_STATS_PuntosT"],
+                {"text": ""},
             )
             self.streamer._set_input_settings(
-                self.elements["AWAY_STATS_PT"], {"text": ""},
+                self.elements["AWAY_STATS_PuntosT"],
+                {"text": ""},
             )
-            self.streamer._set_input_settings(
-                self.elements["HOME_STATS_PuntosT"], {"text": ""},
-            )
-            self.streamer._set_input_settings(
-                self.elements["AWAY_STATS_PuntosT"], {"text": ""},
-            )
-            for x in range(1,6):
+            for x in range(1, 6):
                 self.streamer._set_input_settings(
                     self.elements["HOME_STATS_P" + str(x)],
                     {"text": ""},
@@ -542,17 +599,23 @@ class Match:
                     {"text": ""},
                 )
             if self.is_vmix:
-                self.streamer.update_logos("","")
-                self.streamer.update_names("","")
-                self.streamer.update_referees(['',''])
+                self.streamer.update_logos("", "")
+                self.streamer.update_names("", "")
+                self.streamer.update_referees(["", ""])
                 self.streamer.update_players(clear=True)
                 self.streamer.update_coaches(clear=True)
                 self.streamer.update_winner(clear=True)
                 self.streamer.update_match_history(clear=True)
                 self.streamer.set_results(clear=True)
+                self.streamer.set_point(False)
+                self.streamer.match_point(False)
             else:
-                self.streamer._set_input_settings(self.elements["HOME_LOGO"], {"file": ""})
-                self.streamer._set_input_settings(self.elements["AWAY_LOGO"], {"file": ""})
+                self.streamer._set_input_settings(
+                    self.elements["HOME_LOGO"], {"file": ""}
+                )
+                self.streamer._set_input_settings(
+                    self.elements["AWAY_LOGO"], {"file": ""}
+                )
         except Exception as e:
             print("error reset", e)
             return e

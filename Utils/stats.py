@@ -1,7 +1,7 @@
 import requests 
 from bs4 import BeautifulSoup
 
-class Stats:
+class TeamStats:
     def __init__(self,l_url) -> None:
         self.total = {
             "Total_points": 0,
@@ -186,3 +186,52 @@ class Stats:
             teams_stats[k]['set_percent'] = round((teams_stats[k]['set_won']*100)/teams_stats[k]['set_total'])
             teams_stats[k]['points_percent'] = round((teams_stats[k]['points_won']*100)/teams_stats[k]['points_total'])
         return teams_stats
+    
+class PlayerStats:
+    def __init__(self,player_id:int,team_id:int) -> None:
+        self.id=player_id
+        self.team_id=team_id
+        self.points=0
+        self.serve={
+            "Out": 0,
+            "Win": 0,
+            "Error": 0,
+            "Total": 0,
+        }
+        self.reception={
+            "Win": 0,
+            "Error": 0,
+            "Total": 0,
+        }
+        self.block={
+            "Win": 0,
+        }
+        self.attack = {
+            "Win": 0,
+            "Error": 0,
+            "Total": 0,
+        }
+
+    def _update(self,data):
+        for player in data:
+            if player['PID'] == self.id:
+                self.points = player['PS']
+                self.serve={
+                    "Out": player['SOut'],
+                    "Win": player['SWin'],
+                    "Error": player['SErr'],
+                    "Total": player['STot'],
+                }
+                self.reception={
+                    "Win": player['RWin'],
+                    "Error": player['RErr'],
+                    "Total": player['RTot'],
+                }
+                self.block={
+                    "Win": player['BWin'],
+                }
+                self.attack = {
+                    "Win": player['SpWin'],
+                    "Error": player['SpErr'],
+                    "Total": player['SpTot'],
+                }

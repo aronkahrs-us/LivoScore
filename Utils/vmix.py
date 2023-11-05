@@ -74,9 +74,10 @@ class Vmix:
 
     def time_out(self):
         try:
-            self._set_active(2,self.elements['TIME_OUT']['key'])
-            time.sleep(60)
-            self._set_inactive(2,self.elements['TIME_OUT']['key'])
+            if self.elements['AUTOMATE_TIME_OUT']:
+                self._set_active(2,self.elements['TIME_OUT']['key'])
+                time.sleep(60)
+                self._set_inactive(2,self.elements['TIME_OUT']['key'])
         except Exception as e:
             print('time_out',e)
 
@@ -111,9 +112,9 @@ class Vmix:
     def update_names(self,home:str=None,away:str=None):
         try:
             for x in self.inputs:
-                if ('home' in x.lower() or 'h' in x.lower()) and 'name' in x.lower():
+                if ('home' in x.lower()) and 'name' in x.lower():
                     self._set_input_settings(self.inputs[x],{'text': home})
-                elif ('away' in x.lower() or 'a' in x.lower()) and 'name' in x.lower():
+                elif ('away' in x.lower()) and 'name' in x.lower():
                     self._set_input_settings(self.inputs[x],{'text': away})
         except Exception as e:
             print('update_names',e)
@@ -132,10 +133,10 @@ class Vmix:
                 self._set_input_settings(self.inputs['TK Players A.Text'],{'text': '1 - Nombre Apellido 2 - Nombre Apellido 3 - Nombre Apellido '})
             else:
                 i=1
-                for player in players.values():
-                    self._set_input_settings(self.inputs['{} PlyNum{}.Text'.format(team.upper(),i)],{'text': player['Number']})
-                    self._set_input_settings(self.inputs['{} PlyN{}.Text'.format(team.upper(),i)],{'text': player['Name']})
-                    player_tk += player['Number'] + ' - ' + player['Name'] + ' '
+                for player in players:
+                    self._set_input_settings(self.inputs['{} PlyNum{}.Text'.format(team.upper(),i)],{'text': player.number})
+                    self._set_input_settings(self.inputs['{} PlyN{}.Text'.format(team.upper(),i)],{'text': player.name})
+                    player_tk += str(player.number) + ' - ' + player.name + ' '
                     i+=1
                 if i <18:
                     for j in range(i,19):
@@ -162,7 +163,11 @@ class Vmix:
                 self._set_input(input=self.elements['WINNER']['key'],name=self.elements['WINNER']['text']['@name'],value={'text': ''})
                 self._set_input(input=self.elements['WINNER']['key'],name=self.elements['WINNER']['image']['@name'],value={'file': ''})
             else:
-                self._set_input(input=self.elements['WINNER']['key'],name=self.elements['WINNER']['text']['@name'],value={'text': team.name+" CAMPEON!!"})
+                if self.elements['IS_FINAL']:
+                    text = team.name+ " CAMPEON!!"
+                else:
+                    text = team.name+ " GANÓ!!"
+                self._set_input(input=self.elements['WINNER']['key'],name=self.elements['WINNER']['text']['@name'],value={'text': text})
                 self._set_input(input=self.elements['WINNER']['key'],name=self.elements['WINNER']['image']['@name'],value={'file': team.logo})
         except Exception as e:
             print('update_winner',e)
@@ -249,7 +254,7 @@ class Vmix:
         if function == None:
             function = 'SetText' if 'text' in value else 'SetImage'
             value = value['text'] if 'text' in value else value['file']
-        self.session.post('http://{}:{}/API/?Function={}&Input={}&SelectedName={}&Value={}'.format(self.connect['IP'],self.connect['PORT'],function,input,name,value))
+        self.session.post('http://{}:{}/API/?Function={}&Input={}&SelectedName={}&Value={}'.format(self.connect['IP'],self.connect['PORT'],function,input,name,value),timeout=5)
     
     def _get_inputs(self) -> dict:
         self.inputs={}
