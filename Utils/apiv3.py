@@ -13,8 +13,9 @@ from bs4 import BeautifulSoup
 
 
 class Match:
-    def __init__(self, m_id, window):
+    def __init__(self, m_id, comp_id, window):
         self.m_id = int(m_id)
+        self.comp_id = int(comp_id)
         self.is_running = True
         self.set_point = False
         self.match_point = False
@@ -161,6 +162,7 @@ class Match:
         self.current_set = data["WonSetHome"] + data["WonSetGuest"] + 1
         if self.current_set > 5:
             self.current_set = 5
+
         self.home = Team(
             data["HomeEmpty"],
             data["Home"],
@@ -184,9 +186,9 @@ class Match:
                 data["Guest"]
             ),
         )
-        self.stats.initiate(data, self.current_set)
         self.status = data["Status"]
         self.window.write_event_value("STARTED", 1)
+        self.stats.initiate(self.comp_id,data, self.current_set)
         self._reset_stream()
         self._update_ui()
         self._get_logos()
@@ -287,7 +289,7 @@ class Match:
         players = []
         for player in data:
             name=player["NM"].strip().capitalize() + " " + player["SR"].strip().capitalize()
-            players.append(Player(self.league,team_id,player["PID"],name,player["N"]))
+            players.append(Player(self.league,self.league_url,team_id,player["PID"],name,player["N"],int(self.comp_id)))
         return players
 
     def _get_coach(self, team_id) -> str:

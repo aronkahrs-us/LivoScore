@@ -19,8 +19,10 @@ class League:
         self._get_credentials()
         pass
 
-    def get_ready_matches(self, query:str="") -> dict:
-        if int(datetime.now(tz=timezone.utc).strftime("%d")) == int(datetime.now().strftime("%d")):
+    def get_ready_matches(self, query: str = "") -> dict:
+        if int(datetime.now(tz=timezone.utc).strftime("%d")) == int(
+            datetime.now().strftime("%d")
+        ):
             matches = {}
             URL = str(self.league_url) + "/MainLiveScore.aspx"
             r = requests.get(URL, verify=True)
@@ -36,13 +38,36 @@ class League:
                         "span", {"id": "Content_Main_RLV_MatchList_Label2_" + str(x)}
                     ).text
                     status = soup.find(
-                        "div", {"id": "Content_Main_RLV_MatchList_DIV_FinalResult_" + str(x)}
+                        "div",
+                        {"id": "Content_Main_RLV_MatchList_DIV_FinalResult_" + str(x)},
                     ).get("style")
+
+                    CompID = (
+                        soup.find(
+                            "div",
+                            {
+                                "id": "Content_Main_RLV_MatchList_DIV_MatchListLive_Result_"
+                                + str(x)
+                            },
+                        )
+                        .get_attribute_list("onclick")[0]
+                        .split("&ID=")[1]
+                        .split("&CID=")[0]
+                    )
                     if status == None and query != "":
-                        if query.lower() in Home.lower() or query.lower() in Guest.lower():
-                            matches[int(x)] = Home + " vs " + Guest
+                        if (
+                            query.lower() in Home.lower()
+                            or query.lower() in Guest.lower()
+                        ):
+                            matches[int(x)] = {
+                                "Match": Home + " vs " + Guest,
+                                "CompID": CompID,
+                            }
                     elif status == None:
-                        matches[int(x)] = Home + " vs " + Guest
+                        matches[int(x)] = {
+                            "Match": Home + " vs " + Guest,
+                            "CompID": CompID,
+                        }
                 json_object = json.dumps(matches, indent=4)
                 with open("./Config/matches.json", "w") as outfile:
                     outfile.write(json_object)
@@ -124,3 +149,6 @@ class League:
             headers=headers,
         ).json()
         self.credentials = response
+
+
+League().get_ready_matches()

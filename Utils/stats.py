@@ -14,9 +14,12 @@ class TeamStats:
         self.sets = {}
         pass
 
-    def initiate(self, data, current_set):
+    def initiate(self, comp_id, data, current_set):
         try:
             self._match_history(data['ChampionshipMatchID'],data['Home'],data['Guest'])
+            teams_stats=self._team_stats(comp_id,data['Home'],data['Guest'])
+            self.home=teams_stats['home']
+            self.away=teams_stats['away']
         except:
             pass
         sets = ["Set{}Home", "Set{}Guest"]
@@ -90,7 +93,6 @@ class TeamStats:
     def _match_history(self,m_id,h_id,a_id):
         URL = "{}/MatchStatistics.aspx?mID={}".format(self.league_url,m_id)
         r = requests.get(URL)
-        self.comp_id= r.url.split('ID=')[-1]
         
         soup = BeautifulSoup(r.content, 'lxml')
         idin=soup.find_all('div', attrs = {'id':'RPL_HisotryMatches'})
@@ -117,11 +119,8 @@ class TeamStats:
             'won_home': won_home,
             'won_away': won_away,
         }
-        teams_stats=self._team_stats(h_id,a_id)
-        self.home=teams_stats['home']
-        self.away=teams_stats['away']
         
-    def _team_stats(self,home,away):
+    def _team_stats(self,comp_id,home,away):
         teams_stats = {
             'home':{
                 'played': 0,
@@ -162,7 +161,7 @@ class TeamStats:
                 'result_03': 0,
                 },
         }
-        URL = "{}/CompetitionStandings.aspx?ID={}".format(self.league_url,self.comp_id)
+        URL = "{}/CompetitionStandings.aspx?ID={}".format(self.league_url,comp_id)
         r = requests.get(URL)
         soup = BeautifulSoup(r.content, 'lxml')
         for k,i in {'home':home,'away':away}.items():
@@ -188,9 +187,11 @@ class TeamStats:
         return teams_stats
     
 class PlayerStats:
-    def __init__(self,player_id:int,team_id:int) -> None:
+    def __init__(self, l_url:str, player_id:int, team_id:int, comp_id:int) -> None:
+        self.league_url=l_url
         self.id=player_id
         self.team_id=team_id
+        self.comp_id=comp_id
         self.points=0
         self.serve={
             "Out": 0,
@@ -235,3 +236,21 @@ class PlayerStats:
                     "Error": player['SpErr'],
                     "Total": player['SpTot'],
                 }
+    
+    def _get_stats(self):
+        URL = "{}/Statistics_AllPlayers.aspx/GetDataById".format(self.league_url)
+        data = {
+            'compId': str(self.comp_id),
+            'phaseId': 50,
+            'playerSearchById': str(self.id),
+        }
+        r = requests.post(URL, json=data)
+        data=r.json()['d'][0]
+        print(data)
+        self.matches_played = data['PlayedMatches']
+        self.sets_played = data['PlayedSets']
+        self.points_made = data['PointsTot_ForAllPlayerStats']
+        self.points_per_match = data['PointsPerMatch']
+        self.points_per_set = data['PointsPerSet']
+
+#PlayerStats("https://aclav-web.dataproject.com",2743,139,35)._get_stats()

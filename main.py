@@ -235,7 +235,7 @@ class Main:
                 )
             else:
                 self.window["-ID-"].update(
-                    values=[self.matches[x] for x in self.matches],
+                    values=[self.matches[x]['Match'] for x in self.matches],
                     value="Select Match",
                     visible=True,
                     disabled=False,
@@ -264,9 +264,8 @@ class Main:
             self.th_starting = threading.Thread(target=self._starting,args=('-ERROR-','Starting'),daemon=True) #Starts animation
             self.th_starting.start()
             self.match = Match(
-                list(self.matches.keys())[
-                    list(self.matches.values()).index(self.values["-ID-"])
-                ],
+                [Id for Id, Match in self.matches.items() if Match['Match']==self.values["-ID-"]][0],
+                [Match['CompID'] for Id, Match in self.matches.items() if Match['Match']==self.values["-ID-"]][0],
                 self.window,
             )   #creates new match
             if self.is_obs: # if streamer is obs, starts flask server with pleayers

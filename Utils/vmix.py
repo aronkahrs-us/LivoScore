@@ -134,12 +134,14 @@ class Vmix:
             else:
                 i=1
                 for player in players:
+                    if i>18:
+                        break
                     self._set_input_settings(self.inputs['{} PlyNum{}.Text'.format(team.upper(),i)],{'text': player.number})
                     self._set_input_settings(self.inputs['{} PlyN{}.Text'.format(team.upper(),i)],{'text': player.name})
                     player_tk += str(player.number) + ' - ' + player.name + ' '
                     i+=1
                 if i <18:
-                    for j in range(i,19):
+                    for j in range(i,18):
                         self._set_input_settings(self.inputs['{} PlyNum{}.Text'.format(team.upper(),j)],{'text': ''})
                         self._set_input_settings(self.inputs['{} PlyN{}.Text'.format(team.upper(),j)],{'text': ''})
                 self._set_input_settings(self.inputs['TK Players {}.Text'.format(team.capitalize())],{'text': player_tk})
@@ -306,6 +308,3 @@ class Vmix:
 
     def _add_input(self,value,name):
         self.session.post('http://{}:{}/API/?Function=AddInput&Value={}&SelectedName={}'.format(self.connect['IP'],self.connect['PORT'],value,name))
-
-v=Vmix()
-v.update_match_history(clear=True)
