@@ -2,7 +2,6 @@ import requests
 import xmltodict
 import json
 import time
-import urllib3.exceptions as urlexp
 
 class Vmix:
     def __init__(self) -> None:

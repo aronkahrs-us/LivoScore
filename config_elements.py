@@ -3,12 +3,11 @@ from Utils import obs
 from Utils import vmix
 from theme import *
 import json
-import platform, os
-from pathlib import Path
-from contextlib import suppress
+import os
 
 class ElementsConfig:
     def __init__(self) -> None:
+        """Init GUI and elements"""
         try:
             with open("./Config/stream_config.json", "r") as openfile:
                 config = json.load(openfile)
@@ -535,6 +534,7 @@ class ElementsConfig:
         self.window.close()
 
     def get_config(self):
+        """Get config from file"""
         try:
             with open("./Config/elem_config.json", "r") as openfile:
                 # Reading from json file
@@ -586,6 +586,7 @@ class ElementsConfig:
                 sg.Popup("Configurar", keep_on_top=True)
 
     def get_elements(self, scene=None) -> list:
+        """Get elements from streamer"""
         items = obs.Obs().get_scene_items(scene) if self.is_obs else vmix.Vmix()._get_inputs()
         if items != "ERROR":
             elements = []
@@ -601,6 +602,7 @@ class ElementsConfig:
         return items
 
     def save_config(self):
+        """Save config to file"""
         elements = obs.Obs().get_scene_items(self.values["-SCENE-"]) if self.is_obs else vmix.Vmix()._get_inputs()
         if elements != "ERROR":
             # Data to be written

@@ -190,6 +190,7 @@ class Main:
             elif event == "-ID-" and self.values["-ID-"] != "":  # if match list populates
                 self.window["-ST-"].update(disabled=False)
             elif event == "-ST-":   # if user starts/stops a match
+                self.window["-ST-"].update(disabled=True)
                 try:
                     print('try')
                     if "match" in locals()["self"].__dict__ and self.match.is_running == True:  # if match exists and is running, stops it
@@ -198,6 +199,7 @@ class Main:
                         self.match._stop()
                         self.match.is_running = False
                         self.window["-RELOAD-"].update(disabled=False)
+                        self.window["-ST-"].update(disabled=False)
                     else:   # if match does not exist or is not runing, starts a new match
                         self.window["-RELOAD-"].update(disabled=True)
                         threading.Thread(target=self.start_match, daemon=True).start()
@@ -208,6 +210,7 @@ class Main:
                 threading.Thread(target=self.list_matches, daemon=True).start()
             elif event == "STARTED":    # Match started, stops "starting.." animation
                 self.starting_run=False
+                self.window["-ST-"].update(disabled=False)
         # Closes main window
         self.window.close()
 
@@ -271,6 +274,7 @@ class Main:
             if self.is_obs: # if streamer is obs, starts flask server with pleayers
                 self.court = Court(self.match)
                 self.court.start()
+            self.match.is_running = True
         
     def _starting(self,id,text):
         """ Method to animate 'Starting...' text"""

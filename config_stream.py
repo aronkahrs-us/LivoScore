@@ -94,9 +94,9 @@ class StreamConfig:
         self.window.close()
 
     def get_config(self):
+        """Get config from file"""
         try:
             with open("./Config/stream_config.json", "r") as openfile:
-                # Reading from json file
                 config = json.load(openfile)
                 self.window["-IP-"].update(value=config["IP"], visible=True)
                 self.window["-PORT-"].update(value=config["PORT"], visible=True)
@@ -109,6 +109,7 @@ class StreamConfig:
             sg.Popup("Configure", keep_on_top=True)
 
     def test_config(self):
+        """Test connection to streamer"""
         self.window["-SAVE_TXT-"].update(
                 value="Testing...", text_color="white", visible=True
             )
@@ -125,7 +126,7 @@ class StreamConfig:
             )
 
     def save_config(self):
-        # Data to be written
+        """Save streamer configuration to file"""
         dictionary = {
             "IP": self.values["-IP-"],
             "PORT": self.values["-PORT-"],

@@ -149,6 +149,3 @@ class League:
             headers=headers,
         ).json()
         self.credentials = response
-
-
-League().get_ready_matches()

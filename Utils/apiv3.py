@@ -3,6 +3,7 @@ import time
 import json
 import threading
 import PySimpleGUI as sg
+from PySimpleGUI import Window
 from .team import Team
 from .obs import Obs
 from .vmix import Vmix
@@ -13,29 +14,30 @@ from bs4 import BeautifulSoup
 
 
 class Match:
-    def __init__(self, m_id, comp_id, window):
-        self.m_id = int(m_id)
-        self.comp_id = int(comp_id)
-        self.is_running = True
-        self.set_point = False
-        self.match_point = False
-        self.l_tot_points = 0
-        self.window = window
+    def __init__(self, m_id:int, comp_id:int, window:Window):
+        """Creates a new match, gets configurations and establish the SSE conection"""
+        self.m_id:int = m_id
+        self.comp_id:int = comp_id
+        self.is_running:bool = True
+        self.set_point:bool = False
+        self.match_point:bool = False
+        self.l_tot_points:int = 0
+        self.window:Window = window
         try:
             with open("./Config/league_config.json", "r") as openfile:
                 # Reading from json file
-                config = json.load(openfile)
-                self.league = config["LEAGUE"]
-                self.league_url = config["LEAGUE_URL"]
-                self.stats = TeamStats(self.league_url)
+                config:dict = json.load(openfile)
+                self.league:str = config["LEAGUE"]
+                self.league_url:str = config["LEAGUE_URL"]
+                self.stats:TeamStats = TeamStats(self.league_url)
         except Exception as e:
             sg.popup_error(f"AN EXCEPTION OCCURRED!", e)
         try:
             with open("./Config/stream_config.json", "r") as openfile:
                 # Reading from json file
-                config = json.load(openfile)
-                self.is_obs = config["OBS"]
-                self.is_vmix = config["VMIX"]
+                config:dict = json.load(openfile)
+                self.is_obs:bool = config["OBS"]
+                self.is_vmix:bool = config["VMIX"]
                 self.streamer = Obs() if self.is_obs else Vmix()
         except Exception as e:
             sg.popup_error(f"AN EXCEPTION OCCURRED!", e)
@@ -64,6 +66,7 @@ class Match:
         # self.connect()
 
     def negotiate(self):
+        """"Negotiates Token for SSE connection"""
         params = {
             "clientProtocol": "1.5",
             "connectionData": '[{"name":"signalrlivehubfederations"}]',
@@ -79,6 +82,7 @@ class Match:
         self.token = response["ConnectionToken"]
 
     def connect(self):
+        """Establishes the connection to the Data Project server with SSE and process all messages"""
         headers = {
             "Accept": "text/event-stream",
             "Accept-Language": "en-US,en;q=0.5",
@@ -121,6 +125,7 @@ class Match:
             #     print(e)
 
     def start(self):
+        """Sends the token to the server and starts connection"""
         params = {
             "transport": "serverSentEvents",
             "clientProtocol": "1.5",
@@ -137,6 +142,7 @@ class Match:
         ).json()
 
     def send(self):
+        """Sends match to get the messages and initial match data, teams, stats and starts UI and Stream elements"""
         params = {
             "transport": "serverSentEvents",
             "clientProtocol": "1.5",
@@ -207,8 +213,8 @@ class Match:
         )
 
     def _process_msg(self, msg):
+        """Message processing"""
         if self.is_running == False:
-            print("STOP")
             return "break"
         try:
             data = msg.data.replace("'", '"')
@@ -269,6 +275,7 @@ class Match:
             pass
 
     def _winner(self):
+        """Sets Match winner"""
         if self.home.sets == 3:
             self.streamer.update_winner(self.home)
         elif self.away.sets == 3:
@@ -293,6 +300,7 @@ class Match:
         return players
 
     def _get_coach(self, team_id) -> str:
+        """Get the coach of the team"""
         try:
             URL = "{}/CompetitionTeamDetails.aspx?TeamID={}".format(
                 self.league_url, team_id
@@ -310,6 +318,7 @@ class Match:
             return "No encontrado (inserte manualmente)"
 
     def _set_point(self):
+        """Determines if there is Set or Match Point"""
         self.set_point = False
         self.match_point = False
         self.tot_points = self.home.points + self.away.points
@@ -365,6 +374,7 @@ class Match:
         self.l_tot_points = self.tot_points
 
     def _update_ui(self):
+        """Updates UI Elements"""
         if self.status == 0:
             self.window["-ID-"].update(disabled=False)
             self.window["-ERROR-"].update(
@@ -405,6 +415,7 @@ class Match:
         )
 
     def _update_statistics(self,upd_player:bool=None,players:list=None,data:dict=None):
+        """Updates statistics for team or player"""
         try:
             if upd_player:
                 for player in players:
@@ -427,6 +438,7 @@ class Match:
             )
 
     def _get_referes(self):
+        """Get referees of the match"""
         try:
             URL = "{}/MatchStatistics.aspx?mID={}".format(self.league_url, self.m_id)
             r = requests.get(URL)
@@ -496,6 +508,7 @@ class Match:
         self.credentials = response
 
     def _update_stream(self):
+        """Update Stream Elements"""
         try:
             if self.is_vmix:
                 self.streamer.update_names(self.home.name, self.away.name)
@@ -556,6 +569,7 @@ class Match:
             return e
 
     def _reset_stream(self):
+        """Resets Stream Elements"""
         try:
             self.streamer._set_input_settings(self.elements["HOME_NAME"], {"text": ""})
             self.streamer._set_input_settings(self.elements["AWAY_NAME"], {"text": ""})
@@ -623,6 +637,7 @@ class Match:
             return e
 
     def _stop(self, close=None):
+        """Stops match and resets all"""
         self.is_running = False
         self.status = 2
         self._reset_stream()

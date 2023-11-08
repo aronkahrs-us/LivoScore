@@ -7,12 +7,12 @@
         "Match": "SJ DE CARRASCO A vs BOHEMIOS J",
         "CompID": "112"
     },
-    "6154": {
-        "Match": "Uruguay Pe\u00f1arol 2 vs CBR S",
-        "CompID": "109"
-    },
     "6242": {
         "Match": "ATLETICO BARBATO vs CBPS",
         "CompID": "110"
+    },
+    "6154": {
+        "Match": "Uruguay Pe\u00f1arol 2 vs CBR S",
+        "CompID": "109"
     }
 }

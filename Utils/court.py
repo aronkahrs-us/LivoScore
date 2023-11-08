@@ -1,4 +1,3 @@
-from .apiv3 import Match
 import threading
 from flask import Flask, render_template,request
 
@@ -14,6 +13,7 @@ class Court(threading.Thread):
             return render_template(
                 "court.html", home=match.home.players, away=match.away.players
             )
+    
     def stop(self):
         self._stop_event.set()
 

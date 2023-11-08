@@ -1,8 +1,7 @@
 from theme import *
 import PySimpleGUI as sg
 import json
-import platform, os
-from pathlib import Path
+import os
 
 DOMAINS = {
     "LIVOSUR": "https://livosur-web.dataproject.com",
@@ -57,6 +56,7 @@ DOMAINS = {
 
 class LeagueConfig:
     def __init__(self):
+        """Init GUI and elements"""
         T_league = [[sg.Text("League")]]
         S_league = [
             [
@@ -161,6 +161,7 @@ class LeagueConfig:
         self.window.close()
 
     def get_config(self):
+        """Get config from file"""
         with open("./Config/league_config.json", "r") as openfile:
             # Reading from json file
             config = json.load(openfile)
@@ -176,6 +177,7 @@ class LeagueConfig:
                 self.window["-CHECK-TEAM-"].update(value=True)
 
     def save_config(self) -> bool:
+        """Save config to file"""
         self.window["-SAVE_TXT-"].update(visible=False)
         # Data to be written
         if self.values['-CHECK-TEAM-']:
