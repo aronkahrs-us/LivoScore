@@ -4,6 +4,7 @@
 /test3.py
 /test4.py
 /test.json
+/lic.lvs
 /LivoScore.icns
 /livoscore.ico
 /Livoscore.psd
@@ -20,4 +21,5 @@
 /release
 /build
 /dist
+/auth
 /.vscode

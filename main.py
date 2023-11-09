@@ -2,7 +2,8 @@ import PySimpleGUI as sg
 import threading
 import json
 import time
-import platform, os
+import base64
+import platform, os, sys
 from theme import *
 from config_elements import ElementsConfig
 from config_stream import StreamConfig
@@ -12,6 +13,7 @@ from Utils.vmix import Vmix
 from Utils.apiv3 import Match
 from Utils.league import League
 from Utils.court import Court
+from Utils.auth import Auth
 from Utils.remote import Remote
 
 
@@ -19,6 +21,20 @@ class Main:
     """GUI and main responsabilities like starting the match and the nessesary configuration"""
     def __init__(self) -> None:
         """Init of Main"""
+        try:
+            with open('./lic.lvs', 'r') as lic:
+                data = lic.read().encode('utf-8')
+                data = base64.b64decode(data).decode("utf-8")
+                data = json.loads(data)
+                self.client = data['user']
+                self.token = data['token']
+                if not Auth(self.client,self.token).is_authorized():
+                    sg.popup('No autorizado o sin conexion a internet',title='Not Autorized')
+                    sys.exit("No autorizado o sin conexion a internet")
+        except Exception as e:
+            print(e)
+            sg.popup('No se encontro licencia, asegurese tener el archivo "lic.lvs" junto a su programa',title='Licencia no encontrada')
+            sys.exit("Licencia no encontrada")
         try:
             # Gets the streamer configuration and sets it
             with open("./Config/stream_config.json", "r") as openfile:
@@ -260,7 +276,7 @@ class Main:
             self.window["-ERROR-"].update(
                 "{} is closed or not configured".format("OBS" if self.is_obs else "vMix"), text_color="red", visible=True
             )
-        else:
+        elif Auth(self.client,self.token).is_authorized():
             self.window["-RELOAD-"].update(disabled=True)
             self.window["-ID-"].update(disabled=True)
             self.window["-ERROR-"].update(text_color="green", visible=True)
@@ -275,6 +291,8 @@ class Main:
                 self.court = Court(self.match)
                 self.court.start()
             self.match.is_running = True
+        else:
+            sg.popup('No autorizado o sin conexion a internet',title='Not Autorized')
         
     def _starting(self,id,text):
         """ Method to animate 'Starting...' text"""
