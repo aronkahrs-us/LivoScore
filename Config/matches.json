@@ -1,10 +1,38 @@
 {
-    "6165": {
-        "Match": "NACIONAL B vs OLIMPIA B",
-        "CompID": "112"
+    "6465": {
+        "Match": "PANTERAS vs CENTRO MELILLA",
+        "CompID": "113"
     },
-    "6240": {
-        "Match": "NAUTICO vs CBR A",
-        "CompID": "110"
+    "6476": {
+        "Match": "Enfoque B vs NAUTICO M",
+        "CompID": "118"
+    },
+    "6455": {
+        "Match": "ACJ vs EMPALME OLMOS B",
+        "CompID": "108"
+    },
+    "6466": {
+        "Match": "ENFOQUE vs BIGUA SR",
+        "CompID": "113"
+    },
+    "6468": {
+        "Match": "CORDON IAVA FUCSIA vs LA FRANJA",
+        "CompID": "114"
+    },
+    "6452": {
+        "Match": "PARADA 6 vs HEBRAICA Y MACABI JR",
+        "CompID": "106"
+    },
+    "6448": {
+        "Match": "PLAYA PASCUAL vs SJC - AMIGOS DEL BOSQUE",
+        "CompID": "104"
+    },
+    "6473": {
+        "Match": "P.C - POLI COSTA vs C. A. PE\u00d1AROL U30",
+        "CompID": "117"
+    },
+    "6445": {
+        "Match": "EMPALME OLMOS vs HEBRAICA Y MACABI J",
+        "CompID": "103"
     }
 }

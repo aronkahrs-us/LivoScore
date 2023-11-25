@@ -109,8 +109,6 @@ class TeamStats:
                 "PID": "0",
             },
         )
-        with open("response.html", "w") as f:
-            f.write(r.text)
         soup = BeautifulSoup(r.content, "lxml")
         idin = soup.find_all("div", attrs={"id": "RPL_HisotryMatches"})
         won = []
@@ -152,7 +150,6 @@ class TeamStats:
             "won_home": won_home,
             "won_away": won_away,
         }
-        print(self.match_history)
 
     def _team_stats(self, comp_id, home, away):
         teams_stats = {
@@ -291,13 +288,15 @@ class TeamStats:
             )
         return teams_stats
 
-
 class PlayerStats:
     def __init__(self, l_url: str, player_id: int, team_id: int, comp_id: int) -> None:
         self.league_url = l_url
         self.id = player_id
         self.team_id = team_id
         self.comp_id = comp_id
+        #################
+        ## MATCH STATS ##
+        #################
         self.points = 0
         self.serve = {
             "Out": 0,
@@ -318,6 +317,19 @@ class PlayerStats:
             "Error": 0,
             "Total": 0,
         }
+        #######################
+        ## COMPETITION STATS ##
+        #######################
+        self.matches_played = 0
+        self.sets_played = 0
+        self.points_made = 0
+        self.points_per_match = 0
+        self.points_per_set = 0
+
+        try:
+            self._get_stats()
+        except:
+            print('No stats found')
 
     def _update(self, data):
         for player in data:
@@ -344,10 +356,10 @@ class PlayerStats:
                 }
 
     def _get_stats(self):
-        URL = "{}/Statistics_AllPlayers.aspx/GetDataById".format(self.league_url)
+        URL = "{}/Statistics_AllPlayers.aspx/GetDataById?ID={}&Player={}".format(self.league_url,str(self.comp_id),str(self.id))
         data = {
             "compId": str(self.comp_id),
-            "phaseId": 50,
+            "phaseId": 0,
             "playerSearchById": str(self.id),
         }
         r = requests.post(URL, json=data)
@@ -357,4 +369,5 @@ class PlayerStats:
         self.sets_played = data["PlayedSets"]
         self.points_made = data["PointsTot_ForAllPlayerStats"]
         self.points_per_match = data["PointsPerMatch"]
+        self.points_per_set = data["PointsPerSet"]
         self.points_per_set = data["PointsPerSet"]

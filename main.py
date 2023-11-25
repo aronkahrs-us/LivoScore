@@ -22,18 +22,23 @@ class Main:
     def __init__(self) -> None:
         """Init of Main"""
         try:
-            with open('./lic.lvs', 'r') as lic:
-                data = lic.read().encode('utf-8')
-                data = base64.b64decode(data).decode("utf-8")
+            with open("./lic.lvs", "r") as lic:
+                data = lic.read().encode("utf-16")
+                data = base64.b64decode(data).decode("utf-16")
                 data = json.loads(data)
-                self.client = data['user']
-                self.token = data['token']
-                if not Auth(self.client,self.token).is_authorized():
-                    sg.popup('No autorizado o sin conexion a internet',title='Not Autorized')
+                self.client = data["user"]
+                self.token = data["token"]
+                if not Auth(self.client, self.token).is_authorized():
+                    sg.popup(
+                        "No autorizado o sin conexion a internet", title="Not Autorized"
+                    )
                     sys.exit("No autorizado o sin conexion a internet")
         except Exception as e:
             print(e)
-            sg.popup('No se encontro licencia, asegurese tener el archivo "lic.lvs" junto a su programa',title='Licencia no encontrada')
+            sg.popup(
+                'No se encontro licencia, asegurese tener el archivo "lic.lvs" junto a su programa',
+                title="Licencia no encontrada",
+            )
             sys.exit("Licencia no encontrada")
         try:
             # Gets the streamer configuration and sets it
@@ -45,12 +50,16 @@ class Main:
         except Exception as e:
             # If couldn't connect to streamer
             if "streamer" in locals()["self"].__dict__ and self.streamer.inputs == {}:
-                sg.popup("Check that OBS is open!" if self.is_obs else "Check that OBS is open!")
+                sg.popup(
+                    "Check that OBS is open!"
+                    if self.is_obs
+                    else "Check that OBS is open!"
+                )
             else:
                 # If couldn't get the configuration shows a popup
                 sg.popup(f"Configuration not found, make sure to set everything up!")
         # Sets theme
-        sg.theme('LIVO')
+        sg.theme("LIVO")
         # UI Elements
         T_Local = [
             [
@@ -78,8 +87,14 @@ class Main:
                 )
             ]
         ]
-        B_Iniciar = [[sg.Button("Start", key="-ST-", border_width=0, disabled=True)]]
-        B_Reload = [[sg.Button("🔄", key="-RELOAD-", button_color="white on #002B45", border_width=0)]]
+        B_Iniciar = [[sg.Button("Start", key="-ST-",pad=(0, 0), border_width=0, disabled=True, button_color="#002B45 on white",disabled_button_color='Gray')]]
+        B_Reload = [
+            [
+                sg.Button(
+                    "🔄", key="-RELOAD-",pad=(0, 0), button_color="white on #002B45", border_width=
+                0
+            )
+        ]]
         T_Error = [
             [
                 sg.Text(
@@ -112,7 +127,7 @@ class Main:
                 )
             ]
         ]
-        #Main Layout
+        # Main Layout
         layout = [
             [sg.Menu(menu_def, font=("Bebas", 15))],
             [
@@ -144,7 +159,7 @@ class Main:
                 sg.Column(
                     T_Visita, element_justification="c", expand_x=True, expand_y=True
                 ),
-            ]
+            ],
         ]
         # Makes the config directory, depends on the os the way to create it
         if platform.system() == "Darwin":
@@ -179,23 +194,29 @@ class Main:
         # Event Loop to process "events" and get the "values" of the inputs #
         #####################################################################
 
-        #Main Loop, handles events
+        # Main Loop, handles events
         while True:
             event, self.values = self.window.read()
 
-            if (event == sg.WIN_CLOSED or event == "Cancel"):  # if user closes self.window or clicks cancel
+            if (
+                event == sg.WIN_CLOSED or event == "Cancel"
+            ):  # if user closes self.window or clicks cancel
                 # if a match is ongoing, stops before closing
                 if "match" in locals()["self"].__dict__:
                     self.match._stop(close=True)
                 break
-            elif event == "Stream Elements":  # if user opens Elements config, checks if streaming sowtfare is available
+            elif (
+                event == "Stream Elements"
+            ):  # if user opens Elements config, checks if streaming sowtfare is available
                 if self.streamer.test_connection() != "ERROR":
                     # if available then opens the Elements config
                     ElementsConfig()
                 else:
                     # if unavailable shows error message
                     self.window["-ERROR-"].update(
-                        "{} is closed or not configured".format("OBS" if self.is_obs else "vMix"),
+                        "{} is closed or not configured".format(
+                            "OBS" if self.is_obs else "vMix"
+                        ),
                         text_color="red",
                         visible=True,
                     )
@@ -203,29 +224,36 @@ class Main:
                 StreamConfig()
             elif event == "League Config":  # if user opens League config
                 LeagueConfig()
-            elif event == "-ID-" and self.values["-ID-"] != "":  # if match list populates
+            elif (
+                event == "-ID-" and self.values["-ID-"] != ""
+            ):  # if match list populates
                 self.window["-ST-"].update(disabled=False)
-            elif event == "-ST-":   # if user starts/stops a match
+            elif event == "-ST-":  # if user starts/stops a match
                 self.window["-ST-"].update(disabled=True)
                 try:
-                    print('try')
-                    if "match" in locals()["self"].__dict__ and self.match.is_running == True:  # if match exists and is running, stops it
+                    print("try")
+                    if (
+                        "match" in locals()["self"].__dict__
+                        and self.match.is_running == True
+                    ):  # if match exists and is running, stops it
                         if self.is_obs:
                             self.court.stop()
                         self.match._stop()
                         self.match.is_running = False
                         self.window["-RELOAD-"].update(disabled=False)
                         self.window["-ST-"].update(disabled=False)
-                    else:   # if match does not exist or is not runing, starts a new match
+                    else:  # if match does not exist or is not runing, starts a new match
                         self.window["-RELOAD-"].update(disabled=True)
                         threading.Thread(target=self.start_match, daemon=True).start()
                 except Exception as e:
-                    print('excp',e)
+                    self.window["-RELOAD-"].update(disabled=False)
+                    self.window["-ST-"].update(disabled=False)
+                    print("excp", e)
 
-            elif event == "-RELOAD-":   # if user reloads matches
+            elif event == "-RELOAD-":  # if user reloads matches
                 threading.Thread(target=self.list_matches, daemon=True).start()
-            elif event == "STARTED":    # Match started, stops "starting.." animation
-                self.starting_run=False
+            elif event == "STARTED":  # Match started, stops "starting.." animation
+                self.starting_run = False
                 self.window["-ST-"].update(disabled=False)
         # Closes main window
         self.window.close()
@@ -237,16 +265,20 @@ class Main:
             with open("./Config/league_config.json", "r") as openfile:
                 config = json.load(openfile)
             # starts loading text animation
-            th=threading.Thread(target=self._starting,args=('-ID-','Loading'),daemon=True) #Starts animation
+            th = threading.Thread(
+                target=self._starting, args=("-ID-", "Loading"), daemon=True
+            )  # Starts animation
             th.start()
             self.window["-RELOAD-"].update(disabled=True)
+            self.window["-ID-"].update(disabled=True)
+            self.window["-ST-"].update(disabled=True)
             # Get the matches from the selected league, if a team is provided, then it filters only the matches of that team
-            if 'TEAM' in config.keys():
-                self.matches = League().get_ready_matches(config['TEAM'])
+            if "TEAM" in config.keys():
+                self.matches = League().get_ready_matches(config["TEAM"])
             else:
                 self.matches = League().get_ready_matches()
             # if there are matches, shows them in the dropdown, if not then it shows no matches and disables the dropdown
-            self.starting_run=False
+            self.starting_run = False
             th.join()
             if self.matches == {}:
                 self.window["-ID-"].update(
@@ -254,18 +286,19 @@ class Main:
                 )
             else:
                 self.window["-ID-"].update(
-                    values=[self.matches[x]['Match'] for x in self.matches],
+                    values=[self.matches[x]["Match"] for x in self.matches],
                     value="Select Match",
                     visible=True,
                     disabled=False,
                 )
             self.window["-RELOAD-"].update(disabled=False)
+            self.window["-ID-"].update(disabled=False)
         except Exception as e:
-            #waits for the window to be set and shows an error
+            # waits for the window to be set and shows an error
             while "window" not in locals()["self"].__dict__:
                 pass
             else:
-                print("OK",e)
+                print("OK", e)
                 self.window["-ERROR-"].update(
                     value="No configuration found", visible=True
                 )
@@ -274,28 +307,44 @@ class Main:
         """Method to start matches, gets the match id of the match selected in the dropdown and if streamer available creates a new match"""
         if self.streamer.test_connection() == "ERROR":
             self.window["-ERROR-"].update(
-                "{} is closed or not configured".format("OBS" if self.is_obs else "vMix"), text_color="red", visible=True
+                "{} is closed or not configured".format(
+                    "OBS" if self.is_obs else "vMix"
+                ),
+                text_color="red",
+                visible=True,
             )
-        elif Auth(self.client,self.token).is_authorized():
+            self.window["-RELOAD-"].update(disabled=False)
+            self.window["-ST-"].update(disabled=False)
+        elif Auth(self.client, self.token).is_authorized():
             self.window["-RELOAD-"].update(disabled=True)
             self.window["-ID-"].update(disabled=True)
             self.window["-ERROR-"].update(text_color="green", visible=True)
-            self.th_starting = threading.Thread(target=self._starting,args=('-ERROR-','Starting'),daemon=True) #Starts animation
+            self.th_starting = threading.Thread(
+                target=self._starting, args=("-ERROR-", "Starting"), daemon=True
+            )  # Starts animation
             self.th_starting.start()
             self.match = Match(
-                [Id for Id, Match in self.matches.items() if Match['Match']==self.values["-ID-"]][0],
-                [Match['CompID'] for Id, Match in self.matches.items() if Match['Match']==self.values["-ID-"]][0],
+                [
+                    Id
+                    for Id, Match in self.matches.items()
+                    if Match["Match"] == self.values["-ID-"]
+                ][0],
+                [
+                    Match["CompID"]
+                    for Id, Match in self.matches.items()
+                    if Match["Match"] == self.values["-ID-"]
+                ][0],
                 self.window,
-            )   #creates new match
-            if self.is_obs: # if streamer is obs, starts flask server with pleayers
+            )  # creates new match
+            if self.is_obs:  # if streamer is obs, starts flask server with pleayers
                 self.court = Court(self.match)
                 self.court.start()
             self.match.is_running = True
         else:
-            sg.popup('No autorizado o sin conexion a internet',title='Not Autorized')
-        
-    def _starting(self,id,text):
-        """ Method to animate 'Starting...' text"""
+            sg.popup("No autorizado o sin conexion a internet", title="Not Autorized")
+
+    def _starting(self, id, text):
+        """Method to animate 'Starting...' text"""
         self.starting_run = True
         while self.starting_run:
             time.sleep(0.5)

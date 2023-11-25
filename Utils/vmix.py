@@ -140,7 +140,7 @@ class Vmix:
                     player_tk += str(player.number) + ' - ' + player.name + ' '
                     i+=1
                 if i <18:
-                    for j in range(i,18):
+                    for j in range(i,19):
                         self._set_input_settings(self.inputs['{} PlyNum{}.Text'.format(team.upper(),j)],{'text': ''})
                         self._set_input_settings(self.inputs['{} PlyN{}.Text'.format(team.upper(),j)],{'text': ''})
                 self._set_input_settings(self.inputs['TK Players {}.Text'.format(team.capitalize())],{'text': player_tk})

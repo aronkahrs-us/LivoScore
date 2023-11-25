@@ -151,7 +151,7 @@ class Match:
         }
 
         data = {
-            "data": '{"H":"signalrlivehubfederations","M":"getLiveScoreListData_From_ES","A":["'
+            "data": '{"H":"signalrlivehubfederations","M":"getLiveScore_Init_Data_From_DV","A":["'
             + str(self.m_id)
             + '","'
             + self.league
@@ -164,7 +164,10 @@ class Match:
             cookies=self.cookies,
             headers=self.headers,
             data=data,
-        ).json()["R"][0]
+        ).json()["R"]
+        roster_home=data['Roster_Home_List']
+        roster_away=data['Roster_Guest_List']
+        data=data['Score']
         self.current_set = data["WonSetHome"] + data["WonSetGuest"] + 1
         if self.current_set > 5:
             self.current_set = 5
@@ -174,7 +177,7 @@ class Match:
             data["Home"],
             data["Set" + str(self.current_set) + "Home"],
             data["WonSetHome"],
-            self._get_players(data["Home"]),
+            self._get_players(data["Home"],roster_home),
             self._get_coach(data["Home"]),
             "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(
                 data["Home"]
@@ -186,7 +189,7 @@ class Match:
             data["Guest"],
             data["Set" + str(self.current_set) + "Guest"],
             data["WonSetGuest"],
-            self._get_players(data["Guest"]),
+            self._get_players(data["Guest"],roster_away),
             self._get_coach(data["Guest"]),
             "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(
                 data["Guest"]
@@ -262,6 +265,15 @@ class Match:
                             threading.Thread(target=self._update_statistics,args=(True,self.home.players,data["M"][0]["A"][0][0]), daemon=True).start()
                         elif data["M"][0]["A"][0][1] == self.away.id:
                             threading.Thread(target=self._update_statistics,args=(True,self.away.players,data["M"][0]["A"][0][0]), daemon=True).start()
+                    elif data["M"][0]["M"] == "updatePlayerStatisticsData":
+                        stdata=data["M"][0]["A"][0]
+                        team=int(data["M"][0]["A"][1])
+                        if team == self.home.id:
+                            for player in self.home.players:
+                                player.stats._update(stdata)
+                        elif team == self.away.id:
+                            for player in self.away.players:
+                                player.stats._update(stdata)
                 finally:
                     # if self.status == 2:
                     #     self._stop()
@@ -281,20 +293,10 @@ class Match:
         elif self.away.sets == 3:
             self.streamer.update_winner(self.away)
 
-    def _get_players(self, team_id) -> list:
+    def _get_players(self, team_id, roster) -> list:
         """Get the list of players of the team"""
-        data_rq = {
-            "data": '{"H":"signalrlivehubfederations","M":"getRosterData","A":["'
-            + str(self.m_id)
-            + '",'
-            + str(team_id)
-            + ',"'
-            + self.league
-            + '"]}',
-        }
-        data = self._web_request(data_rq)
         players = []
-        for player in data:
+        for player in roster:
             name=player["NM"].strip().capitalize() + " " + player["SR"].strip().capitalize()
             players.append(Player(self.league,self.league_url,team_id,player["PID"],name,player["N"],int(self.comp_id)))
         return players
