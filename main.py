@@ -22,7 +22,7 @@ class Main:
     def __init__(self) -> None:
         """Init of Main"""
         try:
-            with open("lic.lvs", "r") as lic:
+            with open("lic.lvs", "r", encoding="utf-16") as lic:
                 data = lic.read().encode("utf-16")
                 data = base64.b64decode(data).decode("utf-16")
                 data = json.loads(data)
