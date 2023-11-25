@@ -1,38 +1,150 @@
 {
-    "6465": {
-        "Match": "PANTERAS vs CENTRO MELILLA",
-        "CompID": "113"
+    "10869": {
+        "Match": "Sporting CV Soria vs Club Vigo Voleibol",
+        "CompID": "125"
     },
-    "6476": {
-        "Match": "Enfoque B vs NAUTICO M",
-        "CompID": "118"
+    "10852": {
+        "Match": "CN Sabadell vs UD Ibiza Volley",
+        "CompID": "125"
     },
-    "6455": {
-        "Match": "ACJ vs EMPALME OLMOS B",
-        "CompID": "108"
+    "10842": {
+        "Match": "CVS U Energ\u00eda S\u00f3ller vs Toyota Teams VSJ",
+        "CompID": "122"
     },
-    "6466": {
-        "Match": "ENFOQUE vs BIGUA SR",
-        "CompID": "113"
+    "10850": {
+        "Match": "UBE L\u00b4Illa Grau vs CV Zaragoza Indescar",
+        "CompID": "125"
     },
-    "6468": {
-        "Match": "CORDON IAVA FUCSIA vs LA FRANJA",
-        "CompID": "114"
+    "10851": {
+        "Match": "CV Mediterr\u00e1neo Castell\u00f3n vs Cisneros Alter Tenerife",
+        "CompID": "125"
     },
-    "6452": {
-        "Match": "PARADA 6 vs HEBRAICA Y MACABI JR",
-        "CompID": "106"
+    "10861": {
+        "Match": "Grupo Egido Pinto vs Costa del V\u00f3ley",
+        "CompID": "125"
     },
-    "6448": {
-        "Match": "PLAYA PASCUAL vs SJC - AMIGOS DEL BOSQUE",
-        "CompID": "104"
+    "10873": {
+        "Match": "Arenal Emev\u00e9 vs Club V\u00f3ley Palma",
+        "CompID": "124"
     },
-    "6473": {
-        "Match": "P.C - POLI COSTA vs C. A. PE\u00d1AROL U30",
-        "CompID": "117"
+    "10833": {
+        "Match": "CV Oviedo vs CV Torrej\u00f3n",
+        "CompID": "122"
     },
-    "6445": {
-        "Match": "EMPALME OLMOS vs HEBRAICA Y MACABI J",
-        "CompID": "103"
+    "10832": {
+        "Match": "CV Torrelavega vs RGC Covadonga",
+        "CompID": "122"
+    },
+    "10857": {
+        "Match": "CV Almorad\u00ed vs SUAC Canarias",
+        "CompID": "125"
+    },
+    "10865": {
+        "Match": "CyL Palencia 2024 vs Intasa San Sadurni\u00f1o",
+        "CompID": "125"
+    },
+    "10826": {
+        "Match": "Santa Cruz Cuesta Piedra vs Hidramar Gran Canaria",
+        "CompID": "123"
+    },
+    "10849": {
+        "Match": "Covir\u00e1n CDU Atarfe vs Renovak CV Sant Joan",
+        "CompID": "122"
+    },
+    "10872": {
+        "Match": "Conectabalear CV Manacor vs Volei Villena Petrer",
+        "CompID": "124"
+    },
+    "10844": {
+        "Match": "Universitat d'Alacant vs Holacv.es Benidorm",
+        "CompID": "122"
+    },
+    "10837": {
+        "Match": "Extremadura Arroyo vs Zalaeta",
+        "CompID": "122"
+    },
+    "10831": {
+        "Match": "OCISA Haro Rioja Voley vs CV Tenerife Libby's La Laguna",
+        "CompID": "123"
+    },
+    "10870": {
+        "Match": "Unicaja Costa de Almer\u00eda vs Cisneros Alter",
+        "CompID": "124"
+    },
+    "10866": {
+        "Match": "Extremadura Grupo Laura Otero vs Arona Playa de los Cristianos",
+        "CompID": "125"
+    },
+    "10867": {
+        "Match": "Rotogal Boiro Voleibol vs CDV Textil Santanderina",
+        "CompID": "125"
+    },
+    "10827": {
+        "Match": "Feel Alcobendas vs DSV CV Sant Cugat",
+        "CompID": "123"
+    },
+    "10834": {
+        "Match": "CD Voleibol Astillero vs Arona LESS4MORE",
+        "CompID": "122"
+    },
+    "10856": {
+        "Match": "CD Judesa V\u00f3ley vs Servigroup Benidorm",
+        "CompID": "125"
+    },
+    "10854": {
+        "Match": "CVS Tren de S\u00f3ller vs Familycash X\u00e1tiva VB",
+        "CompID": "125"
+    },
+    "10845": {
+        "Match": "AHORA Voley X\u00e1tiva vs Hidramar Gran Canaria",
+        "CompID": "122"
+    },
+    "10874": {
+        "Match": "CV Guaguas vs Leleman Conqueridor UPV",
+        "CompID": "124"
+    },
+    "10847": {
+        "Match": "CDV UFP Canarias vs FC Cartagena - Algar Surmenor",
+        "CompID": "122"
+    },
+    "10848": {
+        "Match": "Madrid Chamber\u00ed vs Grau Elite Cementos",
+        "CompID": "122"
+    },
+    "10871": {
+        "Match": "Grupo Herce Soria vs CV San Roque",
+        "CompID": "124"
+    },
+    "10858": {
+        "Match": "Michelin Mintonette Almer\u00eda vs CUV Alcorc\u00f3n",
+        "CompID": "125"
+    },
+    "10853": {
+        "Match": "CV Roquetes vs Bar\u00e7a Voleibol",
+        "CompID": "125"
+    },
+    "10875": {
+        "Match": "CV Melilla vs Pamesa Teruel Voleibol",
+        "CompID": "124"
+    },
+    "10829": {
+        "Match": "Arenal Emev\u00e9 vs FP PRO V\u00f3ley Cajasol",
+        "CompID": "123"
+    },
+    "10860": {
+        "Match": "Stapol CV Collado Villalba vs CV Utrera",
+        "CompID": "125"
+    },
+    "10836": {
+        "Match": "Fedes Ascensores La Laguna vs Aceites Abril VoleyOurense",
+        "CompID": "122"
+    },
+    "10868": {
+        "Match": "Universidad Valladolid VCV vs Voley Dumbr\u00eda",
+        "CompID": "125"
+    },
+    "10855": {
+        "Match": "Rodi Balafia Lleida vs Instercap Asisa Tarragona SPSP",
+        "CompID": "125"
     }
 }

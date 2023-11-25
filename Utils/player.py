@@ -6,4 +6,4 @@ class Player:
         self.name= ply_name
         self.number= ply_num
         self.stats = PlayerStats(league_url,player_id,team_id,comp_id)
-        self.photo = "https://images.dataproject.com/{}/TeamPlayer/1080/1080/TeamPlayer_{}_{}.jpg".format(league,self.team_id,self.id)
+        self.photo = "https://images.dataproject.com/{}/TeamPlayer/720/720/TeamPlayer_{}_{}.jpg".format(league,self.team_id,self.id)

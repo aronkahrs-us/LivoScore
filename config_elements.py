@@ -226,26 +226,39 @@ class ElementsConfig:
                 )
             ]
         ]
-        T_elmATO = [[sg.Text("Automate Time Out", expand_x=True, expand_y=True)]]
+        T_elmPS = [[sg.Text("Player Stats", expand_x=True, expand_y=True)]]
+        S_elmPS = [
+            [
+                sg.Combo(
+                    [],
+                    default_value="Select Element",
+                    key="-Elm49-",
+                    auto_size_text=True,
+                    enable_events=True,
+                    disabled=True,
+                    expand_x=True,
+                    expand_y=True,
+                    readonly=True,
+                )
+            ]
+        ]
         S_elmATO = [
             [
                 sg.Checkbox(
                     text='Automate Time Out',
                     default=True,
-                    key="-Elm49-",
+                    key="-Elm50-",
                     enable_events=True,
                     disabled=True,
                 )
             ]
         ]
-
-        T_elmISF = [[sg.Text("Is Championship Final?", expand_x=True, expand_y=True)]]
         S_elmISF = [
             [
                 sg.Checkbox(
                     text='Is Championship Final?',
                     default=True,
-                    key="-Elm50-",
+                    key="-Elm51-",
                     enable_events=True,
                     disabled=True,
                 )
@@ -321,6 +334,13 @@ class ElementsConfig:
                 ),
             sg.Column(
                     S_elmMHI, element_justification="left", expand_x=True, expand_y=True
+                ),
+        ],[
+            sg.Column(
+                    T_elmPS, element_justification="left", expand_x=True, expand_y=True
+                ),
+            sg.Column(
+                    S_elmPS, element_justification="left", expand_x=True, expand_y=True
                 ),
         ]]
         misc_layout = [
@@ -592,7 +612,7 @@ class ElementsConfig:
             elements = []
             for x in items:
                 elements.append(x)
-            for x in range(1, self.n + 14):
+            for x in range(1, self.n + 15):
                 try:
                     self.window["-Elm" + str(x) + "-"].update(
                         value="Select", values=elements, visible=True, disabled=False
@@ -656,8 +676,9 @@ class ElementsConfig:
                     "RESULTS_A": elements[self.values["-Elm46-"]],
                     "WINNER": elements[self.values["-Elm47-"]],
                     "MATCH_HISTORY": elements[self.values["-Elm48-"]],
-                    "AUTOMATE_TIME_OUT": self.values["-Elm49-"],
-                    "IS_FINAL": self.values["-Elm50-"],
+                    "PLAYER_STATS": elements[self.values["-Elm49-"]],
+                    "AUTOMATE_TIME_OUT": self.values["-Elm50-"],
+                    "IS_FINAL": self.values["-Elm51-"],
                 }
             elif self.is_obs:
                 dictionary = {

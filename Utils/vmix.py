@@ -224,6 +224,28 @@ class Vmix:
         except Exception as e:
             print('set_sp_stat',e)
 
+    def set_player_stats(self,player, clear=None):
+        if clear:
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][14]['@name'],value={'text': 'Nombre Apellido'})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['image']['@name'],value={'file': ''})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][0]['@name'],value={'text': '0'})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][1]['@name'],value={'text': '0'})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][2]['@name'],value={'text': '0'})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][3]['@name'],value={'text': '0'})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][4]['@name'],value={'text': '0'})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][5]['@name'],value={'text': '0'})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][6]['@name'],value={'text': '0'})
+        else:
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][14]['@name'],value={'text': player.name})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['image']['@name'],value={'file': player.photo})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][0]['@name'],value={'text': str(player.stats.points_per_set)})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][1]['@name'],value={'text': str(player.stats.points_per_match)})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][2]['@name'],value={'text': str(player.stats.attack['Total'])})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][3]['@name'],value={'text': str(player.stats.block['Win'])})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][4]['@name'],value={'text': str(player.stats.serve['Total'])})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][5]['@name'],value={'text': str(player.stats.points)})
+            self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][6]['@name'],value={'text': str(player.stats.matches_played)})
+
     def set_results(self,home=None,away=None, clear:bool=None):
         rs= ['result_03','result_13','result_23','result_32','result_31','result_30']
         try:

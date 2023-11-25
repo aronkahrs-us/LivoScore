@@ -13,11 +13,11 @@ class License:
         }
         data_str=json.dumps(test).encode(self.encoding)
         data_b64=base64.b64encode(data_str)
-        with open('auth/lic.lvs', 'w') as lic:
+        with open('auth/lic.lvs', 'w', encoding=self.encoding) as lic:
             lic.write(data_b64.decode(self.encoding))
 
     def read(self):
-        with open('auth/lic.lvs', 'r') as lic:
+        with open('auth/lic.lvs', 'r', encoding=self.encoding) as lic:
             data = lic.read().encode(self.encoding)
             data = base64.b64decode(data).decode(self.encoding)
             data = json.loads(data)
