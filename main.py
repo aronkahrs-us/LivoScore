@@ -208,7 +208,7 @@ class Main:
             "Livoscore",
             icon=logo,
             layout=layout,
-            font=("Bebas Neue Pro", 18),
+            font=("Bebas Neue Pro", 15),
             auto_size_text=True,
             resizable=True,
             auto_size_buttons=True,
