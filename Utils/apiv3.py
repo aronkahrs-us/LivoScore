@@ -420,7 +420,6 @@ class Match:
     def update_player_stats(self,p_id:int):
         players=self.home.players+self.away.players
         player = [player for player in players if player.id==p_id][0]
-        print(player,player.stats)
         self.streamer.set_player_stats(player)
 
     def _get_logos(self):

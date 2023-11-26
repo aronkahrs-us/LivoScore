@@ -123,6 +123,8 @@ class Main:
                     expand_x=True,
                     expand_y=True,
                     size=(30, 10),
+                    pad=(0, 0),
+                    button_arrow_color="#002B45",
                     readonly=True,
                 )
             ]
@@ -141,6 +143,8 @@ class Main:
                     expand_x=True,
                     expand_y=True,
                     size=(30, 10),
+                    pad=(0, 0),
+                    button_arrow_color="#002B45",
                     readonly=True,
                     visible=False,
                 )
@@ -204,7 +208,7 @@ class Main:
             "Livoscore",
             icon=logo,
             layout=layout,
-            font=("Bebas Neue", 15),
+            font=("Bebas Neue Pro", 18),
             auto_size_text=True,
             resizable=True,
             auto_size_buttons=True,
@@ -283,12 +287,17 @@ class Main:
                 threading.Thread(target=self.list_matches, daemon=True).start()
             elif event == "STARTED":  # Match started, stops "starting.." animation
                 self.starting_run = False
+                ply_home=[player.name for player in self.match.home.players if player.stats.matches_played != 'No stats found']
+                ply_away=[player.name for player in self.match.away.players if player.stats.matches_played != 'No stats found']
+                ply_list= ['---LOCAL---']+ply_home+['---VISITA---']+ply_away
                 self.window["-ST-"].update(disabled=False)
-                self.window["-PLYST-"].update(values=[player.name for player in self.match.home.players+self.match.away.players],visible=True,disabled=False)
-                self.window["-PLYTXT-"].update(visible=True)
+                if len(ply_list)>2:
+                    self.window["-PLYST-"].update(values=ply_list,visible=True,disabled=False)
+                    self.window["-PLYTXT-"].update(visible=True)
             elif event == "-PLYST-":  # Match started, stops "starting.." animation
-                p_id=[player.id for player in self.match.home.players+self.match.away.players if player.name == self.values["-PLYST-"]][0]
-                self.match.update_player_stats(p_id)
+                if self.values["-PLYST-"] != '---LOCAL---' and self.values["-PLYST-"] != '---VISITA---':
+                    p_id=[player.id for player in self.match.home.players+self.match.away.players if player.name == self.values["-PLYST-"]][0]
+                    self.match.update_player_stats(p_id)
         # Closes main window
         self.window.close()
 

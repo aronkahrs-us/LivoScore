@@ -224,7 +224,7 @@ class Vmix:
         except Exception as e:
             print('set_sp_stat',e)
 
-    def set_player_stats(self,player, clear=None):
+    def set_player_stats(self,player=None, clear=None):
         if clear:
             self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['text'][14]['@name'],value={'text': 'Nombre Apellido'})
             self._set_input(input=self.elements['PLAYER_STATS']['key'],name=self.elements['PLAYER_STATS']['image']['@name'],value={'file': ''})

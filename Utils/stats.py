@@ -329,7 +329,12 @@ class PlayerStats:
         try:
             self._get_stats()
         except:
-            print('No stats found')
+            msg='No stats found'
+            self.matches_played = msg
+            self.sets_played = msg
+            self.points_made = msg
+            self.points_per_match = msg
+            self.points_per_set = msg
 
     def _update(self, data):
         for player in data:
