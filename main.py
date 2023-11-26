@@ -273,8 +273,8 @@ class Main:
                         self.window["-RELOAD-"].update(disabled=False)
                         self.window["-ST-"].update(disabled=False)
                         self.window["-PLYST-"].update(values=[])
-                        self.window["-PLYST-"].update(visible=True)
-                        self.window["-PLYTXT-"].update(visible=True)
+                        self.window["-PLYST-"].update(visible=False)
+                        self.window["-PLYTXT-"].update(visible=False)
                     else:  # if match does not exist or is not runing, starts a new match
                         self.window["-RELOAD-"].update(disabled=True)
                         threading.Thread(target=self.start_match, daemon=True).start()
