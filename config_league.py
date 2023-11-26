@@ -5,7 +5,6 @@ import os
 
 DOMAINS = {
     "LIVOSUR": "https://livosur-web.dataproject.com",
-    "VOLLEYBALL DANMARK": "https://dvbf-web.dataproject.com",
     "Baltic League": "https://bvl-web.dataproject.com",
     "Asociacion de Clubes Liga Argentina de Voleibol": "https://aclav-web.dataproject.com",
     "Federacion del Voleibol Argentino": "https://feva-web.dataproject.com",

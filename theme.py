@@ -11,7 +11,7 @@ sg.theme_add_new('LIVO', {'BACKGROUND': '#002B45',
                           'BORDER': 0, 'SLIDER_DEPTH': 0,
                           'PROGRESS_DEPTH': 0, })
 
-menu_def = [['&Config', ['Stream &Config','&League Config', '&Stream Elements', '______', '&Exit']], ]
+menu_def = [['&Config', ['Stream &Config','&League Config', '&Stream Elements']], ]
 # Switch to use your newly created theme
 sg.theme('LIVO')
 

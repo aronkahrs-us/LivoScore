@@ -53,7 +53,7 @@
         "image": {
             "@index": "0",
             "@name": "Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_509.jpg"
         }
     },
     "A_SUBSTITUTION": {
@@ -68,7 +68,7 @@
         "image": {
             "@index": "0",
             "@name": "Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
+            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_509.jpg"
         }
     },
     "HOME_STATS_PT": {
@@ -212,12 +212,11 @@
             {
                 "@index": "0",
                 "@name": "Ref2.Text",
-                "#text": "Silva Janet"
+                "#text": "Torres Romero Miguel \u00c1ngel"
             },
             {
                 "@index": "1",
-                "@name": "Ref1.Text",
-                "#text": "Cassese Miguel"
+                "@name": "Ref1.Text"
             },
             {
                 "@index": "2",
@@ -239,7 +238,7 @@
             {
                 "@index": "1",
                 "@name": "Stat Value.Text",
-                "#text": "25%"
+                "#text": "41%"
             },
             {
                 "@index": "2",
@@ -250,7 +249,7 @@
         "image": {
             "@index": "0",
             "@name": "SStat Home Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
+            "#text": "https://images.dataproject.com/rfevb/TeamLogo/512/512/TeamLogo_1107.jpg"
         }
     },
     "PP_STAT_H": {
@@ -266,7 +265,7 @@
             {
                 "@index": "1",
                 "@name": "Stat Value.Text",
-                "#text": "44%"
+                "#text": "48%"
             },
             {
                 "@index": "2",
@@ -277,7 +276,7 @@
         "image": {
             "@index": "0",
             "@name": "SStat Home Logo.Source_1",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
+            "#text": "https://images.dataproject.com/rfevb/TeamLogo/512/512/TeamLogo_1107.jpg"
         }
     },
     "SP_STAT_A": {
@@ -293,7 +292,7 @@
             {
                 "@index": "1",
                 "@name": "Stat Value.Text",
-                "#text": "3%"
+                "#text": "74%"
             },
             {
                 "@index": "2",
@@ -304,7 +303,7 @@
         "image": {
             "@index": "0",
             "@name": "SStat Away Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_461.jpg"
+            "#text": "https://images.dataproject.com/rfevb/TeamLogo/512/512/TeamLogo_1078.jpg"
         }
     },
     "PP_STAT_A": {
@@ -320,7 +319,7 @@
             {
                 "@index": "1",
                 "@name": "Stat Value.Text",
-                "#text": "35%"
+                "#text": "53%"
             },
             {
                 "@index": "2",
@@ -331,7 +330,7 @@
         "image": {
             "@index": "0",
             "@name": "SStat Away Logo.Source_1",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_461.jpg"
+            "#text": "https://images.dataproject.com/rfevb/TeamLogo/512/512/TeamLogo_1078.jpg"
         }
     },
     "RESULTS_H": {
@@ -342,7 +341,7 @@
             {
                 "@index": "0",
                 "@name": "home r03.Text",
-                "#text": "7"
+                "#text": "1"
             },
             {
                 "@index": "1",
@@ -352,12 +351,12 @@
             {
                 "@index": "2",
                 "@name": "home r23.Text",
-                "#text": "1"
+                "#text": "2"
             },
             {
                 "@index": "3",
                 "@name": "home r32.Text",
-                "#text": "0"
+                "#text": "2"
             },
             {
                 "@index": "4",
@@ -367,7 +366,7 @@
             {
                 "@index": "5",
                 "@name": "home r30.Text",
-                "#text": "2"
+                "#text": "0"
             },
             {
                 "@index": "6",
@@ -408,7 +407,7 @@
         "image": {
             "@index": "0",
             "@name": "R Home Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
+            "#text": "https://images.dataproject.com/rfevb/TeamLogo/512/512/TeamLogo_1107.jpg"
         }
     },
     "RESULTS_A": {
@@ -419,32 +418,32 @@
             {
                 "@index": "0",
                 "@name": "away r03.Text",
-                "#text": "10"
+                "#text": "0"
             },
             {
                 "@index": "1",
                 "@name": "away r13.Text",
-                "#text": "1"
+                "#text": "0"
             },
             {
                 "@index": "2",
                 "@name": "away r23.Text",
-                "#text": "0"
+                "#text": "1"
             },
             {
                 "@index": "3",
                 "@name": "away r32.Text",
-                "#text": "0"
+                "#text": "1"
             },
             {
                 "@index": "4",
                 "@name": "away r31.Text",
-                "#text": "0"
+                "#text": "1"
             },
             {
                 "@index": "5",
                 "@name": "away r30.Text",
-                "#text": "0"
+                "#text": "3"
             },
             {
                 "@index": "6",
@@ -485,7 +484,7 @@
         "image": {
             "@index": "0",
             "@name": "R Away Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_461.jpg"
+            "#text": "https://images.dataproject.com/rfevb/TeamLogo/512/512/TeamLogo_1078.jpg"
         }
     },
     "WINNER": {
@@ -494,13 +493,11 @@
         "name": "Winner",
         "text": {
             "@index": "0",
-            "@name": "Winner Name.Text",
-            "#text": "JMLM UNIVERSITARIO CAMPEON!!"
+            "@name": "Winner Name.Text"
         },
         "image": {
             "@index": "0",
-            "@name": "Winner Logo.Source",
-            "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
+            "@name": "Winner Logo.Source"
         }
     },
     "MATCH_HISTORY": {
@@ -516,7 +513,7 @@
             {
                 "@index": "1",
                 "@name": "Won Away.Text",
-                "#text": "NN"
+                "#text": "No Encontrado"
             },
             {
                 "@index": "2",
@@ -526,12 +523,12 @@
             {
                 "@index": "3",
                 "@name": "Won Home.Text",
-                "#text": "NN"
+                "#text": "No Encontrado"
             },
             {
                 "@index": "4",
                 "@name": "Total matches.Text",
-                "#text": "NN"
+                "#text": "No Encontrado"
             },
             {
                 "@index": "5",
@@ -548,14 +545,101 @@
             {
                 "@index": "0",
                 "@name": "Hist Away Logo.Source",
-                "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_461.jpg"
+                "#text": "https://images.dataproject.com/rfevb/TeamLogo/512/512/TeamLogo_1078.jpg"
             },
             {
                 "@index": "1",
                 "@name": "Hist Home Logo.Source",
-                "#text": "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_476.jpg"
+                "#text": "https://images.dataproject.com/rfevb/TeamLogo/512/512/TeamLogo_1107.jpg"
             }
         ]
+    },
+    "PLAYER_STATS": {
+        "key": "8bb86247-7764-4a0b-aa76-b4ed53db717f",
+        "type": "GT",
+        "name": "Player Stats",
+        "text": [
+            {
+                "@index": "0",
+                "@name": "PPS N.Text",
+                "#text": "20"
+            },
+            {
+                "@index": "1",
+                "@name": "PPM N.Text",
+                "#text": "20"
+            },
+            {
+                "@index": "2",
+                "@name": "Ataques N.Text",
+                "#text": "20"
+            },
+            {
+                "@index": "3",
+                "@name": "Bloqueos N.Text",
+                "#text": "20"
+            },
+            {
+                "@index": "4",
+                "@name": "Saques N.Text",
+                "#text": "20"
+            },
+            {
+                "@index": "5",
+                "@name": "Puntos N.Text",
+                "#text": "20"
+            },
+            {
+                "@index": "6",
+                "@name": "Partidos N.Text",
+                "#text": "20"
+            },
+            {
+                "@index": "7",
+                "@name": "PPS.Text",
+                "#text": "Puntos por set"
+            },
+            {
+                "@index": "8",
+                "@name": "PPM.Text",
+                "#text": "Puntos por partido"
+            },
+            {
+                "@index": "9",
+                "@name": "Ataques.Text",
+                "#text": "Ataques"
+            },
+            {
+                "@index": "10",
+                "@name": "Bloqueos.Text",
+                "#text": "Bloqueos"
+            },
+            {
+                "@index": "11",
+                "@name": "Saques.Text",
+                "#text": "Saques"
+            },
+            {
+                "@index": "12",
+                "@name": "Puntos.Text",
+                "#text": "Puntos"
+            },
+            {
+                "@index": "13",
+                "@name": "Partidos.Text",
+                "#text": "Partidos"
+            },
+            {
+                "@index": "14",
+                "@name": "Player Name.Text",
+                "#text": "Nombre Apellido"
+            }
+        ],
+        "image": {
+            "@index": "0",
+            "@name": "Player Photo.Source",
+            "#text": "c205739d-d68a-49b6-80cc-abad83857324\\home (1).jpg"
+        }
     },
     "AUTOMATE_TIME_OUT": true,
     "IS_FINAL": true

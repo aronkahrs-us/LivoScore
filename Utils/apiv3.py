@@ -179,8 +179,9 @@ class Match:
             data["WonSetHome"],
             self._get_players(data["Home"],roster_home),
             self._get_coach(data["Home"]),
-            "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(
-                data["Home"]
+            "https://images.dataproject.com/{}/TeamLogo/512/512/TeamLogo_{}.jpg".format(
+                self.league,
+                data["Home"],
             ),
         )
 
@@ -191,8 +192,9 @@ class Match:
             data["WonSetGuest"],
             self._get_players(data["Guest"],roster_away),
             self._get_coach(data["Guest"]),
-            "https://images.dataproject.com/livosur/TeamLogo/512/512/TeamLogo_{}.jpg".format(
-                data["Guest"]
+            "https://images.dataproject.com/{}/TeamLogo/512/512/TeamLogo_{}.jpg".format(
+                self.league,
+                data["Guest"],
             ),
         )
         self.status = data["Status"]
@@ -245,35 +247,17 @@ class Match:
                             threading.Thread(
                                 target=self.streamer.time_out, daemon=True
                             ).start()
-                    elif (
-                        data["M"][0]["M"] == "updateMatchSetData_ES"
-                        or data["M"][0]["M"] == "updateMatchSetData_DV"
-                    ):
+                    elif (data["M"][0]["M"] == "updateMatchSetData_DV" ):
                         self.current_set = data["M"][0]["A"][0]["SN"]
                         self.home.points = data["M"][0]["A"][0]["HP"]
                         self.away.points = data["M"][0]["A"][0]["GP"]
-                    elif (
-                        data["M"][0]["M"] == "updateMatchScoreData_ES"
-                        or data["M"][0]["M"] == "updateMatchScoreData_DV"
-                    ):
+                    elif (data["M"][0]["M"] == "updateMatchScoreData_DV"):
                         self.home.sets = data["M"][0]["A"][0]["H"]
                         self.away.sets = data["M"][0]["A"][0]["G"]
                         self.status = data["M"][0]["A"][0]["S"]
                     elif data["M"][0]["M"] == "updatePlayerStatisticsData":
-                        print('player stats')
-                        if data["M"][0]["A"][0][1] == self.home.id:   
-                            threading.Thread(target=self._update_statistics,args=(True,self.home.players,data["M"][0]["A"][0][0]), daemon=True).start()
-                        elif data["M"][0]["A"][0][1] == self.away.id:
-                            threading.Thread(target=self._update_statistics,args=(True,self.away.players,data["M"][0]["A"][0][0]), daemon=True).start()
-                    elif data["M"][0]["M"] == "updatePlayerStatisticsData":
-                        stdata=data["M"][0]["A"][0]
-                        team=int(data["M"][0]["A"][1])
-                        if team == self.home.id:
-                            for player in self.home.players:
-                                player.stats._update(stdata)
-                        elif team == self.away.id:
-                            for player in self.away.players:
-                                player.stats._update(stdata)
+                        threading.Thread(target=self._update_statistics,args=(True,data["M"][0]["A"]), daemon=True).start()
+                    
                 finally:
                     # if self.status == 2:
                     #     self._stop()
@@ -416,16 +400,27 @@ class Match:
             visible=True,
         )
 
-    def _update_statistics(self,upd_player:bool=None,players:list=None,data:dict=None):
+    def _update_statistics(self,upd_player:bool=None,data:dict=None):
         """Updates statistics for team or player"""
         try:
             if upd_player:
-                for player in players:
-                    player.stats._update(data)
+                stdata=data[0]
+                team=int(data[1])
+                if team == self.home.id:
+                    for player in self.home.players:
+                        player.stats._update(stdata)
+                elif team == self.away.id:
+                    for player in self.away.players:
+                        player.stats._update(stdata)
             else:
                 self.stats.update(self.home.points, self.away.points, self.current_set)
-        except:
-            pass
+        except Exception as e:
+            print(e)
+
+    def update_player_stats(self,p_id:int):
+        players=self.home.players+self.away.players
+        player = [player for player in players if player.id==p_id][0]
+        self.streamer.set_player_stats(player)
 
     def _get_logos(self):
         """Gets the logos of the teams in the match"""
@@ -625,6 +620,7 @@ class Match:
                 self.streamer.update_winner(clear=True)
                 self.streamer.update_match_history(clear=True)
                 self.streamer.set_results(clear=True)
+                self.streamer.set_player_stats(clear=True)
                 self.streamer.set_point(False)
                 self.streamer.match_point(False)
             else:

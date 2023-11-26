@@ -1,38 +1,56 @@
 {
-    "6465": {
-        "Match": "PANTERAS vs CENTRO MELILLA",
-        "CompID": "113"
+    "10859": {
+        "Match": "VP Madrid vs cvleganes.com",
+        "CompID": "125"
     },
-    "6476": {
-        "Match": "Enfoque B vs NAUTICO M",
-        "CompID": "118"
+    "10862": {
+        "Match": "Sporting CV Soria vs Intasa San Sadurni\u00f1o",
+        "CompID": "125"
     },
-    "6455": {
-        "Match": "ACJ vs EMPALME OLMOS B",
-        "CompID": "108"
+    "10863": {
+        "Match": "CyL Palencia 2024 vs Club Vigo Voleibol",
+        "CompID": "125"
     },
-    "6466": {
-        "Match": "ENFOQUE vs BIGUA SR",
-        "CompID": "113"
+    "10840": {
+        "Match": "CV Esplugues vs JS Hotels Cide Palma",
+        "CompID": "122"
     },
-    "6468": {
-        "Match": "CORDON IAVA FUCSIA vs LA FRANJA",
-        "CompID": "114"
+    "10846": {
+        "Match": "Medsur Finestrat-Elche vs Mairena Voley Club",
+        "CompID": "122"
     },
-    "6452": {
-        "Match": "PARADA 6 vs HEBRAICA Y MACABI JR",
-        "CompID": "106"
+    "10835": {
+        "Match": "VP Madrid vs cvleganes.com",
+        "CompID": "122"
     },
-    "6448": {
-        "Match": "PLAYA PASCUAL vs SJC - AMIGOS DEL BOSQUE",
-        "CompID": "104"
+    "10830": {
+        "Match": "CV Sayre CC La Ballena vs Kiele Socuellamos",
+        "CompID": "123"
     },
+<<<<<<< HEAD
     "6473": {
         "Match": "P.C - POLI COSTA vs C. A. PE\u00c3\u2018AROL U30",
         "CompID": "117"
+=======
+    "10828": {
+        "Match": "Heidelberg Volkswagen vs Avarca de Menorca",
+        "CompID": "123"
+>>>>>>> afb0b18ead058c71560369aa9a642eb9e23a8c74
     },
-    "6445": {
-        "Match": "EMPALME OLMOS vs HEBRAICA Y MACABI J",
-        "CompID": "103"
+    "10838": {
+        "Match": "CVB Bar\u00e7a vs CV Vall D\u00b4Hebron",
+        "CompID": "122"
+    },
+    "10839": {
+        "Match": "Garden Hotels Mallorca VC vs CAEP Soria",
+        "CompID": "122"
+    },
+    "10841": {
+        "Match": "CV Melilla vs DSV CV Sant Cugat",
+        "CompID": "122"
+    },
+    "10843": {
+        "Match": "Ram\u00f3n Soler CEV L\u00b4Hospitalet vs Mycaready Premi\u00e1 Dalt Maresme",
+        "CompID": "122"
     }
 }

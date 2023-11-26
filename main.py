@@ -123,7 +123,30 @@ class Main:
                     expand_x=True,
                     expand_y=True,
                     size=(30, 10),
+                    pad=(0, 0),
+                    button_arrow_color="#002B45",
                     readonly=True,
+                )
+            ]
+        ]
+
+        T_ps = [[sg.Text("Player Stats", text_color="white", justification="center", visible=False,key='-PLYTXT-')]]
+        I_ps = [
+            [
+                sg.Combo(
+                    [],
+                    default_value="Loading...",
+                    key="-PLYST-",
+                    auto_size_text=True,
+                    enable_events=True,
+                    disabled=True,
+                    expand_x=True,
+                    expand_y=True,
+                    size=(30, 10),
+                    pad=(0, 0),
+                    button_arrow_color="#002B45",
+                    readonly=True,
+                    visible=False,
                 )
             ]
         ]
@@ -160,6 +183,14 @@ class Main:
                     T_Visita, element_justification="c", expand_x=True, expand_y=True
                 ),
             ],
+            [
+                sg.Column(
+                    T_ps, element_justification="c", expand_x=True, expand_y=True
+                ),
+                sg.Column(
+                    I_ps, element_justification="c", expand_x=True, expand_y=True
+                ),
+            ],
         ]
         # Makes the config directory, depends on the os the way to create it
         if platform.system() == "Darwin":
@@ -177,7 +208,7 @@ class Main:
             "Livoscore",
             icon=logo,
             layout=layout,
-            font=("Bebas Neue", 15),
+            font=("Bebas Neue Pro", 18),
             auto_size_text=True,
             resizable=True,
             auto_size_buttons=True,
@@ -231,7 +262,6 @@ class Main:
             elif event == "-ST-":  # if user starts/stops a match
                 self.window["-ST-"].update(disabled=True)
                 try:
-                    print("try")
                     if (
                         "match" in locals()["self"].__dict__
                         and self.match.is_running == True
@@ -242,6 +272,9 @@ class Main:
                         self.match.is_running = False
                         self.window["-RELOAD-"].update(disabled=False)
                         self.window["-ST-"].update(disabled=False)
+                        self.window["-PLYST-"].update(values=[])
+                        self.window["-PLYST-"].update(visible=True)
+                        self.window["-PLYTXT-"].update(visible=True)
                     else:  # if match does not exist or is not runing, starts a new match
                         self.window["-RELOAD-"].update(disabled=True)
                         threading.Thread(target=self.start_match, daemon=True).start()
@@ -254,7 +287,17 @@ class Main:
                 threading.Thread(target=self.list_matches, daemon=True).start()
             elif event == "STARTED":  # Match started, stops "starting.." animation
                 self.starting_run = False
+                ply_home=[player.name for player in self.match.home.players if player.stats.matches_played != 'No stats found']
+                ply_away=[player.name for player in self.match.away.players if player.stats.matches_played != 'No stats found']
+                ply_list= ['---LOCAL---']+ply_home+['---VISITA---']+ply_away
                 self.window["-ST-"].update(disabled=False)
+                if len(ply_list)>2:
+                    self.window["-PLYST-"].update(values=ply_list,visible=True,disabled=False)
+                    self.window["-PLYTXT-"].update(visible=True)
+            elif event == "-PLYST-":  # Match started, stops "starting.." animation
+                if self.values["-PLYST-"] != '---LOCAL---' and self.values["-PLYST-"] != '---VISITA---':
+                    p_id=[player.id for player in self.match.home.players+self.match.away.players if player.name == self.values["-PLYST-"]][0]
+                    self.match.update_player_stats(p_id)
         # Closes main window
         self.window.close()
 
