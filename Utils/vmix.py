@@ -58,9 +58,11 @@ class Vmix:
         except Exception as e:
             print('serve',e)
     
-    def substitution(self,team,home,away):
+    def substitution(self,team=None,home=None,away=None,clear:bool=False):
         try:
-            if team == '*':
+            if clear:
+                self._set_input(input=self.elements['H_SUBSTITUTION']['key'],name=self.elements['H_SUBSTITUTION']['image']['@name'],value={'file':''})
+            elif team == '*':
                 self._set_input(input=self.elements['H_SUBSTITUTION']['key'],name=self.elements['H_SUBSTITUTION']['image']['@name'],value={'file':home})
                 self._set_active(2,self.elements['H_SUBSTITUTION']['key'])
             elif team == 'a':
@@ -128,8 +130,8 @@ class Vmix:
                     self._set_input_settings(self.inputs['H PlyN{}.Text'.format(i)],{'text': 'Nombre Apellido'})
                     self._set_input_settings(self.inputs['A PlyNum{}.Text'.format(i)],{'text': '0'})
                     self._set_input_settings(self.inputs['A PlyN{}.Text'.format(i)],{'text': 'Nombre Apellido'})
-                self._set_input_settings(self.inputs['TK Players H.Text'],{'text': '1 - Nombre Apellido 2 - Nombre Apellido 3 - Nombre Apellido '})
-                self._set_input_settings(self.inputs['TK Players A.Text'],{'text': '1 - Nombre Apellido 2 - Nombre Apellido 3 - Nombre Apellido '})
+                self._set_input_settings(self.inputs['TK Players H.Text'],{'text': '1 - Nombre Apellido | 2 - Nombre Apellido | 3 - Nombre Apellido '})
+                self._set_input_settings(self.inputs['TK Players A.Text'],{'text': '1 - Nombre Apellido | 2 - Nombre Apellido | 3 - Nombre Apellido '})
             else:
                 i=1
                 for player in players:
@@ -137,9 +139,9 @@ class Vmix:
                         break
                     self._set_input_settings(self.inputs['{} PlyNum{}.Text'.format(team.upper(),i)],{'text': player.number})
                     self._set_input_settings(self.inputs['{} PlyN{}.Text'.format(team.upper(),i)],{'text': player.name})
-                    player_tk += str(player.number) + ' - ' + player.name + ' '
+                    player_tk += '| ' + str(player.number) + ' - ' + player.name + ' '
                     i+=1
-                if i <18:
+                if i <=18:
                     for j in range(i,19):
                         self._set_input_settings(self.inputs['{} PlyNum{}.Text'.format(team.upper(),j)],{'text': ''})
                         self._set_input_settings(self.inputs['{} PlyN{}.Text'.format(team.upper(),j)],{'text': ''})
@@ -209,18 +211,30 @@ class Vmix:
         except Exception as e:
             print('update_referees',e)
 
-    def set_sp_stat(self,home,away):
+    def set_sp_stat(self,home=None,away=None,clear:bool=False):
         try:
-            #HOME
-            self._set_input(input=self.elements['SP_STAT_H']['key'],name=self.elements['SP_STAT_H']['text'][0]['@name'],value={'text': 'Sets Ganados'})
-            self._set_input(input=self.elements['SP_STAT_H']['key'],name=self.elements['SP_STAT_H']['text'][1]['@name'],value={'text': str(home['set_percent'])+'%'})
-            self._set_input(input=self.elements['PP_STAT_H']['key'],name=self.elements['PP_STAT_H']['text'][0]['@name'],value={'text': 'Puntos Ganados'})
-            self._set_input(input=self.elements['PP_STAT_H']['key'],name=self.elements['PP_STAT_H']['text'][1]['@name'],value={'text': str(home['points_percent'])+'%'})
-            #AWAY
-            self._set_input(input=self.elements['SP_STAT_A']['key'],name=self.elements['SP_STAT_A']['text'][0]['@name'],value={'text': 'Sets Ganados'})
-            self._set_input(input=self.elements['SP_STAT_A']['key'],name=self.elements['SP_STAT_A']['text'][1]['@name'],value={'text': str(away['set_percent'])+'%'})
-            self._set_input(input=self.elements['PP_STAT_A']['key'],name=self.elements['PP_STAT_A']['text'][0]['@name'],value={'text': 'Puntos Ganados'})
-            self._set_input(input=self.elements['PP_STAT_A']['key'],name=self.elements['PP_STAT_A']['text'][1]['@name'],value={'text': str(away['points_percent'])+'%'})
+            if clear:
+                #HOME
+                self._set_input(input=self.elements['SP_STAT_H']['key'],name=self.elements['SP_STAT_H']['text'][0]['@name'],value={'text': 'Sets Ganados'})
+                self._set_input(input=self.elements['SP_STAT_H']['key'],name=self.elements['SP_STAT_H']['text'][1]['@name'],value={'text': '0%'})
+                self._set_input(input=self.elements['PP_STAT_H']['key'],name=self.elements['PP_STAT_H']['text'][0]['@name'],value={'text': 'Puntos Ganados'})
+                self._set_input(input=self.elements['PP_STAT_H']['key'],name=self.elements['PP_STAT_H']['text'][1]['@name'],value={'text': '0%'})
+                #AWAY
+                self._set_input(input=self.elements['SP_STAT_A']['key'],name=self.elements['SP_STAT_A']['text'][0]['@name'],value={'text': 'Sets Ganados'})
+                self._set_input(input=self.elements['SP_STAT_A']['key'],name=self.elements['SP_STAT_A']['text'][1]['@name'],value={'text': '0%'})
+                self._set_input(input=self.elements['PP_STAT_A']['key'],name=self.elements['PP_STAT_A']['text'][0]['@name'],value={'text': 'Puntos Ganados'})
+                self._set_input(input=self.elements['PP_STAT_A']['key'],name=self.elements['PP_STAT_A']['text'][1]['@name'],value={'text': '0%'})
+            else:
+                #HOME
+                self._set_input(input=self.elements['SP_STAT_H']['key'],name=self.elements['SP_STAT_H']['text'][0]['@name'],value={'text': 'Sets Ganados'})
+                self._set_input(input=self.elements['SP_STAT_H']['key'],name=self.elements['SP_STAT_H']['text'][1]['@name'],value={'text': str(home['set_percent'])+'%'})
+                self._set_input(input=self.elements['PP_STAT_H']['key'],name=self.elements['PP_STAT_H']['text'][0]['@name'],value={'text': 'Puntos Ganados'})
+                self._set_input(input=self.elements['PP_STAT_H']['key'],name=self.elements['PP_STAT_H']['text'][1]['@name'],value={'text': str(home['points_percent'])+'%'})
+                #AWAY
+                self._set_input(input=self.elements['SP_STAT_A']['key'],name=self.elements['SP_STAT_A']['text'][0]['@name'],value={'text': 'Sets Ganados'})
+                self._set_input(input=self.elements['SP_STAT_A']['key'],name=self.elements['SP_STAT_A']['text'][1]['@name'],value={'text': str(away['set_percent'])+'%'})
+                self._set_input(input=self.elements['PP_STAT_A']['key'],name=self.elements['PP_STAT_A']['text'][0]['@name'],value={'text': 'Puntos Ganados'})
+                self._set_input(input=self.elements['PP_STAT_A']['key'],name=self.elements['PP_STAT_A']['text'][1]['@name'],value={'text': str(away['points_percent'])+'%'})
         except Exception as e:
             print('set_sp_stat',e)
 
