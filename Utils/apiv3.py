@@ -621,6 +621,8 @@ class Match:
                 self.streamer.update_match_history(clear=True)
                 self.streamer.set_results(clear=True)
                 self.streamer.set_player_stats(clear=True)
+                self.streamer.set_sp_stat(clear=True)
+                self.streamer.substitution(clear=True)
                 self.streamer.set_point(False)
                 self.streamer.match_point(False)
             else:
