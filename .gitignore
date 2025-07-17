@@ -22,6 +22,7 @@
 /release
 /build
 /dist
+/Config
 /.vscode
 *.png
 *.rar
