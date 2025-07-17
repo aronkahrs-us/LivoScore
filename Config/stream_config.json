@@ -1,7 +1,7 @@
 {
-    "IP": "192.168.68.107",
-    "PORT": "8088",
+    "IP": "localhost",
+    "PORT": "4455",
     "PASS": "test",
-    "OBS": false,
-    "VMIX": true
+    "OBS": true,
+    "VMIX": false
 }

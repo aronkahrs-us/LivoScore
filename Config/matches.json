@@ -1,22 +1,202 @@
 {
-    "6531": {
-        "Match": "NACIONAL A vs BOHEMIOS",
-        "CompID": "101"
+    "9218": {
+        "Match": "HEBRAICA Y MACABI J vs PE\u00d1AROL",
+        "CompID": "147"
     },
-    "6522": {
-        "Match": "PARADA 6 vs JUAN FERREIRA C",
-        "CompID": "106"
+    "9283": {
+        "Match": "JMLM UNIVERSITARIO vs CORDON IAVA Azul",
+        "CompID": "164"
     },
-    "6523": {
-        "Match": "ITUZAINGO MALD vs CBPS OLD SCHOOL",
-        "CompID": "107"
+    "9227": {
+        "Match": "DEPORTIVO MONTA\u00d1ES vs MACHAKE",
+        "CompID": "149"
     },
-    "6527": {
-        "Match": "25 DE AGOSTO B vs COUNTRY EL PINAR",
-        "CompID": "116"
+    "9247": {
+        "Match": "NEKOMA vs CBR S",
+        "CompID": "155"
     },
-    "6520": {
-        "Match": "KONRAD & Asociados vs EMPALME OLMOS",
-        "CompID": "103"
+    "9293": {
+        "Match": "COUNTRY EL PINAR B vs LA FRANJA B",
+        "CompID": "166"
+    },
+    "9214": {
+        "Match": "CBPS S vs CBPS AZUL",
+        "CompID": "146"
+    },
+    "9268": {
+        "Match": "P4 - YONI VOLEY vs MILENIAL`S",
+        "CompID": "160"
+    },
+    "9277": {
+        "Match": "AIRES PUROS vs U. STA ROSA C",
+        "CompID": "162"
+    },
+    "9301": {
+        "Match": "SAN PABLO vs MONTEVIDEO",
+        "CompID": "168"
+    },
+    "9254": {
+        "Match": "CBH B vs COUNTRY EL PINAR C",
+        "CompID": "169"
+    },
+    "9273": {
+        "Match": "NAUTICO SR vs BOHEMIOS M",
+        "CompID": "161"
+    },
+    "9223": {
+        "Match": "LAGOMAR vs PLAYA PASCUAL",
+        "CompID": "148"
+    },
+    "9224": {
+        "Match": "COLEGIO SAN PABLO vs TINTOCO",
+        "CompID": "148"
+    },
+    "9259": {
+        "Match": "SAN JOSE DE CARRASCO B vs BOHEMIOS J",
+        "CompID": "158"
+    },
+    "9231": {
+        "Match": "HEBRAICA Y MACABI JR vs CBPS V",
+        "CompID": "150"
+    },
+    "9242": {
+        "Match": "COUNTRY EL PINAR J vs LEGADO",
+        "CompID": "154"
+    },
+    "9257": {
+        "Match": "BAGE vs HEBRAICA Y MACABI",
+        "CompID": "157"
+    },
+    "9272": {
+        "Match": "CANELON CHICO vs UNION VECINAL",
+        "CompID": "161"
+    },
+    "9280": {
+        "Match": "P.C - POLI COSTA vs SAN JUAN UNIVERSITARIO",
+        "CompID": "163"
+    },
+    "9253": {
+        "Match": "MILENIALS vs TORNADO VOLEY",
+        "CompID": "169"
+    },
+    "9226": {
+        "Match": "AIRES PUROS C vs Union Sta Rosa SJC",
+        "CompID": "149"
+    },
+    "9294": {
+        "Match": "UCDD vs COL. ARETEIA B",
+        "CompID": "167"
+    },
+    "9295": {
+        "Match": "HEBRAICA Y MACABI U19 vs SAYAGO",
+        "CompID": "167"
+    },
+    "9239": {
+        "Match": "PASO CARRASCO - VETERANOS vs ZONA 3",
+        "CompID": "153"
+    },
+    "9252": {
+        "Match": "CORDON BLANCO vs POQUITOS",
+        "CompID": "169"
+    },
+    "9269": {
+        "Match": "HEBRAICA Y MACABI B vs LA FRANJA",
+        "CompID": "160"
+    },
+    "9288": {
+        "Match": "P.C. PASO CARRASCO vs Union Vecinal Amarillo",
+        "CompID": "165"
+    },
+    "9289": {
+        "Match": "AIRES PUROS J vs La Paz Voley",
+        "CompID": "165"
+    },
+    "9240": {
+        "Match": "UDELAR B vs C. S. SOLIS",
+        "CompID": "154"
+    },
+    "9261": {
+        "Match": "PE\u00d1AROL vs BIGUA BIARRITZ",
+        "CompID": "158"
+    },
+    "9282": {
+        "Match": "Huracan F.C vs MILENIALS B",
+        "CompID": "164"
+    },
+    "9298": {
+        "Match": "BANCO HIPOTECARIO vs URUPAN",
+        "CompID": "168"
+    },
+    "9232": {
+        "Match": "CBPS OLD SCHOOL vs ITUZAINGO MALD",
+        "CompID": "150"
+    },
+    "9292": {
+        "Match": "AIRES PUROS Z vs UNION V8",
+        "CompID": "166"
+    },
+    "9264": {
+        "Match": "C Y V vs PAQUE",
+        "CompID": "159"
+    },
+    "9284": {
+        "Match": "HEBRAICA Y MACABI I vs ALKIMIA",
+        "CompID": "164"
+    },
+    "9245": {
+        "Match": "LOS TITANES - LA TUNA vs SAYAGO",
+        "CompID": "155"
+    },
+    "9246": {
+        "Match": "Country El Pinar B vs BOHEMIOS M",
+        "CompID": "155"
+    },
+    "9248": {
+        "Match": "MONTEVIDEO vs LA PAZ B",
+        "CompID": "156"
+    },
+    "9243": {
+        "Match": "COLEGIO ARETEIA C vs CORDON AZUL",
+        "CompID": "154"
+    },
+    "9287": {
+        "Match": "UDELAR vs CBPS ROJO",
+        "CompID": "165"
+    },
+    "9300": {
+        "Match": "NEKOMA vs PE\u00d1AROL U17",
+        "CompID": "168"
+    },
+    "9258": {
+        "Match": "CENTENARIO vs CBPS",
+        "CompID": "157"
+    },
+    "9241": {
+        "Match": "BANCO HIPOTECARIO vs C. A JUAN E. MILLER",
+        "CompID": "154"
+    },
+    "9281": {
+        "Match": "NAUTICO M vs CBPS S",
+        "CompID": "163"
+    },
+    "9285": {
+        "Match": "CERO ES 3 vs SINERGIA PTA DEL ESTE",
+        "CompID": "164"
+    },
+    "9276": {
+        "Match": "U. STA ROSA - B - LAGOMAR vs C. A. PE\u00d1AROL U30",
+        "CompID": "162"
+    },
+    "9271": {
+        "Match": "SJC - CHILL OUT vs U.A.S",
+        "CompID": "161"
+    },
+    "9249": {
+        "Match": "AIRES PUROS D vs LA FRANJA B",
+        "CompID": "156"
+    },
+    "9275": {
+        "Match": "OLD BRENDAN\u00b4S CLUB vs URUGUAY PE\u00d1AROL",
+        "CompID": "162"
     }
 }
