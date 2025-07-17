@@ -23,6 +23,8 @@
 
 ## Introduction
 
+I developed this in 2022 to enhance the quality of my girlfriend's volleyball matches. As a one-person team streaming the matches, it was challenging to manage both the camera and the score simultaneously. This solution, though imperfect, worked for me at the time. Recently, I rediscovered it and decided to release it publicly, hoping that someone else might find it useful.
+
 LivoScore provides graphics automation for volleyball matches. If you are streaming a match and its scoreboard is live on [DataProject's WCM](https://dataproject.com/Products/EU/en/Volleyball/WCM), you can automate the scoreboard and stats graphics. It is compatible with vMix and OBS.
 
 **Disclaimer:** This version may not work with OBS. Development initially targeted OBS but transitioned to vMix, so OBS support may be limited or broken.
