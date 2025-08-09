@@ -1,5 +1,10 @@
 <h1 align="center">LivoScore</h1>
 
+<h1 align="center">
+  <strong>⚠️ Archived Project — A new and improved version will be released in the coming months.  
+  This version is no longer actively maintained.</strong>
+</h1>
+
 <p align="center">
   <a href="">
     <img alt="LivoScore" title="LivoScore" src="assets/LivoScore.png" width="150">
